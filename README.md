@@ -54,6 +54,14 @@ By combining trivai with crosswords, WordWeaver engages users in a mentally reqa
   - [Credits](#credits)
 
   ## User Goals
+  The following goals were identified to ensure WordWeaver offers meaningful value to its users:
+    - Choose *categories* that match their interests or knowledge areas.
+    - Solve fun and challenging crossword puzzles.
+    - Engage with trivia-based questions across varying levels of difficulty.
+    - Test and expand their general knowledge.
+    - Access puzzles without needing to sign up or log in.
+    - Experience smooth gameplay with intuitive navigation.
+    - Enjoy a visually clean and responsive interface across devices.
 
   ## User Stories
 

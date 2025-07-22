@@ -22,34 +22,101 @@ By combining trivai with crosswords, WordWeaver engages users in a mentally reqa
   - [User Stories](#user-stories)
   - [Website Goals and Objectives](#website-goals-and-objectives)
   - [Wireframes](#wireframes)
-  - [Design Chices](#design-chioces)
-    - [Typography]
-    - [Colour Scheme]
-    - [Images]
-    - [Responsiveness]
-  - [Features]
-    - [Existing Features]
-    - [Future Enhancements]
-  - [Technologies Used]
-    - [Languages]
-    - [Libraries and Frameworks]
-    - [Tools]
-  - [Testing]
-    - [Bugs Fixed]
-    - [Responsiveness Tests]
-    - [Code Validation]
-      - [HTML]
-      - [CSS]
-      - [JavaScript]
-    - [User Story Testing]
-    - [Feature Testing]
-    - [Accessibility Testing]
-    - [Lighthouse Testing]
-    - [Browser Testing]
-  - [Deployment]
-    - [To Delploy the Project]
-    - [To Fork the Project]
-    - [To Clone the project]
-  - [Credits]
+  - [Design Choices](#design-chioces)
+    - [Typography](#typography)
+    - [Colour Scheme](#colour-scheme)
+    - [Images](#images)
+    - [Responsiveness](#responsiveness)
+  - [Features](#features)
+    - [Existing Features](#existing-features)
+    - [Future Enhancements](#future-enhancements)
+    - [Stretch Goals](#stretch-goals)
+  - [Technologies Used](#technologies-used)
+    - [Languages](#languages)
+    - [Libraries and Frameworks](#libraries-and-frameworks)
+    - [Tools](#tools)
+  - [Testing](#testing)
+    - [Bugs Fixed](#bugs-fixed)
+    - [Responsiveness Tests](#responsiveness-tests)
+    - [Code Validation](#code-validation)
+      - [HTML](#html)
+      - [CSS](#css)
+      - [JavaScript](#javascript)
+    - [User Story Testing](#user-story-testing)
+    - [Feature Testing](#feature-testing)
+    - [Accessibility Testing](#accessibility-testing)
+    - [Lighthouse Testing](#lighthouse-testing)
+    - [Browser Testing](#browser-testing)
+  - [Deployment](#deployment)
+    - [To Delploy the Project](#to-delploy-the-project)
+    - [To Fork the Project](#to-fork-the-project)
+    - [To Clone the project](#to-clone-the-project)
+  - [Credits](#credits)
 
-  
+  ## User Goals
+
+  ## User Stories
+
+  ## Website Goals and Objectives
+
+  ## Wireframes
+
+  ## Design Choices
+
+  ### Typography
+
+  ### Colour Scheme
+
+  ### Images
+
+  ### Responsiveness
+
+  ## Features
+
+  ### Existing Features
+
+  ### Future Enhancements
+
+  ### Stretch Goals
+
+  ## Technologies Used
+
+  ### Languages
+
+  ### Libraries and Frameworks
+
+  ### Tools
+
+  ## Testing
+
+  ### Bugs Fixed
+
+  ### Responsiveness Tests
+
+  ### Code Validation
+
+  #### HTML
+
+  #### CSS
+
+  #### JavaScript
+
+  ### User Story Testing
+
+  ### Feature Testing
+
+  ### Accessibility Testing
+
+  ### Lighthouse Testing
+
+  ### Browser Testing
+
+  ## Deployment
+
+  ### To Delploy the Project
+
+  ### To Fork the Project
+
+  ### To Clone the project
+
+  ## Credits

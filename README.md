@@ -76,6 +76,16 @@ The following goals were identified to ensure WordWeaver offers meaningful value
 User stories and development tasks are fully detailed on the [GitHub Project Board](https://github.com/users/creatvie-introvert/projects/13/views/1), showcasing steps taken to bring the project to completion.
 
 ## Website Goals and Objectives
+The primary goal of **WordWeaver** was to create an engaging and accessible crossword puzzle web app that combined quiz-style clues with an interactive grid. The project was designed to provide both entertainment and educational value, while demonstrating strong frontend development skills, user-centred design and API integration.
+
+**Key Objectives**
+- Deliver an intuiitive puzzle solving experience.
+- Support a range of player abilities.
+- Integrate quiz-style clues.
+- Ensure full responsiveness.
+- Encourage replay-ability and engagement.
+- Fetch data from a public API.
+= Showcase professional development skills.
 
 ## Wireframes
 

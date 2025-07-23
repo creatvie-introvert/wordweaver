@@ -85,7 +85,7 @@ The primary goal of **WordWeaver** was to create an engaging and accessible cros
 - Ensure full responsiveness.
 - Encourage replay-ability and engagement.
 - Fetch data from a public API.
-= Showcase professional development skills.
+- Showcase professional development skills.
 
 ## Wireframes
 

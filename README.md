@@ -88,6 +88,13 @@ The primary goal of **WordWeaver** was to create an engaging and accessible cros
 - Showcase professional development skills.
 
 ## Wireframes
+**WordWeaver** is a responsive, single-page web app that blends trivia with classic crossword puzzles. Designed to be clean, intuitive, and mobile-first, the app allows users to create dynamic puzzles by selecting a difficulty level and a quiz category, all without needing to sign-up or log in.
+
+Clues are fetched in real-time from a public trivia API and mapped into a crossword-style grid that users can interact with directly. The design encourages a frictionless experience as players can jump straight into a gae, switch between light and dark modes, and recieve instant feedback upon completion.
+
+From a UX perspective, WordWeaver prioristises clarity and choice. Its modular layout adapts responsively across mobile, tablet, and desktop, whilst maintianing a minimalist aesthetic. This ensures the puzzle remains the focal point. Built with accessibility and usability in mind, this project demonstrates dynamic DOM manipulation, API integration, and progressive interaction - all shaped through thoughtful wireframing and iteration in Figma.
+
+
 
 ## Design Choices
 

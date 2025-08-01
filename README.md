@@ -94,7 +94,23 @@ Clues are fetched in real-time from a public trivia API and mapped into a crossw
 
 From a UX perspective, WordWeaver prioristises clarity and choice. Its modular layout adapts responsively across mobile, tablet, and desktop, whilst maintianing a minimalist aesthetic. This ensures the puzzle remains the focal point. Built with accessibility and usability in mind, this project demonstrates dynamic DOM manipulation, API integration, and progressive interaction - all shaped through thoughtful wireframing and iteration in Figma.
 
+<details>
+<summary>Mobile Wireframes</summary>
 
+![Mobile Low Fidelity Wireframes](docs/ux-artefacts/mobile-lofi-wifi.png)
+</details>
+
+<details>
+<summary>Tablet Wireframes</summary>
+
+![Tablet Low Fidelity Wireframes](docs/ux-artefacts/tablet-lofi-wifi.png)
+</details>
+
+<details>
+<summary>Desktop Wireframes</summary>
+
+![Desktop Low Fidelity Wireframes](docs/ux-artefacts/desktop-lofi-wifi.png)
+</details>
 
 ## Design Choices
 

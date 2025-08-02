@@ -113,6 +113,7 @@ From a UX perspective, WordWeaver prioristises clarity and choice. Its modular l
 </details>
 
 ## Design Choices
+The design of WordWeaver was shaped by both user needs and accessibility principles, aiming for a visually engaging yet highly functional experience. Every design decision, from typography and colour contrast to responsiveness, was made to support ease of use, cross-device compatibility, and inclusive gameplay. This section outlines the key design systems used throughout the project, including font hierarchy, dual-theme colour palettes, minimal imagery, and mobile-first design.
 
 ### Typography
 

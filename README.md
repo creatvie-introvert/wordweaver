@@ -255,11 +255,33 @@ This project was built using core frontend technologies along with a range of de
 ### Browser Testing
 
 ## Deployment
+The project was deployed using **GitHub Pages** and is publicly accessible via the following link:
+
+_add link_
 
 ### To Delploy the Project
+1. Log in to your GitHub account and navigate to the project repository.
+2. Click on the **Settings** tab.
+3. In the left sidebar, scroll to **Pages**.
+4. Under **Source**, select the main branch and /root directory.
+5. Click **Save**. GitHub pages will automaticall build and deploy the site.
+6. After a few moments, the live link will appear at the top of the GitHub Pages section.
 
 ### To Fork the Project
+1. Visit the [WordWeaver repository](https://github.com/creatvie-introvert/wordweaver).
+2. In the top-right corner of the page, click the **Fork** button.
+3. Choose the GitHub account where the forkeed repository will be copied.
+4. You now have your own version of the project to edit freely.
 
 ### To Clone the project
+1. Navigate to your preferred local directory.
+2. Open your terminal or command line interface.
+3. Type the following command:
+<pre>
+bash
+git clone https://github.com/creatvie-introvert/wordweaver.git
+</pre>
+4. Press **Enter** to clone the repository to your local machine.
+5. Open the folder in your code editor (e.g. VS Code) to begin exploring or editing the files.
 
 ## Credits

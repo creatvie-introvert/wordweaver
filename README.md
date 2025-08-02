@@ -192,42 +192,43 @@ This project was built using core frontend technologies along with a range of de
 ### Languages
 - **[HTML](https://developer.mozilla.org/en-US/docs/Glossary/HTML5)** - for semantic structure of the page
 - **[CSS](https://developer.mozilla.org/en-US/docs/Web/CSS)** - for styling, responsive layout, and theme switching
--**[JavaScript]()** - for dynamic functionality, DOM interaction, and API integration
+-**[JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)** - for dynamic functionality, DOM interaction, and API integration
 
 ### Libraries and Frameworks
-- **Google Font *Poppins*** - clean and modern typeface used throughout the site
-- FontAwesome - for scable and accessible SVG icons
-- AOS (Animate on Scroll) - for simple scroll-triggered animations
+- **[Google Font *Poppins*](https://fonts.google.com/specimen/Poppins)** - clean and modern typeface used throughout the site
+- **[FontAwesome](https://fontawesome.com)** - for scable and accessible SVG icons
+- **[AOS (Animate on Scroll)](https://michalsnik.github.io/aos/)** - for simple scroll-triggered animations
 
 ### Tools
-- Figma - used to create wireframes for mobile, tablet and desktop views
-- Visual Studio Code - code editor used for the entire development process
-- Git - version contol system
-- GitHub - for repository hosting and project board tracking
-  - GitHub Project Board - tracks issues, user stories, and development tasks
-- Google Chrome DevTools - used extensively for debugging, performance testing, and responsive inspection
+- **[Figma](https://www.figma.com/)** - used to create wireframes for mobile, tablet and desktop views
+- **[Visual Studio Code](https://code.visualstudio.com/)** - code editor used for the entire development process
+- **[Git](https://git-scm.com)** - version contol system
+- **[GitHub](https://github.com)** - for repository hosting and project board tracking
+  - **[GitHub Project Board](https://github.com/users/creatvie-introvert/projects/13/views/1)** - tracks issues, user stories, and development tasks
+- **[Google Chrome DevTools](https://developer.chrome.com/docs/devtools/)** - used extensively for debugging, performance testing, and responsive inspection
 
 ### Image and Asset Tools
-- Sora - Al tool used to generate the WordWeaver logo
-- Squoosh - image optimisation tool for reducing file size while preserving quality
-- Coolors - used to define and refine the colour palette for both themes
+- **[Sora](https://sora.ai/)** - Al tool used to generate the WordWeaver logo
+- **[Squoosh](https://squoosh.app/)** - image optimisation tool for reducing file size while preserving quality
+- **[Coolors](https://coolors.co/)** - used to define and refine the colour palette for both themes
 
 ### API
-- Opentrivia DB - public trivia APU used to fetch quiz-style clues dynamically based on user-selected categories and diffficulty
+- **[Opentrivia DB](https://opentdb.com/)** - public trivia APU used to fetch quiz-style clues dynamically based on user-selected categories and diffficulty
 
 ### Validation and Accessibilty Testing
-- WAVE Web Accessibility Evaluation Tool - used to check for accessibilty issues
-- WebAim Contrast Checker - verified colour contrast compliance (WCAD 2.1 AA/AAA)
-- W3C Markup Validator - for validating HTML structure
-- W3C CSS Validator - for validating stylesheet syntax
-- Autoprefixer - ensured browser compatibility for custom CSS
+- **[WAVE Web Accessibility Evaluation Tool](https://wave.webaim.org/)** - used to check for accessibilty issues
+- **[WebAim Contrast Checker](https://webaim.org/resources/contrastchecker/)** - verified colour contrast compliance (WCAD 2.1 AA/AAA)
+- **[W3C Markup Validator](https://validator.w3.org/)** - for validating HTML structure
+- **[W3C CSS Validator](https://jigsaw.w3.org/css-validator/)** - for validating stylesheet syntax
+- **[Autoprefixer](https://autoprefixer.github.io/)** - ensured browser compatibility for custom CSS
+- **[JSHinterface](https://creatvie-introvert.github.io/JSHinterface/)** - used to validate and lint JavaScript code during development
 
 ### Responsive Design Testing
-- Am I Responsive? - for generating device mockus of the responsive design
-- Responsive Design Checker - used to preview layouts across various devices and resolutions
+- **[Am I Responsive?](https://ui.dev/amiresponsive/)** - for generating device mockus of the responsive design
+- **[Responsive Design Checker](https://responsivedesignchecker.com/)** - used to preview layouts across various devices and resolutions
 
 ### Deployment
-- GitHub Pages - used for live deployment of the project
+- **[GitHub Pages](https://pages.github.com)** - used for live deployment of the project
 
 ## Testing
 

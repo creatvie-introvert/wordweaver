@@ -158,6 +158,20 @@ All functional icons (such as Help, Info, and Theme Toggle) were implemented usi
 Together, the imagery reinforced the brand's playful yet focused tone while maintainig a minimal and distraction-free interface.
 
 ### Responsiveness
+WordWeaver was designed and developed with a mobile-first approach to ensure usability across a range of devices. The layout and interface dynamically adapts to diffferent screen sizes and orientations, providing an optimal experience on smartphones, tablets, and desktop browsers.
+
+During development, responsive behaviour was implemented using CSS media queries and flexible layout techniques. Key interface elements such as buttons, grid sizes, and typography dscaled appropriately based on the user's viewport, and modals adjusted to remain legible and centred.
+
+The table below outlines the breakpoints that were used throughout the project to guide layout and design decisions:
+
+|Breakpoint|Device Type|Min Width|Max Width|
+|----------|-----------|---------|---------|
+|Extra Small|Smartphones|320px|479px|
+|Small|Small Tablets|480px|767px|
+|Medium|Tablets|787px|1023px|
+|Large|Laptops & Desktops|1024px|∞|
+
+Responsiveness was tested as each new screen size was added to ensure both visual consistency and functionality. Scrollable content was handled carefully, touch targets were spaced for accessibility on small screens, and key game features remained centred and visible regarless of resolution.
 
 ## Features
 

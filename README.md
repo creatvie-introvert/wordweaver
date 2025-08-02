@@ -116,6 +116,20 @@ From a UX perspective, WordWeaver prioristises clarity and choice. Its modular l
 The design of WordWeaver was shaped by both user needs and accessibility principles, aiming for a visually engaging yet highly functional experience. Every design decision, from typography and colour contrast to responsiveness, was made to support ease of use, cross-device compatibility, and inclusive gameplay. This section outlines the key design systems used throughout the project, including font hierarchy, dual-theme colour palettes, minimal imagery, and mobile-first design.
 
 ### Typography
+WordWeaver uses the **Poppins** typeface, a geometric sans-serif font chosen for its clean, modern appearance and excellent readability across devices. With a rounded yet structured aesthetic, Poppins helps strike a balance between playfulness and clarity - ideal for a puzzle based game.
+
+The type system follows a responsive scale that adjusts font sizes across mobile, tablet, and desktop devices to enhance usability and maintain visual hierarchy.
+
+|Text Style|Mobile|Tablet|Desktop|
+|----------|------|------|-------|
+|Page-Heading/Hero|40px|48px|64px|
+|Section Heading|32px|40px|48px|
+|Subheading|20px|24px|32px|
+|Paragraph/Body|16px|18px|20px|
+|Button/Label|18px|20px|22px|
+|Caption/Tag|14px|14px|14px|
+
+![Typography system across all breakpoints](docs/design-choices/typography-design-system.png)
 
 ### Colour Scheme
 

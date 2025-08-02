@@ -149,7 +149,13 @@ The dark theme features a deep charcoal background paried with light neutral ton
 ![Dark Theme Colour Palette](docs/design-choices/dark-colour-scheme.png)
 
 ![Dark Theme Contrast Grid](docs/design-choices/dark-theme-contrast-grid.png)
+
 ### Images
+The project's visuals were kept clean and purposeful to suport usability and accessibility. The only raster image used was the custom WordWeaver logo, which was designed to reflect the game's whimsical and intellectual nature. The logo features a feather quill, sparkles, and stylised crossword tiles to subtly reinforce the game's word puzzle theme.
+
+All functional icons (such as Help, Info, and Theme Toggle) were implemented using inlive SVGs to maintain visual sharpness and scalability across all screen sizes. SVGs were chosen for their accessibility benefits and performance efficiency, ensuring consistent styling and fast loading without relying on external icon libraries.
+
+Together, the imagery reinforced the brand's playful yet focused tone while maintainig a minimal and distraction-free interface.
 
 ### Responsiveness
 

@@ -35,6 +35,11 @@ By combining trivai with crosswords, WordWeaver engages users in a mentally reqa
   - [Languages](#languages)
   - [Libraries and Frameworks](#libraries-and-frameworks)
   - [Tools](#tools)
+  - [Image and Asset Tools](#image-and-asset-tools)
+  - [API](#api)
+  - [Validation and Accessibilty Testing](#validation-and-accessibilty-testing)
+  - [Responsive Design Testing](#responsive-design-testing)
+  - [Deployment](#deployment)
 - [Testing](#testing)
   - [Bugs Fixed](#bugs-fixed)
   - [Responsiveness Tests](#responsiveness-tests)
@@ -182,12 +187,47 @@ Responsiveness was tested as each new screen size was added to ensure both visua
 ### Stretch Goals
 
 ## Technologies Used
+This project was built using core frontend technologies along with a range of design, testing, and optimisation tools. The goal was to ensure clean code, responsive layouts, and an accessible user experience.
 
 ### Languages
+- **[HTML](https://developer.mozilla.org/en-US/docs/Glossary/HTML5)** - for semantic structure of the page
+- **[CSS](https://developer.mozilla.org/en-US/docs/Web/CSS)** - for styling, responsive layout, and theme switching
+-**[JavaScript]()** - for dynamic functionality, DOM interaction, and API integration
 
 ### Libraries and Frameworks
+- **Google Font *Poppins*** - clean and modern typeface used throughout the site
+- FontAwesome - for scable and accessible SVG icons
+- AOS (Animate on Scroll) - for simple scroll-triggered animations
 
 ### Tools
+- Figma - used to create wireframes for mobile, tablet and desktop views
+- Visual Studio Code - code editor used for the entire development process
+- Git - version contol system
+- GitHub - for repository hosting and project board tracking
+  - GitHub Project Board - tracks issues, user stories, and development tasks
+- Google Chrome DevTools - used extensively for debugging, performance testing, and responsive inspection
+
+### Image and Asset Tools
+- Sora - Al tool used to generate the WordWeaver logo
+- Squoosh - image optimisation tool for reducing file size while preserving quality
+- Coolors - used to define and refine the colour palette for both themes
+
+### API
+- Opentrivia DB - public trivia APU used to fetch quiz-style clues dynamically based on user-selected categories and diffficulty
+
+### Validation and Accessibilty Testing
+- WAVE Web Accessibility Evaluation Tool - used to check for accessibilty issues
+- WebAim Contrast Checker - verified colour contrast compliance (WCAD 2.1 AA/AAA)
+- W3C Markup Validator - for validating HTML structure
+- W3C CSS Validator - for validating stylesheet syntax
+- Autoprefixer - ensured browser compatibility for custom CSS
+
+### Responsive Design Testing
+- Am I Responsive? - for generating device mockus of the responsive design
+- Responsive Design Checker - used to preview layouts across various devices and resolutions
+
+### Deployment
+- GitHub Pages - used for live deployment of the project
 
 ## Testing
 

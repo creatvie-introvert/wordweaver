@@ -61,6 +61,8 @@ h1, h2, h3, h4, h5, h6 {
     --caption-text: #4D4D4D;
     --hover-accent:#2A5A2B;
     --focus-ring: #397C3D;
+
+    --header-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -74,6 +76,8 @@ h1, h2, h3, h4, h5, h6 {
         --caption-text: #A8A8A8;
         --hover-accent:#2A5A2B;
         --focus-ring: #A2D3A1;
+
+        --header-shadow: 0 4px 1.2rem rgba(0, 0, 0, 0.15);
     }
 }
 
@@ -105,6 +109,7 @@ nav ul {
     justify-content: space-between;
     align-items: center;
     padding: 0.8rem 1.6rem;
+    box-shadow: var(--header-shadow)
 }
 
 #site-logo {

@@ -96,3 +96,23 @@ nav ul {
     list-style: none;
     padding: 0;
 }
+
+/* 
+    Header Styles
+*/
+#site-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 1.6rem;
+}
+
+#site-logo {
+    width: 5.6rem;
+    height: auto;
+}
+
+.nav-list {
+    display: flex;
+    gap: 0.8rem;
+}

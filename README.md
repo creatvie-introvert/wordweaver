@@ -149,7 +149,7 @@ The light theme uses a soft **seasalt background** paired with **charcoal text**
 
 **Dark Theme**
 
-The dark theme features a deep charcoal background paired with light neutral tones for text and interface contrast. a muted lavender-blue provides visual focus without causing strain. This palette was selected to reduce glare and improve readability in low-light environments while maintaining a professional, modern tone.
+The dark theme adopts a deep charcoal base ('#1E1E1E') for a reduced-glare experience. Primary text is displayed in a **soft pale green** ('#E5F5DC') for high contrast. Button accents shift to muted green and sage tones, offering visual continuity with the light theme and interactive states.
 
 ![Dark Theme Colour Palette](docs/design-choices/dark-colour-scheme.png)
 

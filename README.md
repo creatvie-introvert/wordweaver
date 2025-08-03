@@ -257,7 +257,7 @@ This project was built using core frontend technologies along with a range of de
 ## Deployment
 The project was deployed using **GitHub Pages** and is publicly accessible via the following link:
 
-_add link_
+[WordWeaver](https://creatvie-introvert.github.io/wordweaver/)
 
 ### To Delploy the Project
 1. Log in to your GitHub account and navigate to the project repository.

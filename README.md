@@ -1,7 +1,7 @@
 <img src="docs/wordweaver-logo-no-text.png" alt="WordWeaver Logo" width="250">
 
 # WordWeaver
-**WordWeaver** is an interactive, quiz-powered crossword game that blends wordplay with general knowledge. Designed with both entertainment and cognitive stimulation in mind, this web app dynamically builds crossword puzzles from quiz APIs, letting user test their knowledge while weavuing answers across a responsive grid.
+**WordWeaver** is an interactive, quiz-powered crossword game that blends wordplay with general knowledge. Designed with both entertainment and cognitive stimulation in mind, this web app dynamically builds crossword puzzles from quiz APIs, letting user test their knowledge while weaving answers across a responsive grid.
 
 This project exists to:
   - Provide a unique and educational twist on traditional crossword puzzles.
@@ -13,7 +13,7 @@ This project exists to:
   - Puzzle lovers looking for a new way to engage with crosswords.
   - Users of all ages who want a fun and educational browser-based game.
 
-By combining trivai with crosswords, WordWeaver engages users in a mentally reqarding experience that is equally suited for casual entertainment and light learning.
+By combining trivia with crosswords, WordWeaver engages users in a mentally challenging experience that is equally suited for casual entertainment and light learning.
 
 <!-- TODO: Insert final mockup screenshot here -->
 
@@ -84,7 +84,7 @@ User stories and development tasks are fully detailed on the [GitHub Project Boa
 The primary goal of **WordWeaver** was to create an engaging and accessible crossword puzzle web app that combined quiz-style clues with an interactive grid. The project was designed to provide both entertainment and educational value, while demonstrating strong frontend development skills, user-centred design and API integration.
 
 **Key Objectives**
-- Deliver an intuiitive puzzle solving experience.
+- Deliver an intuitive puzzle solving experience.
 - Support a range of player abilities.
 - Integrate quiz-style clues.
 - Ensure full responsiveness.
@@ -95,9 +95,9 @@ The primary goal of **WordWeaver** was to create an engaging and accessible cros
 ## Wireframes
 **WordWeaver** is a responsive, single-page web app that blends trivia with classic crossword puzzles. Designed to be clean, intuitive, and mobile-first, the app allows users to create dynamic puzzles by selecting a difficulty level and a quiz category, all without needing to sign-up or log in.
 
-Clues are fetched in real-time from a public trivia API and mapped into a crossword-style grid that users can interact with directly. The design encourages a frictionless experience as players can jump straight into a gae, switch between light and dark modes, and recieve instant feedback upon completion.
+Clues are fetched in real-time from a public trivia API and mapped into a crossword-style grid that users can interact with directly. The design encourages a frictionless experience as players can jump straight into a game, switch between light and dark modes, and recieve instant feedback upon completion.
 
-From a UX perspective, WordWeaver prioristises clarity and choice. Its modular layout adapts responsively across mobile, tablet, and desktop, whilst maintianing a minimalist aesthetic. This ensures the puzzle remains the focal point. Built with accessibility and usability in mind, this project demonstrates dynamic DOM manipulation, API integration, and progressive interaction - all shaped through thoughtful wireframing and iteration in Figma.
+From a UX perspective, WordWeaver prioritises clarity and choice. Its modular layout adapts responsively across mobile, tablet, and desktop, whilst maintaining a minimalist aesthetic. This ensures the puzzle remains the focal point. Built with accessibility and usability in mind, this project demonstrates dynamic DOM manipulation, API integration, and progressive interaction - all shaped through thoughtful wireframing and iteration in Figma.
 
 <details>
 <summary>Mobile Wireframes</summary>
@@ -137,7 +137,7 @@ The type system follows a responsive scale that adjusts font sizes across mobile
 ![Typography system across all breakpoints](docs/design-choices/typography-design-system.png)
 
 ### Colour Scheme
-To support boith aesthetic appeal and accessibility, WordWeaver is designed with two themes: **light mode** and **dark mode**. Each theme maintains visual harmony and ensures sufficient contrast ratios in line with WCAG 2.1 AA/AAA guidelines.
+To support both aesthetic appeal and accessibility, WordWeaver is designed with two themes: **light mode** and **dark mode**. Each theme maintains visual harmony and ensures sufficient contrast ratios in line with WCAG 2.1 AA/AAA guidelines.
 
 **Light Theme**
 
@@ -149,23 +149,23 @@ The light theme uses a clean off-white background with contrasting deep blacks a
 
 **Dark Theme**
 
-The dark theme features a deep charcoal background paried with light neutral tones for text and interface contrast. a muted lavender-blue provides visual focus without causing strain. This palette was selected to reduce glare and omprove readability in low-light environments while maintaining a professional, modern tone.
+The dark theme features a deep charcoal background paired with light neutral tones for text and interface contrast. a muted lavender-blue provides visual focus without causing strain. This palette was selected to reduce glare and improve readability in low-light environments while maintaining a professional, modern tone.
 
 ![Dark Theme Colour Palette](docs/design-choices/dark-colour-scheme.png)
 
 ![Dark Theme Contrast Grid](docs/design-choices/dark-theme-contrast-grid.png)
 
 ### Images
-The project's visuals were kept clean and purposeful to suport usability and accessibility. The only raster image used was the custom WordWeaver logo, which was designed to reflect the game's whimsical and intellectual nature. The logo features a feather quill, sparkles, and stylised crossword tiles to subtly reinforce the game's word puzzle theme.
+The project's visuals were kept clean and purposeful to support usability and accessibility. The only raster image used was the custom WordWeaver logo, which was designed to reflect the game's whimsical and intellectual nature. The logo features a feather quill, sparkles, and stylised crossword tiles to subtly reinforce the game's word puzzle theme.
 
 All functional icons (such as Help, Info, and Theme Toggle) were implemented using inlive SVGs to maintain visual sharpness and scalability across all screen sizes. SVGs were chosen for their accessibility benefits and performance efficiency, ensuring consistent styling and fast loading without relying on external icon libraries.
 
-Together, the imagery reinforced the brand's playful yet focused tone while maintainig a minimal and distraction-free interface.
+Together, the imagery reinforced the brand's playful yet focused tone while maintaining a minimal and distraction-free interface.
 
 ### Responsiveness
 WordWeaver was designed and developed with a mobile-first approach to ensure usability across a range of devices. The layout and interface dynamically adapts to diffferent screen sizes and orientations, providing an optimal experience on smartphones, tablets, and desktop browsers.
 
-During development, responsive behaviour was implemented using CSS media queries and flexible layout techniques. Key interface elements such as buttons, grid sizes, and typography dscaled appropriately based on the user's viewport, and modals adjusted to remain legible and centred.
+During development, responsive behaviour was implemented using CSS media queries and flexible layout techniques. Key interface elements such as buttons, grid sizes, and typography scaled appropriately based on the user's viewport, and modals adjusted to remain legible and centred.
 
 The table below outlines the breakpoints that were used throughout the project to guide layout and design decisions:
 
@@ -176,7 +176,7 @@ The table below outlines the breakpoints that were used throughout the project t
 |Medium|Tablets|787px|1023px|
 |Large|Laptops & Desktops|1024px|∞|
 
-Responsiveness was tested as each new screen size was added to ensure both visual consistency and functionality. Scrollable content was handled carefully, touch targets were spaced for accessibility on small screens, and key game features remained centred and visible regarless of resolution.
+Responsiveness was tested as each new screen size was added to ensure both visual consistency and functionality. Scrollable content was handled carefully, touch targets were spaced for accessibility on small screens, and key game features remained centred and visible regardless of resolution.
 
 ## Features
 
@@ -202,7 +202,7 @@ This project was built using core frontend technologies along with a range of de
 ### Tools
 - **[Figma](https://www.figma.com/)** - used to create wireframes for mobile, tablet and desktop views
 - **[Visual Studio Code](https://code.visualstudio.com/)** - code editor used for the entire development process
-- **[Git](https://git-scm.com)** - version contol system
+- **[Git](https://git-scm.com)** - version control system
 - **[GitHub](https://github.com)** - for repository hosting and project board tracking
   - **[GitHub Project Board](https://github.com/users/creatvie-introvert/projects/13/views/1)** - tracks issues, user stories, and development tasks
 - **[Google Chrome DevTools](https://developer.chrome.com/docs/devtools/)** - used extensively for debugging, performance testing, and responsive inspection
@@ -213,7 +213,7 @@ This project was built using core frontend technologies along with a range of de
 - **[Coolors](https://coolors.co/)** - used to define and refine the colour palette for both themes
 
 ### API
-- **[Opentrivia DB](https://opentdb.com/)** - public trivia APU used to fetch quiz-style clues dynamically based on user-selected categories and diffficulty
+- **[Opentrivia DB](https://opentdb.com/)** - public trivia API used to fetch quiz-style clues dynamically based on user-selected categories and diffficulty
 
 ### Validation and Accessibilty Testing
 - **[WAVE Web Accessibility Evaluation Tool](https://wave.webaim.org/)** - used to check for accessibilty issues
@@ -224,7 +224,7 @@ This project was built using core frontend technologies along with a range of de
 - **[JSHinterface](https://creatvie-introvert.github.io/JSHinterface/)** - used to validate and lint JavaScript code during development
 
 ### Responsive Design Testing
-- **[Am I Responsive?](https://ui.dev/amiresponsive/)** - for generating device mockus of the responsive design
+- **[Am I Responsive?](https://ui.dev/amiresponsive/)** - for generating device mockups of the responsive design
 - **[Responsive Design Checker](https://responsivedesignchecker.com/)** - used to preview layouts across various devices and resolutions
 
 ### Deployment
@@ -264,13 +264,13 @@ _add link_
 2. Click on the **Settings** tab.
 3. In the left sidebar, scroll to **Pages**.
 4. Under **Source**, select the main branch and /root directory.
-5. Click **Save**. GitHub pages will automaticall build and deploy the site.
+5. Click **Save**. GitHub pages will automatically build and deploy the site.
 6. After a few moments, the live link will appear at the top of the GitHub Pages section.
 
 ### To Fork the Project
 1. Visit the [WordWeaver repository](https://github.com/creatvie-introvert/wordweaver).
 2. In the top-right corner of the page, click the **Fork** button.
-3. Choose the GitHub account where the forkeed repository will be copied.
+3. Choose the GitHub account where the forked repository will be copied.
 4. You now have your own version of the project to edit freely.
 
 ### To Clone the project

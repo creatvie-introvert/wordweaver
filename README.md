@@ -285,3 +285,4 @@ git clone https://github.com/creatvie-introvert/wordweaver.git
 5. Open the folder in your code editor (e.g. VS Code) to begin exploring or editing the files.
 
 ## Credits
+- **CSS Reset**: Based on [Josh W. Comeau's Custom CSS Reset](https://www.joshwcomeau.com/css/custom-css-reset/)

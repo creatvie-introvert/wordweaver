@@ -136,3 +136,7 @@ nav ul {
     display: block;
     color: var(--button-bg);
 }
+
+.nav-btn svg:hover {
+    color: var(--hover-accent);
+}

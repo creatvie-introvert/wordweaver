@@ -51,11 +51,11 @@ h1, h2, h3, h4, h5, h6 {
 */
 :root {
     --bg-colour: #f9f9f9;
-    --text-colour: #1c1c1c;
+    --text-color: #1c1c1c;
     --button-bg: #000;
     --button-text: #f9f9f9;
     --accent: #3c4caa;
-    --border-colour: #808080;
+    --border-color: #808080;
     --caption-text: #949494;
     --hover-accent:#5c6bc0;
     --focus-ring: #9fa8da;
@@ -63,12 +63,12 @@ h1, h2, h3, h4, h5, h6 {
 
 @media (prefers-color-scheme: dark) {
     :root {
-        --bg-colour: #1e1e1e;
-        --text-colour: #f5f5f5;
+        --bg-color: #1e1e1e;
+        --text-color: #f5f5f5;
         --button-bg: #f9f9f9;
         --button-text: #1e1e1e;
         --accent: #9fa8da;
-        --border-colour: #949494;
+        --border-color: #949494;
         --caption-text: #808080;
         --hover-accent:#5c6bc0;
         --focus-ring: #9fa8da;
@@ -85,4 +85,6 @@ html {
 
 body {
     min-height: 100vh;
+    background-color: var(--bg-color);
+    color: var(--text-color);
 }

@@ -46,6 +46,21 @@ h1, h2, h3, h4, h5, h6 {
     isolation: isolate;
 }
 
+/* 
+    CSS Variables
+*/
+:root {
+    --bg-colour: #f9f9f9;
+    --text-colour: #1c1c1c;
+    --button-bg: #000;
+    --button-text: #f9f9f9;
+    --accent: #3c4caa;
+    --border-colour: #808080;
+    --caption-text: #949494;
+    --hover-accent:#5c6bc0;
+    --focus-ring: #9fa8da;
+}
+
 /*
     Base Enhancements
 */

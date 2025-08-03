@@ -137,11 +137,11 @@ The type system follows a responsive scale that adjusts font sizes across mobile
 ![Typography system across all breakpoints](docs/design-choices/typography-design-system.png)
 
 ### Colour Scheme
-To support both aesthetic appeal and accessibility, WordWeaver is designed with two themes: **light mode** and **dark mode**. Each theme maintains visual harmony and ensures sufficient contrast ratios in line with WCAG 2.1 AA/AAA guidelines.
+To support both aesthetic appeal and accessibility, WordWeaver is designed with two themes: **light mode** and **dark mode**. Each theme draws directly from the brand's nature inspired palette and maintains contrast ratios that align with WCAG 2.1 AA guidelines.
 
 **Light Theme**
 
-The light theme uses a clean off-white background with contrasting deep blacks and slate greys for typography and UI elements. The vivid blue accent was chosen for buttons and interactive highlights, providing strong visual cues without sacrificing readability.
+The light theme uses a soft **seasalt background** paired with **charcoal text** and button elements.Rich natural greens are used for accents, hover states, and focus rings - echoing the organic tones of the WordWeaver logo. These choices ensure clarity, calmness, and consistent branding.
 
 ![Light Theme Colour palette](docs/design-choices/light-colour-scheme.png)
 

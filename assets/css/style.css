@@ -50,7 +50,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* CSS Variables */
 :root {
-    --bg-colour: #F5F2DA;
+    --bg-color: #F5F2DA;
     --text-color: #2E3A36;
     --button-bg: #2E3A36;
     --button-text: #F5F2DA;
@@ -77,6 +77,34 @@ h1, h2, h3, h4, h5, h6 {
 
         --header-shadow: 0 4px 1.2rem rgba(0, 0, 0, 0.15);
     }
+}
+
+[data-theme="dark"] {
+    --bg-color: #1E1E1E;
+    --text-color: #E6F5DC;
+    --button-bg: #A2D3A1;
+    --button-text: #2D3934;
+    --accent: #85B786;
+    --border-color: #ABABAB;
+    --caption-text: #A8A8A8;
+    --hover-accent:#2A5A2B;
+    --focus-ring: #A2D3A1;
+
+    --header-shadow: 0 4px 1.2rem rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="light"] {
+    --bg-color: #F5F2DA;
+    --text-color: #2E3A36;
+    --button-bg: #2E3A36;
+    --button-text: #F5F2DA;
+    --accent: #205B28;
+    --border-color: #808080;
+    --caption-text: #4D4D4D;
+    --hover-accent:#2A5A2B;
+    --focus-ring: #397C3D;
+
+    --header-shadow: 0 4px 0.8rem rgba(0, 0, 0, 0.08);
 }
 
 /*

@@ -173,7 +173,7 @@ The table below outlines the breakpoints that were used throughout the project t
 |----------|-----------|---------|---------|
 |Extra Small|Smartphones|320px|479px|
 |Small|Small Tablets|480px|767px|
-|Medium|Tablets|787px|1023px|
+|Medium|Tablets|768px|1023px|
 |Large|Laptops & Desktops|1024px|∞|
 
 Responsiveness was tested as each new screen size was added to ensure both visual consistency and functionality. Scrollable content was handled carefully, touch targets were spaced for accessibility on small screens, and key game features remained centred and visible regardless of resolution.

@@ -166,10 +166,6 @@ nav ul {
     transition: color 0.2s ease;
 }
 
-.nav-btn svg:hover {
-    color: var(--hover-accent);
-}
-
 .nav-btn:focus-visible {
     border-radius: 0.8rem;
     outline: 2px solid var(--focus-ring);
@@ -190,5 +186,9 @@ nav ul {
 @media (min-width: 1024px) {
     #site-header {
         padding: 0.8rem 12rem;
+    }
+
+    .nav-btn svg:hover {
+        color: var(--hover-accent);
     }
 }

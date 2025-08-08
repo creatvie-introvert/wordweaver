@@ -26,6 +26,7 @@
 </head>
 
 <body>
+    <!-- Site header with logo and navigation buttons: Info, Help, Theme Toggle -->
     <header id="site-header">
         <div class="logo-container">
             <a href="index.html" aria-label="Go to homepage">
@@ -35,7 +36,7 @@
         <nav id="main-nav">
             <ul class="nav-list">
                 <li>
-                    <button class="nav-btn" id="about-btn" aria-label="About">
+                    <button class="nav-btn" id="about-btn" aria-label="About" data-modal="infoModal">
                         <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <g clip-path="url(#clip0_127_283)">
                                 <path
@@ -48,17 +49,10 @@
                                 </clipPath>
                             </defs>
                         </svg>
-
-                        <!-- <svg fill="currentColor" viewBox="0 -8 528 528"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <title>info</title>
-                            <path
-                                d="M264 456Q210 456 164 429 118 402 91 356 64 310 64 256 64 202 91 156 118 110 164 83 210 56 264 56 318 56 364 83 410 110 437 156 464 202 464 256 464 310 437 356 410 402 364 429 318 456 264 456ZM296 208L296 144 232 144 232 208 296 208ZM296 368L296 240 232 240 232 368 296 368Z" />
-                        </svg> -->
                     </button>
                 </li>
                 <li>
-                    <button class="nav-btn" id="help-btn" aria-label="Help">
+                    <button class="nav-btn" id="help-btn" aria-label="Help" data-modal="helpModal">
                         <svg fill="currentColor" viewBox="0 0 36 36" version="1.1" preserveAspectRatio="xMidYMid meet"
                             xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                             <title>help-solid</title>
@@ -87,6 +81,36 @@
     </header>
 
     <main></main>
+
+    <!-- Info Modal -->
+    <div class="modal" id="infoModal" role="dialog" aria-modal="true" aria-labelledby="infoTitle" aria-hidden="true" hidden>
+        <div class="modal-content">
+            <button class="close-modal" aria-label="close-modal">
+                &times;
+            </button>
+            <h2 id="infoTitle">
+                About WordWeaver
+            </h2>
+            <p>
+                Information about the web app will go here...
+            </p>
+        </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div class="modal" id="helpModal" role="dialog" aria-modal="true" aria-labelledby="helpTitle" aria-hidden="true" hidden>
+        <div class="modal-content">
+            <button class="close-modal" aria-label="close-modal">
+                &times;
+            </button>
+            <h2 id="helpTitle">
+                How to play?
+            </h2>
+            <p>
+                How to play the game will go here...
+            </p>
+        </div>
+    </div>
 
     <footer></footer>
     <script src="assets/js/script.js" defer></script>

@@ -359,7 +359,7 @@ body.modal-open {
     color: var(--button-bg);
 }
 
-/* Hero Section Styles */
+/* Main Section Styles */
 
 #hero-section {
     display: flex;
@@ -378,8 +378,22 @@ body.modal-open {
     flex-direction: column;
     align-items: center;
     gap: 1.6rem;
+    width: 100%;
 }
 
+#difficulty-section {
+    display: flex;
+    flex-direction: column;
+    gap: 2.4rem;
+}
+
+.difficulty-btn-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    width: min(100%, 45.5rem);
+    margin: 0 auto;
+}
 
 /* Media Queries */
 @media (min-width: 480px) {
@@ -397,6 +411,20 @@ body.modal-open {
         max-width: 100%;
         height: auto;
         flex: 0 1 auto;
+    }
+
+    .hero-text {
+        width: min(40vw, 28rem);
+    }
+
+    .difficulty-btn-container {
+        max-width: 45.5rem;
+        margin: 0 auto;
+        width: 100%;
+    }
+
+    .difficulty-btn-container .primary-btn {
+       align-self: stretch;
     }
 }
 
@@ -421,11 +449,16 @@ body.modal-open {
 
     #hero-section {
         display: flex;
+        flex-direction: row;
         justify-content: space-between;
     }
 
     #hero-section img {
-        width: 50%;
+        width: 45%;
+    }
+
+    .hero-text {
+        width: 45%;
     }
 }
 

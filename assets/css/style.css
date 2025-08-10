@@ -138,6 +138,41 @@ body {
     background-color: var(--bg-color);
 }
 
+h1 {
+    font-size: var(--font-hero);
+    line-height: var(--line-height-hero);
+}
+
+h2 {
+    font-size: var(--font-section-header);
+    line-height: var(--line-height-section-header);
+}
+
+h3 {
+    font-size: var(--font-subheader);
+    line-height: var(--line-height-subheader);
+}
+
+p {
+    font-size: var(--font-paragraph);
+    line-height: var(--line-height-paragraph);
+}
+
+button, label {
+    font-size: var(--font-button);
+    line-height: var(--line-height-button);
+}
+
+.caption {
+    font-size: var(--font-caption);
+    line-height: var(--line-height-caption);
+}
+
+.tag {
+    font-size: var(--font-tag);
+    line-height: var(--line-height-tag);
+}
+
 nav ul {
     list-style: none;
     padding: 0;

@@ -132,10 +132,16 @@ html {
 }
 
 body {
+    display: flex;
+    flex-direction: column;
     min-height: 100vh;
     font-family: 'Poppins', sans-serif;
     color: var(--text-color);
     background-color: var(--bg-color);
+}
+
+main {
+    flex: 1;
 }
 
 h1 {
@@ -233,6 +239,8 @@ nav ul {
     outline-offset: 2px;
 }
 
+/* Header - Modal Styles */
+
 .modal {
     position: fixed;
     top: 0;
@@ -307,6 +315,31 @@ body.modal-open {
 
 #helpModal ol li {
     margin-bottom: 1rem;
+}
+
+/* Footer Styles */
+
+.site-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.6rem;
+    padding: 6.4rem 1.6rem 3.2rem;
+}
+
+#footer-logo {
+    width: 10rem;
+    height: auto;
+}
+
+.social-links {
+    display: flex;
+    gap: 1.6rem;
+}
+
+.social-links i {
+    font-size: 4.8rem;
+    color: var(--button-bg);
 }
 
 /* Media Queries */

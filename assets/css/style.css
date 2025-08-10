@@ -305,6 +305,10 @@ body.modal-open {
     border-bottom: 1px solid var(--border-color);
 }
 
+.modal-body-text i {
+    color: var(--accent);
+}
+
 /* Media Queries */
 @media (min-width: 480px) {
     

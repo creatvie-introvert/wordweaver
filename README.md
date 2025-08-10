@@ -238,7 +238,7 @@ On desktop screens, the header strtches across the full width, with the logo and
 ##### Information Modal
 The **Information Modal** is accessible from the header's "Info" icon, provides users with essential details about the WordWeaver app and its creatos.
 
-**Key Features**
+**Key Features:**
 - Displays app name, version, and a short description.
 - Lists creditis for trivia question sourcing [Open Trivia DB](https://opentdb.com).
 - Includes developer name and contact links: portfolio site and email feedback.
@@ -250,6 +250,22 @@ The **Information Modal** is accessible from the header's "Info" icon, provides 
 <summary>Info Modal</summary>
 
 ![Info-Modal](docs/features/info-modal.png)
+</details>
+
+##### Help Modal
+The **Help Modal** is accessible from the header's "Help" icon. It provides players with clear giudance on how to play WordWeaver.
+
+**Key Features:**
+- Displays a concise description of the game's concept.
+- Lists step-by-step instructions for starting and playing a game.
+- Opens in the centre of the screen with a dimmed overlay.
+- Fully accessible: traps focus, labelled for assitive technologies, dismissable via close button, Esc key, or clicking the backdrop.
+- Content area scrolls on smaller devices to maintain readability.
+
+<details>
+<summary>Help Modal</summary>
+
+![Help-Modal](docs/features/help-modal.png)
 </details>
 
 ### Future Enhancements

@@ -207,6 +207,10 @@ nav ul {
     width: 100%;
 }
 
+.hidden {
+    display: none;
+}
+
 /* 
     Header Styles
 */

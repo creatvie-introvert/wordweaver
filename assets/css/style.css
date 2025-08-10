@@ -153,7 +153,7 @@ h3 {
     line-height: var(--line-height-subheader);
 }
 
-p {
+p, ol {
     font-size: var(--font-paragraph);
     line-height: var(--line-height-paragraph);
 }
@@ -307,6 +307,10 @@ body.modal-open {
 
 .modal-body-text i {
     color: var(--accent);
+}
+
+#helpModal ol li {
+    margin-bottom: 1rem;
 }
 
 /* Media Queries */

@@ -179,8 +179,61 @@ The table below outlines the breakpoints that were used throughout the project t
 Responsiveness was tested as each new screen size was added to ensure both visual consistency and functionality. Scrollable content was handled carefully, touch targets were spaced for accessibility on small screens, and key game features remained centred and visible regardless of resolution.
 
 ## Features
+The Features section showcases the interactive elements, core functionality, and user-focused enhancements that make WordWeaver an engaging and accessible game. Every feature has been designed and implemented wit usability, responsiveness, and accessibility at the forefront, delivering a smooth and enjoyable experience across all devices. From foundational gameplay mechanics ro advanced, user-driven enhancement, WordWeaver provides a polished and fully realised gaming experience. Features are organised into Existing Features, Future Enhancements, and Stretch Goals, clearly illustrating the projects scope, completed milestones, and potential future developments.
 
 ### Existing Features
+
+#### Header
+One of the core UI elements of WordWeaver, is the header. It delivers **persistent navigation**, brand visibility, and quick access to key game functions. Designed for clarity and ease of use, it adapts fluidly across devices to maintain an intuitive experience.
+
+The header includes the **WordWeaver logo** on the left, which doubles as a clickable button to instantly return users to the startn screen from anywhere in the app. On the right, three interactive icons - **Info**, **Help**, and **Theme Toggle** - provide quick access to guidance, gameplay information, and light/dark mode switching.
+
+The header remains fixed at the top of the viewport, ensuring it is always within reach without interrupting gameplay.
+
+##### Mobile View
+In the mobile layout the header is compact and space-efficient. Icons are sized for comfortable tapping, and spacing ensures no accidental presses.
+
+<details>
+<summary>Header - Mobile View (Light Mode)</summary>
+
+![Header - Mobile - Light Mode](docs/features/header-mobile-light.png)
+</details>
+
+<details>
+<summary>Header - Mobile View (Dark Mode)</summary>
+
+![Header - Mobile - Dark Mode](docs/features/header-mobile-dark.png)
+</details>
+
+##### Tablet View
+The tablet header layout expands spacing between elements, giving the logo and icons more breathing room while maintaining a touch-friendly size. Proportional scaling ensures visual balancewithout compromising functionalitiy.
+
+<details>
+<summary>Header - Tablet View (Light Mode)</summary>
+
+![Header - Tablet - Light Mode](docs/features/header-tablet-light.png)
+</details>
+
+<details>
+<summary>Header - Tablet View (Dark Mode)</summary>
+
+![Header - Tablet - Dark Mode](docs/features/header-tablet-dark.png)
+</details>
+
+##### Desktop View
+On desktop screens, the header strtches across the full width, with the logo and icons clearly separated for visual clarity. Ample horizontal space allows the design to feel open while keeoing interactive elements immediately accessible.
+
+<details>
+<summary>Header - Desktop View (Light Mode)</summary>
+
+![Header - Desktop - Light Mode](docs/features/header-desktop-light.png)
+</details>
+
+<details>
+<summary>Header - Desktop View (Dark Mode)</summary>
+
+![Header - Desktop - Dark Mode](docs/features/header-desktop-dark.png)
+</details>
 
 ### Future Enhancements
 

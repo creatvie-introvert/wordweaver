@@ -268,6 +268,53 @@ The **Help Modal** is accessible from the header's "Help" icon. It provides play
 ![Help-Modal](docs/features/help-modal.png)
 </details>
 
+#### Footer
+The footer provides branding, attribution, and quick access to the app's social media profiles.
+
+**Key Features:**
+- Displays the **WordWeaver logo** linked to the homepage for quick navigation
+- Inculdes a **"Powered by"** credit linking to [Open Trivia DB](https://opentdb.com), the trivia question source.
+- Contains a **social media links section** with accessible icon buttons for Facebook, Linkedin, and GitHub.
+- External links open in new tabs and use rel="noopener noreferrer" for security.
+- Uses role="contentinfo" to clearly define the footer as site-qide information for assistive technologies.
+- Fully responsive design - content stacks verticall and is horizontally centred.
+
+<details>
+<summary>Footer - Mobile View (Light Mode)</summary>
+
+![Footer - Mobile - Light Mode](docs/features/footer-mobile-light.png)
+</details>
+
+<details>
+<summary>Footer - Mobile View (Dark Mode)</summary>
+
+![Footer - Mobile - Dark Mode](docs/features/footer-mobile-dark.png)
+</details>
+
+<details>
+<summary>Footer - Tablet View (Light Mode)</summary>
+
+![Footer - Tablet - Light Mode](docs/features/footer-tablet-light.png)
+</details>
+
+<details>
+<summary>Footer - Tablet View (Dark Mode)</summary>
+
+![Footer - Tablet - Dark Mode](docs/features/footer-tablet-dark.png)
+</details>
+
+<details>
+<summary>Footer - Desktop View (Light Mode)</summary>
+
+![Footer - Desktop - Light Mode](docs/features/footer-desktop-light.png)
+</details>
+
+<details>
+<summary>Footer - Desktop View (Dark Mode)</summary>
+
+![Footer - Desktop - Dark Mode](docs/features/footer-desktop-dark.png)
+</details>
+
 ### Future Enhancements
 
 ### Stretch Goals

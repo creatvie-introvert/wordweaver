@@ -57,7 +57,7 @@ h1, h2, h3, h4, h5, h6 {
     --accent: #205B28;
     --border-color: #808080;
     --caption-text: #4D4D4D;
-    --hover-accent:#2A5A2B;
+    --hover-accent:#5FA565;
     --focus-ring: #397C3D;
 
     --header-shadow: 0 4px 0.8rem rgba(0, 0, 0, 0.08);
@@ -117,7 +117,7 @@ h1, h2, h3, h4, h5, h6 {
     --accent: #205B28;
     --border-color: #808080;
     --caption-text: #4D4D4D;
-    --hover-accent:#2A5A2B;
+    --hover-accent:#5FA565;
     --focus-ring: #397C3D;
 
     --header-shadow: 0 4px 0.8rem rgba(0, 0, 0, 0.08);
@@ -171,6 +171,20 @@ button, label {
 .tag {
     font-size: var(--font-tag);
     line-height: var(--line-height-tag);
+}
+
+.bold {
+    font-weight: 700;
+}
+
+a {
+    color: var(--accent);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+a:hover {
+    color: var(--hover-accent);
 }
 
 nav ul {
@@ -247,16 +261,20 @@ nav ul {
     position: relative;
     padding: 2.4rem 1.6rem;
     max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
     width: 90%;
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: 1.6rem;
+    gap: 3.2rem;
 }
 
 .modal-header {
     display: flex;
     justify-content: space-between;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 1rem;
 }
 
 .close-modal {
@@ -269,6 +287,22 @@ nav ul {
 
 body.modal-open {
     overflow: hidden;
+}
+
+#infoTitle, #helpTitle, .close-modal {
+    font-size: 2.4rem;
+    line-height: 1.2;
+}
+
+.modal-body-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.modal-body-text p {
+    padding: 0.8rem 1.6rem;
+    border-bottom: 1px solid var(--border-color);
 }
 
 /* Media Queries */

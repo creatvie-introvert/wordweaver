@@ -183,10 +183,6 @@ a {
     cursor: pointer;
 }
 
-a:hover {
-    color: var(--hover-accent);
-}
-
 nav ul {
     list-style: none;
     padding: 0;
@@ -343,6 +339,10 @@ body.modal-open {
         --font-button: 2.2rem;
         --font-caption: 1.8rem;
         --font-tag: 1.6;
+    }
+
+    a:hover {
+        color: var(--hover-accent);
     }
 
     #site-header {

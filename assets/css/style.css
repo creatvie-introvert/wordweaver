@@ -253,11 +253,11 @@ nav ul {
     transition: color 0.2s ease;
 }
 
-.nav-btn:focus-visible {
+/* .nav-btn:focus-visible {
     border-radius: 0.8rem;
     outline: 2px solid var(--focus-ring);
     outline-offset: 2px;
-}
+} */
 
 /* Header - Modal Styles */
 
@@ -436,6 +436,17 @@ body.modal-open {
     box-shadow: 0 0.6rem 1.2rem rgba(0, 0, 0, 0.4);
 }
 
+.nav-btn:focus-visible,
+.primary-btn:focus-visible,
+.category-btn:focus-visible,
+a:focus-visible,
+.logo-container a:focus-visible img,
+.footer-logo-container a:focus-visible img {
+    border-radius: 0.8rem;
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+}
+
 /* Media Queries */
 @media (min-width: 480px) {
     #hero-section {
@@ -551,10 +562,7 @@ body.modal-open {
 
 @media (hover: hover) and (pointer: fine) {
     .nav-btn svg:hover,
-    .social-links i:hover {
-        color: var(--hover-accent);
-    }
-
+    .social-links i:hover,
     a:hover {
         color: var(--hover-accent);
     }

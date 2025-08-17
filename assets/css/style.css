@@ -210,7 +210,7 @@ nav ul {
     cursor: pointer;
 }
 
-.hidden {
+.section-wrapper.hidden {
     display: none;
 }
 
@@ -380,7 +380,7 @@ body.modal-open {
     width: 100%;
 }
 
-#difficulty-section {
+.difficulty-container {
     display: flex;
     flex-direction: column;
     gap: 2.4rem;

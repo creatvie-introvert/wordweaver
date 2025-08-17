@@ -430,6 +430,7 @@ body.modal-open {
     height: 10rem;
     object-fit: contain;
     border-radius: 50%;
+    box-shadow: 0 0.6rem 1.2rem rgba(0, 0, 0, 0.4);
 }
 
 /* Media Queries */

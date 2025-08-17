@@ -202,10 +202,12 @@ nav ul {
 .primary-btn {
     background-color: var(--button-bg);
     color: var(--button-text);
+    font-weight: 600;
     padding: 1.6rem 1.2rem;
     border-radius: 0.8rem;
     border: none;
     width: 100%;
+    cursor: pointer;
 }
 
 .hidden {
@@ -420,6 +422,7 @@ body.modal-open {
     border-radius: 0.8rem;
     background-color: var(--button-bg);
     color: var(--button-text);
+    font-weight: 600;
     border: none;
     cursor: pointer;
     padding: 1.6rem 1.2rem;
@@ -520,16 +523,12 @@ body.modal-open {
         --font-tag: 1.6;
     }
 
-    a:hover {
+    /* a:hover {
         color: var(--hover-accent);
-    }
+    } */
 
     #site-header {
         padding: 0.8rem 12rem;
-    }
-
-    .nav-btn svg:hover {
-        color: var(--hover-accent);
     }
 
     .section-wrapper {
@@ -547,5 +546,23 @@ body.modal-open {
 
     .hero-text {
         width: 45%;
+    }
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .nav-btn svg:hover,
+    .social-links i:hover {
+        color: var(--hover-accent);
+    }
+
+    a:hover {
+        color: var(--hover-accent);
+    }
+
+    .primary-btn:hover,
+    .category-btn:hover {
+        background-color: var(--hover-accent);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 0.8rem rgba(0, 0, 0, 0.15);
     }
 }

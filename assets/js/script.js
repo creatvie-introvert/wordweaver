@@ -49,11 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
         modal.hidden = false;
         modal.setAttribute('aria-hidden', 'false');
         body.classList.add('modal-open');
-        // modal.querySelector('.close-modal').focus();
-
-        // const closeBtn = modal.querySelector('.close-modal');
-
-        // closeBtn.addEventListener('click', () => closeModal(modal));
 
         const closeBtn = modal.querySelector('.close-modal');
 
@@ -64,15 +59,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // document.addEventListener('keydown', escHandler);
-
-        // function escHandler(e) {
-        //     if (e.key === 'Escape') {
-        //         closeModal(modal);
-
-        //         document.removeEventListener('keydown', escHandler);
-        //     }
-        // }
         const escHandler = e => {
             if (e.key === 'Escape') {
                 closeModal(modal);

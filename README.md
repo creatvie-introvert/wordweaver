@@ -365,7 +365,12 @@ This project was built using core frontend technologies along with a range of de
 
 ## Testing
 
-### Bugs Fixed
+### Bugs
+|ID|Bug|Description|Status|Steps to Fix|Commit Link|
+|--|---|-----------|------|------------|-----------|
+|B-001|Hero Section Media Query Alignment|On screens 480px and above, the hero section layout broke due to incorrect flex settings|**Fixed**|Adjusted the media query by correcting `flex-direction` and alignment rules for the hero section|[296c9d4](https://github.com/creatvie-introvert/wordweaver/commit/296c9d4430572d973cf91b885a549c31a3ea2614)|
+|B-002|Category Container Overflow|On desktop view, the 3x3 category grid flowed off screen and wasn't centred|**Fixed**|Added `max-width`, `margin: 0 auto;`, and corrected grid layout properties in CSS|[0075021](https://github.com/creatvie-introvert/wordweaver/commit/0075021f61c1c9747d01c83ced41cca7ca059ba0)|
+|B-003|Focus Ring Missing on Logo|Focus-visible styles didn't apply to the header logo link|**Fixed**|Updated selector from `.logo-container` to `.logo-container a:focus-visible` for correct targeting|[3326f3c](https://github.com/creatvie-introvert/wordweaver/commit/3326f3cecaa679c459ec745fd5faab49b61fb551)|
 
 ### Responsiveness Tests
 

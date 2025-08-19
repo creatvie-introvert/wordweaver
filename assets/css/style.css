@@ -493,6 +493,21 @@ a:focus-visible,
 
 .back-btn {
     margin-left: auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 4.8rem;
+    height: 4.8rem;
+    border: 2px solid var(--button-bg);
+    border-radius: 10rem;
+
+    color: var(--button-bg);
+
+    background: transparent;
+
+    cursor: pointer;
+    transition: transform 120ms ease, box-shadow 120ms ease, background-color 120ms ease, color 120ms ease;
 }
 
 /* Media Queries */
@@ -612,6 +627,15 @@ a:focus-visible,
     .category-btn:hover {
         background-color: var(--hover-accent);
         box-shadow: 0 4px 0.8rem rgba(0, 0, 0, 0.15);
+
+        transform: translateY(-2px);
+    }
+
+    .back-btn:hover {
+        background-color: var(--button-bg);
+        box-shadow: 0 4px 0.8rem rgba(0, 0, 0, 0.15);
+
+        color: var(--button-text);
 
         transform: translateY(-2px);
     }

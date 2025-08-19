@@ -221,7 +221,7 @@ nav ul {
 }
 
 .section-wrapper.hidden {
-    display: none;
+    display: none !important;
 }
 
 /* 
@@ -232,6 +232,7 @@ nav ul {
     justify-content: space-between;
     align-items: center;
     padding: 0.8rem 1.6rem;
+    margin-bottom: 1.6rem;
 
     box-shadow: var(--header-shadow);
 }

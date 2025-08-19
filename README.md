@@ -193,46 +193,30 @@ The header remains fixed at the top of the viewport, ensuring it is always withi
 ##### Mobile View
 In the mobile layout the header is compact and space-efficient. Icons are sized for comfortable tapping, and spacing ensures no accidental presses.
 
-<details>
-<summary>Header - Mobile View (Light Mode)</summary>
-
-![Header - Mobile - Light Mode](docs/features/header-mobile-light.png)
-</details>
-
-<details>
-<summary>Header - Mobile View (Dark Mode)</summary>
-
-![Header - Mobile - Dark Mode](docs/features/header-mobile-dark.png)
-</details>
-
 ##### Tablet View
 The tablet header layout expands spacing between elements, giving the logo and icons more breathing room while maintaining a touch-friendly size. Proportional scaling ensures visual balancewithout compromising functionalitiy.
-
-<details>
-<summary>Header - Tablet View (Light Mode)</summary>
-
-![Header - Tablet - Light Mode](docs/features/header-tablet-light.png)
-</details>
-
-<details>
-<summary>Header - Tablet View (Dark Mode)</summary>
-
-![Header - Tablet - Dark Mode](docs/features/header-tablet-dark.png)
-</details>
 
 ##### Desktop View
 On desktop screens, the header strtches across the full width, with the logo and icons clearly separated for visual clarity. Ample horizontal space allows the design to feel open while keeoing interactive elements immediately accessible.
 
 <details>
-<summary>Header - Desktop View (Light Mode)</summary>
+<summary>View Header Screenshots (Light Mode)</summary>
 
-![Header - Desktop - Light Mode](docs/features/header-desktop-light.png)
+<p align="center">
+<img src="docs/features/header-mobile-light.png" width="30%" alt="Header section on mobile in light theme">
+<img src="docs/features/header-tablet-light.png" width="30%" alt="Header section on tablet in light theme">
+<img src="docs/features/header-desktop-light.png" width="30%" alt="Header section on desktop in light theme">
+</p>
 </details>
 
 <details>
-<summary>Header - Desktop View (Dark Mode)</summary>
+<summary>View Header Screenshots (Dark Mode)</summary>
 
-![Header - Desktop - Dark Mode](docs/features/header-desktop-dark.png)
+<p align="center">
+<img src="docs/features/header-mobile-dark.png" width="30%" alt="Header section on mobile in dark theme">
+<img src="docs/features/header-tablet-dark.png" width="30%" alt="Header section on tablet in dark theme">
+<img src="docs/features/header-desktop-dark.png" width="30%" alt="Header section on desktop in dark theme">
+</p>
 </details>
 
 ##### Information Modal
@@ -247,9 +231,11 @@ The **Information Modal** is accessible from the header's "Info" icon, provides 
 - Content area scrolls on smaller devices to maintain readability.
 
 <details>
-<summary>Info Modal</summary>
+<summary>View Info Modal</summary>
 
-![Info-Modal](docs/features/info-modal.png)
+<p align="center">
+<img src="docs/features/info-modal.png" width="60%" alt="Info/About modal screenshot">
+</p>
 </details>
 
 ##### Help Modal
@@ -263,9 +249,11 @@ The **Help Modal** is accessible from the header's "Help" icon. It provides play
 - Content area scrolls on smaller devices to maintain readability.
 
 <details>
-<summary>Help Modal</summary>
+<summary>View Help Modal</summary>
 
-![Help-Modal](docs/features/help-modal.png)
+<p align="center">
+<img src="docs/features/help-modal.png" width="60%" alt="Help modal screenshot">
+</p>
 </details>
 
 #### Footer
@@ -280,39 +268,23 @@ The footer provides branding, attribution, and quick access to the app's social 
 - Fully responsive design - content stacks verticall and is horizontally centred.
 
 <details>
-<summary>Footer - Mobile View (Light Mode)</summary>
+<summary> View Footer Screenshots (Light Mode)</summary>
 
-![Footer - Mobile - Light Mode](docs/features/footer-mobile-light.png)
+<p align="center">
+<img src="docs/features/footer-mobile-light.png" width="30%" alt="Footer section on mobile in light theme">
+<img src="docs/features/footer-tablet-light.png" width="30%" alt="Footer section on tablet in light theme">
+<img src="docs/features/footer-desktop-light.png" width="30%" alt="Footer section on desktop in light theme">
+</p>
 </details>
 
 <details>
-<summary>Footer - Mobile View (Dark Mode)</summary>
+<summary> View Footer Screenshots (Dark Mode)</summary>
 
-![Footer - Mobile - Dark Mode](docs/features/footer-mobile-dark.png)
-</details>
-
-<details>
-<summary>Footer - Tablet View (Light Mode)</summary>
-
-![Footer - Tablet - Light Mode](docs/features/footer-tablet-light.png)
-</details>
-
-<details>
-<summary>Footer - Tablet View (Dark Mode)</summary>
-
-![Footer - Tablet - Dark Mode](docs/features/footer-tablet-dark.png)
-</details>
-
-<details>
-<summary>Footer - Desktop View (Light Mode)</summary>
-
-![Footer - Desktop - Light Mode](docs/features/footer-desktop-light.png)
-</details>
-
-<details>
-<summary>Footer - Desktop View (Dark Mode)</summary>
-
-![Footer - Desktop - Dark Mode](docs/features/footer-desktop-dark.png)
+<p align="center">
+<img src="docs/features/footer-mobile-dark.png" width="30%" alt="Footer section on mobile in dark theme">
+<img src="docs/features/footer-tablet-dark.png" width="30%" alt="Footer section on tablet in dark theme">
+<img src="docs/features/footer-desktop-dark.png" width="30%" alt="Footer section on desktop in dark theme">
+</p>
 </details>
 
 #### Hero Section
@@ -326,15 +298,17 @@ The hero section introduces users to the game and provides the primary entry poi
 - Designed with accessibility in mind, ensuring all interactive elements are usable with a keyboard and screen readers.
 
 <details>
-<summary>Hero Section Screenshots (Light Mode)</summary>
+<summary>View Hero Section Screenshots (Light Mode)</summary>
 
+<p align="center">
 <img src="docs/features/hero-mobile-light.png" width="30%" alt="Hero section on mobile in light theme">
 <img src="docs/features/hero-tablet-light.png" width="30%" alt="Hero section on tablet in light theme">
 <img src="docs/features/hero-desktop-light.png" width="30%" alt="Hero section on desktop in light theme">
+<p>
 </details>
 
 <details>
-<summary>Hero Section Secreenshots (Dark Mode)</summary>
+<summary>View Hero Section Secreenshots (Dark Mode)</summary>
 
 <p align="center">
 <img src="docs/features/hero-mobile-dark.png" width="30%" alt="Hero section on mobile in dark theme">

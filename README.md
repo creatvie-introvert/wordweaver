@@ -315,6 +315,34 @@ The footer provides branding, attribution, and quick access to the app's social 
 ![Footer - Desktop - Dark Mode](docs/features/footer-desktop-dark.png)
 </details>
 
+#### Hero Section
+The hero section introduces users to the game and provides the primary entry point to begin playing.
+
+**Key Features:**
+- Displays the **game title** and **tagline** to welcome users and set context.
+- Features a prominent **Start Game** button that guides users into the gameplay flow.
+- Clicking **Start Game** hides the heor section and reveals the **Category Selection** section.
+- Fully responsive design - the hero image and text adjust seamlessly across screen sizes.
+- Designed with accessibility in mind, ensuring all interactive elements are usable with a keyboard and screen readers.
+
+<details>
+<summary>Hero Section Screenshots (Light Mode)</summary>
+
+<img src="docs/features/hero-mobile-light.png" width="30%" alt="Hero section on mobile in light theme">
+<img src="docs/features/hero-tablet-light.png" width="30%" alt="Hero section on tablet in light theme">
+<img src="docs/features/hero-desktop-light.png" width="30%" alt="Hero section on desktop in light theme">
+</details>
+
+<details>
+<summary>Hero Section Secreenshots (Dark Mode)</summary>
+
+<p align="center">
+<img src="docs/features/hero-mobile-dark.png" width="30%" alt="Hero section on mobile in dark theme">
+<img src="docs/features/hero-tablet-dark.png" width="30%" alt="Hero section on tablet in dark theme">
+<img src="docs/features/hero-desktop-dark.png" width="30%" alt="Hero section on desktop in dark theme">
+</p>
+</deatils>
+
 ### Future Enhancements
 
 ### Stretch Goals

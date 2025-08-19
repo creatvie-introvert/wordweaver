@@ -474,6 +474,27 @@ a:focus-visible,
     outline-offset: 2px;
 }
 
+.section-header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4rem;
+}
+
+.section-header h2 {
+    position: absolute;
+    left: 50%;
+    
+    margin: 0;
+
+    transform: translateX(-50%);
+}
+
+.back-btn {
+    margin-left: auto;
+}
+
 /* Media Queries */
 @media (min-width: 480px) {
     #hero-section {

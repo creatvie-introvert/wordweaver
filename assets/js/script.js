@@ -121,15 +121,22 @@ document.addEventListener('DOMContentLoaded', () => {
         body.classList.remove('modal-open');
     }
     
+    // START GAME BUTTON LOGIC - Handles transition from Hero to Category selection
     const startBtn = document.querySelector('#start-game-btn');
 
+    // Listen for clicks on the Start Game Button
     startBtn.addEventListener('click', () => {
+        // Get references to the hero and category sections
         const heroSection = document.querySelector('#hero-section');
         const categorySection = document.querySelector('#category-section');
 
+        // Hide the hero section
         heroSection.classList.add('hidden');
+
+        // Show the category selection section
         categorySection.classList.remove('hidden');
 
+        // Debug message for development/testing
         console.log('you pressed start');
     });
 });

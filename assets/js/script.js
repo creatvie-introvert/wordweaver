@@ -121,15 +121,15 @@ document.addEventListener('DOMContentLoaded', () => {
         body.classList.remove('modal-open');
     }
     
-    const startBtn = document.querySelector("#start-game-btn");
+    const startBtn = document.querySelector('#start-game-btn');
 
-    startBtn.addEventListener("click", () => {
-        const heroSection = document.querySelector("#hero-section");
-        const categorySection = document.querySelector("#category-section");
+    startBtn.addEventListener('click', () => {
+        const heroSection = document.querySelector('#hero-section');
+        const categorySection = document.querySelector('#category-section');
 
-        heroSection.classList.add("hidden");
-        categorySection.classList.remove("hidden");
+        heroSection.classList.add('hidden');
+        categorySection.classList.remove('hidden');
 
-        console.log("you pressed start")
+        console.log('you pressed start');
     });
 });

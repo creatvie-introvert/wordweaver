@@ -125,12 +125,17 @@ document.addEventListener('DOMContentLoaded', () => {
         startBtn.addEventListener('click', () => {
             // Hide the hero section
             heroSection.classList.add('hidden');
+            heroSection.setAttribute('aria-hidden', 'true');
+            heroSection.setAttribute('hidden', '');
 
             // Show the category selection section
             categorySection.classList.remove('hidden');
+            categorySection.removeAttribute('hidden');
+            categorySection.setAttribute('aria-hidden', 'false');
 
-            // Debug message for development/testing
-            console.log('you pressed start');
+            // Move focus to category title
+            const categoryHeading = document.getElementById('category-title');
+            categoryHeading?.focus();
         });
     }
 
@@ -167,10 +172,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const heading = headingId ? document.getElementById(headingId) : null;
 
             (heading || previousSection).focus();
-
-
-            // const focusTarget = previousSection.querySelector('[autofocus], buttton, a, [tabindex]:not([tabindex="-1"])');
-            // (focusTarget || previousSection).focus?.();
         });
     });
 });

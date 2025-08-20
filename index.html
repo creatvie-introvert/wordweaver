@@ -83,10 +83,11 @@
     </header>
 
     <main>
-        <section id="hero-section" class="section-wrapper">
+        <!-- Hero Section -->
+        <section id="hero-section" class="section-wrapper" aria-labelledby="hero-title">
             <img src="assets/images/wordweaver-logo.webp" alt="WordWeaver Logo">
             <div class="hero-text">
-                <h1>
+                <h1 id="hero-title" tabindex="-1">
                     WordWeaver
                 </h1>
                 <p>
@@ -98,31 +99,9 @@
             </div>
         </section>
 
-        <section id="difficulty-section" class="difficulty-container section-wrapper hidden">
+        <section id="category-section" class="section-wrapper hidden" aria-labelledby="category-title">
             <div class="section-header">
-                <h2>
-                    Choose Your Difficulty
-                </h2>
-                <button class="back-btn" aria-label="Go back to category selection" data-prev="category-section">
-                    X
-                </button>
-            </div>
-            <div class="difficulty-btn-container">
-                <button class="primary-btn">
-                    Easy
-                </button>
-                <button class="primary-btn">
-                    Medium
-                </button>
-                <button class="primary-btn">
-                    Hard
-                </button>
-            </div>
-        </section>
-
-        <section id="category-section" class="section-wrapper hidden" >
-            <div class="section-header">
-                <h2>
+                <h2 id="category-title" tabindex="-1">
                     Choose Your Category
                 </h2>
                 <button class="back-btn" aria-label="Go back to start screen" data-prev="hero-section">
@@ -168,6 +147,31 @@
                 </button>
             </div>
         </section>
+
+        <!-- Difficulty section -->
+        <section id="difficulty-section" class="difficulty-container section-wrapper hidden" aria-labelledby="difficulty-title">
+            <div class="section-header">
+                <h2 id="difficulty-title" tabindex="-1">
+                    Choose Your Difficulty
+                </h2>
+                <button class="back-btn" aria-label="Go back to category selection" data-prev="category-section">
+                    X
+                </button>
+            </div>
+            <div class="difficulty-btn-container">
+                <button class="primary-btn">
+                    Easy
+                </button>
+                <button class="primary-btn">
+                    Medium
+                </button>
+                <button class="primary-btn">
+                    Hard
+                </button>
+            </div>
+        </section>
+
+        
 
         <section id="game-section"></section>
     </main>

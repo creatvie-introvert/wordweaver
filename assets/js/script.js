@@ -26,12 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    /**
-     * Updates the aria-label for the theme toggle button
-     * to ensure screen readers announce the correct action
-     * 
-     * @returns {void}
-     */
+    // Updates the aria-label for the theme toggle button
     function updateToggleLabel() {
         const label = currentTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
         toggleBtn.setAttribute('aria-label', label);
@@ -41,6 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalButtons = document.querySelectorAll('[data-modal]');
     const modals = document.querySelectorAll('.modal');
     const body = document.body;
+    let escHandler = null;
 
     // Wire up open actions for each modal trigger
     modalButtons.forEach(button => {
@@ -61,13 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    /**
-     * Show a modal, set appropriate accessibilty attributes
-     * lock background scroll, focus the close button and attach an ESC handler
-     * 
-     * @param {HTMLElement|null} modal - The modal element to be opened
-     * @returns {void}
-     */
+    // Show a modal
     function openModal(modal) {
         if (!modal) return;
 
@@ -88,19 +78,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        /**
-         * Escape handler reference so we can remove it on any close
-         * Close the modal when Escape is pressed and remove handler
-         * 
-         * @param {KeyboardEvent} e 
-         */
-        const escHandler = e => {
+        // Create and store escape handler
+        escHandler = e => {
             if (e.key === 'Escape') {
                 closeModal(modal);
-
-                document.removeEventListener('keydown', escHandler);
             }
-        };
+        }
 
         // Attach ESC listener while modal is open
         document.addEventListener('keydown', escHandler);
@@ -108,9 +91,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /**
      * Hide a modal, restore attributes, and re-enable page scrolling
-     * 
-     * @param {HTMLElement} modal - The modal element to close
-     * @returns {void}
      */
     function closeModal(modal) {
         // Hide visually and from assistive tech
@@ -119,6 +99,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Restore body scroll
         body.classList.remove('modal-open');
+
+        // Clean up ESC listener if present
+        if (escHandler) {
+            document.removeEventListener('keydown', escHandler);
+            escHandler = null;
+        }
     }
     
     // START GAME BUTTON LOGIC - Handles transition from Hero to Category selection

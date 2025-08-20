@@ -116,9 +116,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // START GAME BUTTON LOGIC - Handles transition from Hero to Category selection
     const startBtn = document.querySelector('#start-game-btn');
 
-    // Get references to the hero and category sections
+    // Get references to the hero, category, and difficulty sections
     const heroSection = document.querySelector('#hero-section');
     const categorySection = document.querySelector('#category-section');
+    const categoryContainer = categorySection?.querySelector('.category-container');
+    const difficultySection = document.querySelector('#difficulty-section');
+    const difficultyTitle = document.querySelector('#difficulty-title');
+
+    // state holder for API
+    let selectedCategory = null;
 
     if (startBtn) {
         // Listen for clicks on the Start Game Button
@@ -136,6 +142,33 @@ document.addEventListener('DOMContentLoaded', () => {
             // Move focus to category title
             const categoryHeading = document.getElementById('category-title');
             categoryHeading?.focus();
+        });
+    }
+
+    // CATEGORY SELECTION LOGIC - Use event delegation on the category container
+    if (categoryContainer) {
+        categoryContainer.addEventListener('click', (e) => {
+            const categoryBtn = e.target.closest('[data-category]');    // any button with data-category attribute
+
+            if (!categoryBtn) return;   // ignore clicks outside buttons
+
+            const chosenCategory = categoryBtn.getAttribute('data-category');
+
+            console.log('Category chosen:', chosenCategory);
+
+            // Hide category section
+            categorySection.classList.add('hidden');
+            categorySection.setAttribute('aria-hidden', 'true');
+            categorySection.setAttribute('hidden', '');
+
+            // Show difficulty section
+            difficultySection.classList.remove('hidden');
+            difficultySection.setAttribute('aria-hidden', 'false');
+            difficultySection.removeAttribute('hidden');
+
+            // Move focus for acessibility
+            const focusTarget = difficultySection.querySelector('[autofocus], button, a, [tabindex]:not([tabindex="-1"])');
+            (focusTarget || difficultySection).focus?.();
         });
     }
 

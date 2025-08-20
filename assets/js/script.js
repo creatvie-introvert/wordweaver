@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /**
      * Updates the aria-label for the theme toggle button
-     * to ensure screen readers annouce the correct action
+     * to ensure screen readers announce the correct action
      * 
      * @returns {void}
      */
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
         toggleBtn.setAttribute('aria-label', label);
     }
 
-    // MODAL LOGIC - Handles opening, closing, and sccessibility for all modals in the app
+    // MODAL LOGIC - Handles opening, closing, and accessibility for all modals in the app
     const modalButtons = document.querySelectorAll('[data-modal]');
     const modals = document.querySelectorAll('.modal');
     const body = document.body;
@@ -62,8 +62,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     /**
-     * Show a modal, set appropiate accessibilty attributes
-     * lock background scroll, focus the close button and ttach an ESC handler
+     * Show a modal, set appropriate accessibilty attributes
+     * lock background scroll, focus the close button and attach an ESC handler
      * 
      * @param {HTMLElement|null} modal - The modal element to be opened
      * @returns {void}
@@ -139,4 +139,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // Debug message for development/testing
         console.log('you pressed start');
     });
+
+
 });

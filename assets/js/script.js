@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
         button.addEventListener('click', () => {
             const modalId = button.getAttribute('data-modal');
             const modal = document.getElementById(modalId);
-            openModal(modal);
+            openModal(modal, button);
         });
     });
 
@@ -58,8 +58,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Show a modal
-    function openModal(modal) {
+    function openModal(modal, openerEl) {
         if (!modal) return;
+
+        modal.dataset.returnFocusId = openerEl?.id || '';
 
         // Reveal modal and mark as visible for assistive tech
         modal.hidden = false;
@@ -93,6 +95,10 @@ document.addEventListener('DOMContentLoaded', () => {
      * Hide a modal, restore attributes, and re-enable page scrolling
      */
     function closeModal(modal) {
+        const returnId = modal.dataset.returnFocusId;
+        const returnEl = returnId ? document.getElementById(returnId) : null;
+        (returnEl || document.querySelector('#site-header a, #site-header button'))?.focus?.(); 
+
         // Hide visually and from assistive tech
         modal.hidden = true;
         modal.setAttribute('aria-hidden', 'true');

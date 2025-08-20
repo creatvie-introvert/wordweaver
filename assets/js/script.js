@@ -133,4 +133,38 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('you pressed start');
         });
     }
+
+    // BACK BUTTON LOGIC - handles all .back-btn elements
+    const backBtns = document.querySelectorAll('.back-btn');
+
+    backBtns.forEach(backBtn => {
+        backBtn.addEventListener('click', () => {
+            const prevId = backBtn.getAttribute('data-prev');
+            const currentSection = backBtn.closest('section');
+            const previousSection = document.getElementById(prevId);
+
+            if (!currentSection || !previousSection) {
+                console.log('Back handler: missing current or previous section', {prevId, currentSection, previousSection});
+                return;
+            }
+
+            // Hide current section
+            currentSection.classList.add('hidden');
+
+            currentSection.setAttribute('aria-hidden', 'true');
+
+            currentSection.setAttribute('hidden', '');
+
+            // Show previous section
+            previousSection.classList.remove('hidden');
+
+            previousSection.removeAttribute('hidden');
+
+            previousSection.setAttribute('aria-hidden', 'false');
+
+            // Move focus to a sensible target
+            const focusTarget = previousSection.querySelector('[autofocus], buttton, a, [tabindex]:not([tabindex="-1"])');
+            (focusTarget || previousSection).focus?.();
+        });
+    });
 });

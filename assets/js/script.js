@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const previousSection = document.getElementById(prevId);
 
             if (!currentSection || !previousSection) {
-                console.log('Back handler: missing current or previous section', {prevId, currentSection, previousSection});
+                console.warn('Back handler: missing current or previous section', {prevId, currentSection, previousSection});
                 return;
             }
 
@@ -163,8 +163,14 @@ document.addEventListener('DOMContentLoaded', () => {
             previousSection.setAttribute('aria-hidden', 'false');
 
             // Move focus to a sensible target
-            const focusTarget = previousSection.querySelector('[autofocus], buttton, a, [tabindex]:not([tabindex="-1"])');
-            (focusTarget || previousSection).focus?.();
+            const headingId = previousSection.getAttribute('aria-labelledby');
+            const heading = headingId ? document.getElementById(headingId) : null;
+
+            (heading || previousSection).focus();
+
+
+            // const focusTarget = previousSection.querySelector('[autofocus], buttton, a, [tabindex]:not([tabindex="-1"])');
+            // (focusTarget || previousSection).focus?.();
         });
     });
 });

@@ -172,6 +172,39 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // DIFFICULTY SELECTION LOGIC
+    const difficutyContainer = difficultySection?.querySelector('.difficulty-btn-container');
+    const gameSection = document.querySelector('#game-section');
+
+    if (difficutyContainer) {
+        difficutyContainer.addEventListener('click', (e) => {
+            const difficultyBtn = e.target.closest('[data-difficulty]');
+
+            if (!difficultyBtn) return;
+
+            const chosenDifficulty = difficultyBtn.getAttribute('data-difficulty');
+
+            console.log('Difficulty chosen:', chosenDifficulty);
+
+            // Hide difficulty section
+            difficultySection.classList.add('hidden');
+            difficultySection.setAttribute('aria-hidden', 'true');
+            difficultySection.setAttribute('hidden', '');
+
+            // Show game section
+            gameSection.classList.remove('hidden');
+            gameSection.removeAttribute('hidden');
+            gameSection.setAttribute('aria-hidden', 'false');
+
+            // Focus game title
+            document.getElementById('game-title')?.focus();
+
+            // TODO: Load crossword board & clues via API
+
+            loadCrossword(selectedCategory, chosenDifficulty);
+        });
+    }
+
     // BACK BUTTON LOGIC - handles all .back-btn elements
     const backBtns = document.querySelectorAll('.back-btn');
 

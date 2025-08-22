@@ -241,6 +241,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    function decodeHTML(html) {
+        const txt = document.createElement('textarea');
+        txt.innerHTML = html;
+        return txt.value;
+    }
+
     async function loadCrossword(selectedCategory, chosenDifficulty) {
         const categoryMap = {
             'general-knowledge': 9,
@@ -280,6 +286,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (data.response_code === 0) {
                 let cluesArray = [];
+
+                data.results.forEach(result => {
+                    const clueText = decodeHTML(result.question);
+                    const answerText = decodeHTML(result.correct_answer);
+                    
+                    const cleanAnswer = answerText.replace(/[^A-Z]/gi, '').toUpperCase();
+
+                    cluesArray.push({
+                        clue: clueText,
+                        answer: cleanAnswer
+                    })
+                });
             }
         }
     }

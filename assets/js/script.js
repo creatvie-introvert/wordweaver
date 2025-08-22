@@ -298,6 +298,17 @@ document.addEventListener('DOMContentLoaded', () => {
                         answer: cleanAnswer
                     })
                 });
+
+                let halfway = Math.floor(cluesArray.length / 2);
+
+                cluesArray.forEach((clue, index) => {
+                    if (index < halfway) {
+                        clue.orientation = 'across';
+                    }
+                    else {
+                        clue.orientation = 'down';
+                    }
+                });
             }
         }
     }

@@ -255,5 +255,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const categoryId = categoryMap[selectedCategory];
+
+        let numQuestions;
+
+        switch (chosenDifficulty) {
+            case 'easy':
+                numQuestions = 10;
+                break;
+            case 'medium':
+                numQuestions = 14;
+                break;
+            case 'hard':
+                numQuestions = 20;
+                break;
+            default:
+                console.warn(`Unexpected difficulty level: ${chosenDifficulty}`);
+        }
     }
 });

@@ -273,5 +273,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const apiURL = `https://opentdb.com/api.php?amount=${numQuestions}&category=${categoryId}&difficulty=${chosenDifficulty}&type=multiple`;
+
+        try {
+            const response = await fetch(apiURL);
+            const data = await response.json();
+
+            if (data.response_code === 0) {
+                let cluesArray = [];
+            }
+        }
     }
 });

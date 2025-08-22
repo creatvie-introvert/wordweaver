@@ -299,6 +299,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 data.results.forEach(result => {
                     const clueText = decodeHTML(result.question);
                     const answerText = decodeHTML(result.correct_answer);
+
+                    if (/\d/.test(answerText)) return;
                     
                     const cleanAnswer = answerText.replace(/[^A-Z]/gi, '').toUpperCase();
 

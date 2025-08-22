@@ -241,7 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    function loadCrossword(selectedCategory, chosenDifficulty) {
+    async function loadCrossword(selectedCategory, chosenDifficulty) {
         const categoryMap = {
             'general-knowledge': 9,
             'science-and-nature': 17,
@@ -272,6 +272,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.warn(`Unexpected difficulty level: ${chosenDifficulty}`);
         }
 
-        const apiURL = `https://opentdb.com/api.php?amount=${numQuestions}&category=${categoryId}&difficulty=${chosenDifficulty}&type=multiple`
+        const apiURL = `https://opentdb.com/api.php?amount=${numQuestions}&category=${categoryId}&difficulty=${chosenDifficulty}&type=multiple`;
     }
 });

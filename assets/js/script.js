@@ -240,4 +240,20 @@ document.addEventListener('DOMContentLoaded', () => {
             (heading || previousSection).focus();
         });
     });
+
+    function loadCrossword(selectedCategory, chosenDifficulty) {
+        const categoryMap = {
+            'general-knowledge': 9,
+            'science-and-nature': 17,
+            'film': 11,
+            'music': 12,
+            'video-games': 15,
+            'sports': 21,
+            'geography': 22,
+            'history': 23,
+            'computers': 18
+        }
+
+        const categoryId = categoryMap[selectedCategory];
+    }
 });

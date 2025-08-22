@@ -40,7 +40,7 @@
     - Tag each object with orientation: 'across' or 'down'
 
 9. **Pass data to grid rendering function**
-    - Call buildCrosswordGrid(clues Array)
+    - Call buildCrosswordGrid(cluesArray)
 
 10. **Handle errors or bad responses**
     - If fetch fails or response is not 0:

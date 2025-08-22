@@ -125,6 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // state holder for API
     let selectedCategory = null;
+    let chosenDifficulty = null;
 
     if (startBtn) {
         // Listen for clicks on the Start Game Button
@@ -152,9 +153,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!categoryBtn) return;   // ignore clicks outside buttons
 
-            const chosenCategory = categoryBtn.getAttribute('data-category');
+            selectedCategory = categoryBtn.getAttribute('data-category');
 
-            console.log('Category chosen:', chosenCategory);
+            console.log('Category chosen:', selectedCategory);
 
             // Hide category section
             categorySection.classList.add('hidden');
@@ -182,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!difficultyBtn) return;
 
-            const chosenDifficulty = difficultyBtn.getAttribute('data-difficulty');
+            chosenDifficulty = difficultyBtn.getAttribute('data-difficulty');
 
             console.log('Difficulty chosen:', chosenDifficulty);
 
@@ -248,6 +249,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function loadCrossword(selectedCategory, chosenDifficulty) {
+        console.log('loadCrossword called with:', selectedCategory, chosenDifficulty);
+
         const categoryMap = {
             'general-knowledge': 9,
             'science-and-nature': 17,
@@ -261,6 +264,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const categoryId = categoryMap[selectedCategory];
+
+        console.log('Category ID:', categoryId);
 
         let numQuestions;
 
@@ -280,9 +285,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const apiURL = `https://opentdb.com/api.php?amount=${numQuestions}&category=${categoryId}&difficulty=${chosenDifficulty}&type=multiple`;
 
+        console.log('API URL:', apiURL)
+
         try {
             const response = await fetch(apiURL);
             const data = await response.json();
+
+            console.log('API response data:', data);
 
             if (data.response_code === 0) {
                 let cluesArray = [];
@@ -292,6 +301,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     const answerText = decodeHTML(result.correct_answer);
                     
                     const cleanAnswer = answerText.replace(/[^A-Z]/gi, '').toUpperCase();
+
+                    console.log('Parse clue:', clueText, '| Clean answer:', cleanAnswer);
 
                     cluesArray.push({
                         clue: clueText,
@@ -310,10 +321,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 });
 
+                console.log('Final cluesArray with orientations:', cluesArray);
+
                 buildCrosswordGrid(cluesArray);
             }
         } catch (error) {
             console.error('Error fetching trivia data', error);
         }
+    }
+
+    function buildCrosswordGrid(cluesArray) {
+        console.log('Grid rendering function called with:', cluesArray);
+
+        // TODO: Build crossword rendering logic
     }
 });

@@ -271,5 +271,7 @@ document.addEventListener('DOMContentLoaded', () => {
             default:
                 console.warn(`Unexpected difficulty level: ${chosenDifficulty}`);
         }
+
+        const apiURL = `https://opentdb.com/api.php?amount=${numQuestions}&category=${categoryId}&difficulty=${chosenDifficulty}&type=multiple`
     }
 });

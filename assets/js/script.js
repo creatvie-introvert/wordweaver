@@ -309,7 +309,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         clue.orientation = 'down';
                     }
                 });
+
+                buildCrosswordGrid(cluesArray);
             }
+        } catch (error) {
+            console.error('Error fetching trivia data', error);
         }
     }
 });

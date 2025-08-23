@@ -316,20 +316,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                 });
 
-                let halfway = Math.floor(cluesArray.length / 2);
-
-                cluesArray.forEach((clue, index) => {
-                    if (index < halfway) {
-                        clue.orientation = 'across';
-                        clue.row = index;
-                        clue.col = 0;
-                    }
-                    else {
-                        clue.orientation = 'down';
-                        clue.row = 0;
-                        clue.col = index - halfway;
-                    }
-                });
+                cluesArray = assignCluePositions(cluesArray);
 
                 console.log('Final cluesArray with orientations:', cluesArray);
 
@@ -338,6 +325,126 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error('Error fetching trivia data', error);
         }
+    }
+
+    function assignCluePositions(cluesArray, gridSize = 15) {
+        const grid = Array.from({ length: gridSize }, () => Array.from({length: gridSize}, () => null));
+
+        function canPlace(clue, row, col, orientation) {
+            const word = clue.answer;
+
+            for (let i = 0; i < word.length; i++) {
+                const r = orientation === 'across' ? row : row + i;
+                const c = orientation === 'down' ? col + i : col;
+
+                if (r >= gridSize || c >= gridSize || r < 0) return false;
+
+                const cell = grid[r][c];
+                if (cell && cell !== word[i]) return false;
+            }
+
+            return true;
+        }
+
+        function placeClue(clue, row, col, orientation) {
+            const word = clue.answer;
+
+            for (let i = 0; i < word.length; i++) {
+                const r = orientation === 'across' ? row : row + i;
+                const c = orientation === 'across' ? col + i : col;
+                grid[r][c] = word[i];
+            }
+
+            clue.row = row;
+            clue.col = col;
+            clue.orientation = orientation;
+        }
+
+        const firstClue = cluesArray[0];
+        const startRow = Math.floor(gridSize / 2);
+        const startCol = Math.floor((gridSize - firstClue.answer.length) / 2);
+        placeClue(firstClue, startRow, startCol, 'across');
+
+        for (let index = 1; index < cluesArray.length; index++) {
+            const clue = cluesArray[index];
+            const word = clue.answer;
+            let placed = false;
+
+            for (let prevClue of cluesArray.slice(0, index)) {
+                const prevWord = prevClue.answer;
+
+                for (let i = 0; i < word.length; i++) {
+                    for (let j = 0; j < prevWord.length; j++) {
+                        if (word[i] === prevWord[j]) {
+                            const newOrientation = prevClue.orientation === 'across' ? 'down' : 'across';
+                            const r = newOrientation === 'across'
+                                ? prevClue.row + j
+                                : prevClue.row - i;
+                            const c = newOrientation === 'across'
+                                ? prevClue.col - i
+                                : prevClue.col + j;
+                            
+                                if (canPlace(clue, r, c, newOrientation)) {
+                                    placeClue(clue, r, c, newOrientation);
+                                    placed =true;
+                                    break;
+                                }
+                        }
+                    }
+                    if (placed) break;
+                }
+                if (placed) break;
+            }
+
+            if (!placed) {
+                console.warn(`Could not place: ${clue.answer}`);
+            }
+        }
+
+        // cluesArray.forEach((clue, index) => {
+        //     const word = clue.answer;
+
+        //     if (index === 0) {
+        //         const startRow = Math.floor(gridSize / 2);
+        //         const startCol = Math.floor((gridSize - word.length) / 2);
+        //         placeClue(clue, startRow, startCol, 'across');
+        //         return;
+        //     }
+
+        //     let placed = false;
+
+        //     for (let prevClue of cluesArray.slice(0, index)) {
+        //         const prevWord = prevClue.answer;
+
+        //         for (let i = 0; i < word.length; i++) {
+        //             for (let j = 0; j < prevWord.length; j++) {
+        //                 if (word[i] === prevWord[j]) {
+        //                     const r = prevClue.orientation === 'across' 
+        //                         ? prevClue.row - i 
+        //                         : prevClue.row + j;
+        //                     const c = prevClue.orientation === 'across'
+        //                         ? prevClue.col + j
+        //                         : prevClue.col - i;
+        //                     const newOrientation = prevClue.orientation === 'across' ? 'down' : 'across';
+
+        //                     if (canPlace(clue, r, c, newOrientation)) {
+        //                         placeClue(clue, r, c, newOrientation);
+        //                         placed = true;
+        //                         break;
+        //                     }
+        //                 }
+        //             }
+        //             if (placed) break;
+        //         }
+        //         if (placed) break;
+        //     }
+
+        //     if (!placed) {
+        //         console.warn(`Could not place: ${clue.answer}`);
+        //     }
+        // });
+
+        return cluesArray;
     }
 
     function generateGrid(cluesArray, gridSize) {
@@ -364,6 +471,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const startRow = clue.row;
             const startCol = clue.col;
 
+            let canPlace = true;
+
             for (let i = 0; i < answer.length; i++) {
                 let row = startRow;
                 let col = startCol;
@@ -376,8 +485,38 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 if (row >= gridSize || col >= gridSize) {
-                    console.warn(`Clue "${clue.answer}" at (${row},${col}) exceeds grid bounds.`);
+                    canPlace = false;
+                    break;
+                    // console.warn(`Clue "${clue.answer}" at (${row},${col}) exceeds grid bounds.`);
+                    // continue;
+                }
+
+                if (!grid[row] || !grid[row][col]) {
+                    console.warn(`Skipping letter "${answer[i]}" at (${row}, ${col}) - out of bounds`);
                     continue;
+                }
+                const cell = grid[row][col];
+                cell.letter = answer[i];
+            }
+
+            if (!canPlace) {
+                console.warn(`Skipping "${clue.answer}" due to conflict`);
+                return;
+            }
+                // else {
+                //     cell.letter = answer[i];
+                // }
+                // cell.letter = answer[i];
+
+            for (let i = 0; i < answer.length; i++) {
+                let row = startRow;
+                let col = startCol;
+
+                if (orientation === 'across') {
+                    col += i;
+                }
+                else if (orientation === 'down') {
+                    row += i;
                 }
 
                 const cell = grid[row][col];
@@ -394,9 +533,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     cell.isStartOfClue = true;
                 }
             }
+
+            clue.placed = true;
+            
         });
 
         console.table(grid);
+
+        for (let i = 0; i < gridSize; i++) {
+            for (let j = 0; j < gridSize; j++) {
+                const cell = grid[i][j];
+                if (cell.letter === '') {
+                    cell.isBlock = true;
+                }
+            }
+        }
+
         return grid;
     }
 
@@ -408,7 +560,33 @@ document.addEventListener('DOMContentLoaded', () => {
         const grid = generateGrid(cluesArray, gridSize);
 
         console.table(grid);
+
+        renderCrossword(grid)
     }
 
-    
+    function renderCrossword(grid) {
+        const board = document.getElementById('crossword-board');
+        board.innerHTML = '';
+
+        const gridSize = grid.length;
+        board.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
+
+        grid.forEach((row) => {
+            row.forEach((cell) => {
+                const cellDiv = document.createElement('div');
+                cellDiv.classList.add('cell');
+                cellDiv.dataset.row = cell.row;
+                cellDiv.dataset.col = cell.col;
+
+                if (cell.isBlock) {
+                    cellDiv.classList.add('black-cell');
+                }
+                else {
+                    cellDiv.textContent = cell.letter;  // Use for debugging
+                }
+
+                board.appendChild(cellDiv);
+            });
+        });
+    }
 });

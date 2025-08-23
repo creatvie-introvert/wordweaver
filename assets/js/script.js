@@ -336,10 +336,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const grid = [];
 
         for (let i = 0; i < gridSize; i++) {
-            grid[i] = new Array(gridSize).fill(null);
+            grid[i] = [];
+            for (let j = 0; j < gridSize; j++) {
+                grid[i][j] = {
+                    row: i,
+                    col: j,
+                    isBlock: false,
+                    letter: '', 
+                    acrossClueId: null,
+                    downClueId: null,
+                    isStartOfClue: false
+                }
+            }
         }
 
-        // console.table(grid);
         return grid;
     }
 

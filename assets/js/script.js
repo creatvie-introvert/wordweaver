@@ -335,15 +335,51 @@ document.addEventListener('DOMContentLoaded', () => {
 
             for (let i = 0; i < word.length; i++) {
                 const r = orientation === 'across' ? row : row + i;
-                const c = orientation === 'down' ? col + i : col;
+                const c = orientation === 'down' ? col: col + i;
 
-                if (r >= gridSize || c >= gridSize || r < 0) return false;
+                // if (r >= gridSize || c >= gridSize || r < 0) return false;
+                if ( i >= 0 && i < word.length) {
+                    if ( 
+                        r < 0 || r >= gridSize || 
+                        c < 0 || c >= gridSize ||
+                        (grid[r][c] && grid[r][c] !== word[i])
+                    ) {
+                        return false;
+                    }
+                }
+                else if (
+                    r >= 0 && r < gridSize &&
+                    c >= 0 && c < gridSize &&
+                    grid[r][c]
+                ) {
+                    return false;
+                }
 
-                const cell = grid[r][c];
-                if (cell && cell !== word[i]) return false;
+                for (let i = 0; i < word.length; i++) {
+                    const r = orientation === 'across' ? row : row + i;
+                    const c = orientation === 'across' ? col + i : col;
+
+                    const adjacentCoords = orientation === 'across'
+                        ? [[r - 1, c], [r + 1, c]]
+                        : [[r, c-1], [r, c + 1]];
+                    
+                        for (const [ar, ac] of adjacentCoords) {
+                            if (
+                                ar >= 0 && ar < gridSize &&
+                                ac >= 0 && ac < gridSize &&
+                                grid[ar][ac]
+                            ) {
+                                return false;
+                            }
+                        }
+                }
+
+                return true;
+                // const cell = grid[r][c];
+                // if (cell && cell !== word[i]) return false;
             }
 
-            return true;
+            // return true;
         }
 
         function placeClue(clue, row, col, orientation) {

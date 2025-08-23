@@ -466,10 +466,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         cluesArray.forEach(clue => {
+
+            
+
             const answer = clue.answer.toUpperCase();
             const orientation = clue.orientation;
             const startRow = clue.row;
             const startCol = clue.col;
+
+            if (typeof startRow !== 'number' || typeof startCol !== 'number') {
+                console.warn(`Skipping unplaced clue "${clue.answer}"`);
+                return;
+            }
 
             let canPlace = true;
 
@@ -487,13 +495,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (row >= gridSize || col >= gridSize) {
                     canPlace = false;
                     break;
-                    // console.warn(`Clue "${clue.answer}" at (${row},${col}) exceeds grid bounds.`);
-                    // continue;
                 }
 
                 if (!grid[row] || !grid[row][col]) {
                     console.warn(`Skipping letter "${answer[i]}" at (${row}, ${col}) - out of bounds`);
-                    continue;
+                    canPlace = false;
+                    break;
                 }
                 const cell = grid[row][col];
                 cell.letter = answer[i];

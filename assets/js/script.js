@@ -308,8 +308,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     cluesArray.push({
                         clue: clueText,
-                        answer: cleanAnswer
-                    })
+                        answer: cleanAnswer,
+                        // Temporary debugging code
+                        row: 0,
+                        col:cluesArray.length * 2,
+                        id: `clue-${cluesArray.length}`
+                    });
                 });
 
                 let halfway = Math.floor(cluesArray.length / 2);
@@ -317,9 +321,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 cluesArray.forEach((clue, index) => {
                     if (index < halfway) {
                         clue.orientation = 'across';
+                        clue.row = index;
+                        clue.col = 0;
                     }
                     else {
                         clue.orientation = 'down';
+                        clue.row = 0;
+                        clue.col = index - halfway;
                     }
                 });
 
@@ -350,6 +358,45 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
+        cluesArray.forEach(clue => {
+            const answer = clue.answer.toUpperCase();
+            const orientation = clue.orientation;
+            const startRow = clue.row;
+            const startCol = clue.col;
+
+            for (let i = 0; i < answer.length; i++) {
+                let row = startRow;
+                let col = startCol;
+
+                if (orientation === 'across') {
+                    col += i;
+                }
+                else if (orientation === 'down') {
+                    row += i;
+                }
+
+                if (row >= gridSize || col >= gridSize) {
+                    console.warn(`Clue "${clue.answer}" at (${row},${col}) exceeds grid bounds.`);
+                    continue;
+                }
+
+                const cell = grid[row][col];
+                cell.letter = answer[i];
+
+                if (orientation === 'across') {
+                    cell.acrossClueId = clue.id;
+                }
+                else if (orientation === 'down') {
+                    cell.downClueId = clue.id;
+                }
+
+                if (i === 0) {
+                    cell.isStartOfClue = true;
+                }
+            }
+        });
+
+        console.table(grid);
         return grid;
     }
 

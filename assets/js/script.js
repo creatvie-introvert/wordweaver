@@ -332,9 +332,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function generateGrid(cluesArray, gridSize) {
+        const grid = [];
+
+        for (let i = 0; i < gridSize; i++) {
+            grid[i] = new Array(gridSize).fill(null);
+        }
+
+        // console.table(grid);
+        return grid;
+    }
+
     function buildCrosswordGrid(cluesArray) {
         console.log('Grid rendering function called with:', cluesArray);
 
         // TODO: Build crossword rendering logic
+        const gridSize = 15;
+        const grid = generateGrid(cluesArray, gridSize);
+
+        console.table(grid);
     }
 });

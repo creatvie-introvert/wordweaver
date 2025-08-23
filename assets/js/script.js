@@ -401,49 +401,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // cluesArray.forEach((clue, index) => {
-        //     const word = clue.answer;
-
-        //     if (index === 0) {
-        //         const startRow = Math.floor(gridSize / 2);
-        //         const startCol = Math.floor((gridSize - word.length) / 2);
-        //         placeClue(clue, startRow, startCol, 'across');
-        //         return;
-        //     }
-
-        //     let placed = false;
-
-        //     for (let prevClue of cluesArray.slice(0, index)) {
-        //         const prevWord = prevClue.answer;
-
-        //         for (let i = 0; i < word.length; i++) {
-        //             for (let j = 0; j < prevWord.length; j++) {
-        //                 if (word[i] === prevWord[j]) {
-        //                     const r = prevClue.orientation === 'across' 
-        //                         ? prevClue.row - i 
-        //                         : prevClue.row + j;
-        //                     const c = prevClue.orientation === 'across'
-        //                         ? prevClue.col + j
-        //                         : prevClue.col - i;
-        //                     const newOrientation = prevClue.orientation === 'across' ? 'down' : 'across';
-
-        //                     if (canPlace(clue, r, c, newOrientation)) {
-        //                         placeClue(clue, r, c, newOrientation);
-        //                         placed = true;
-        //                         break;
-        //                     }
-        //                 }
-        //             }
-        //             if (placed) break;
-        //         }
-        //         if (placed) break;
-        //     }
-
-        //     if (!placed) {
-        //         console.warn(`Could not place: ${clue.answer}`);
-        //     }
-        // });
-
         return cluesArray;
     }
 
@@ -510,10 +467,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.warn(`Skipping "${clue.answer}" due to conflict`);
                 return;
             }
-                // else {
-                //     cell.letter = answer[i];
-                // }
-                // cell.letter = answer[i];
 
             for (let i = 0; i < answer.length; i++) {
                 let row = startRow;

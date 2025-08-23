@@ -511,6 +511,31 @@ a:focus-visible,
     transition: transform 120ms ease, box-shadow 120ms ease, background-color 120ms ease, color 120ms ease;
 }
 
+#crossword-board {
+    display: grid;
+    grid-template-columns: repeat(15, 1fr);
+    grid-template-rows: repeat(15, 1fr);
+    gap: 1px;
+}
+
+.cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    aspect-ratio: 1/1;
+    border: 1px solid #000;
+
+    font-size: var(--font-tag);
+    color: #000;
+
+    background-color: #fff;
+}
+
+.black-cell {
+    background-color: #000;
+}
+
 /* Media Queries */
 @media (min-width: 480px) {
     #hero-section {

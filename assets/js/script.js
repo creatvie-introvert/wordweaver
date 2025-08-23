@@ -335,51 +335,60 @@ document.addEventListener('DOMContentLoaded', () => {
 
             for (let i = 0; i < word.length; i++) {
                 const r = orientation === 'across' ? row : row + i;
-                const c = orientation === 'down' ? col: col + i;
+                const c = orientation === 'across' ? col + i : col;
 
-                // if (r >= gridSize || c >= gridSize || r < 0) return false;
-                if ( i >= 0 && i < word.length) {
-                    if ( 
-                        r < 0 || r >= gridSize || 
-                        c < 0 || c >= gridSize ||
-                        (grid[r][c] && grid[r][c] !== word[i])
-                    ) {
-                        return false;
-                    }
+                const beforeR = orientation === 'across' ? row : row - 1;
+                const beforeC = orientation === 'across' ? col - 1 : col;
+                const afterR = orientation === 'across' ? row : row + word.length;
+                const afterC = orientation === 'across' ? col + word.length : col;
+
+                if (
+                    beforeR >= 0 && beforeR < gridSize &&
+                    beforeC >= 0 && beforeC < gridSize &&
+                    grid[beforeR][beforeC]
+                ) {
+                    return false;
                 }
-                else if (
-                    r >= 0 && r < gridSize &&
-                    c >= 0 && c < gridSize &&
-                    grid[r][c]
+
+                if (
+                    afterR >= 0 && afterR < gridSize &&
+                    afterC >= 0 && afterC < gridSize &&
+                    grid[afterR][afterC]
                 ) {
                     return false;
                 }
 
                 for (let i = 0; i < word.length; i++) {
-                    const r = orientation === 'across' ? row : row + i;
-                    const c = orientation === 'across' ? col + i : col;
+                    const r = orientation = 'across' ? row : row + i;
+                    const c = orientation = 'across' ? col + i : col;
+
+                    if (r < 0 || r >= gridSize || c < 0 || c >= gridSize) {
+                        return false;
+                    }
+
+                    const cell = grid[r][c];
+
+                    if (cell && cell !== word[i]) {
+                        return false;
+                    }
 
                     const adjacentCoords = orientation === 'across'
                         ? [[r - 1, c], [r + 1, c]]
-                        : [[r, c-1], [r, c + 1]];
-                    
-                        for (const [ar, ac] of adjacentCoords) {
-                            if (
-                                ar >= 0 && ar < gridSize &&
-                                ac >= 0 && ac < gridSize &&
-                                grid[ar][ac]
-                            ) {
-                                return false;
-                            }
+                        : [[r, c - 1], [r, c + 1]];
+
+                    for (const [ar, ac] of adjacentCoords) {
+                        if (
+                            ar >= 0 && ar < gridSize &&
+                            ac >= 0 && ac < gridSize &&
+                            grid[ar][ac] && grid[ar][ac] !== word[i]
+                        ) {
+                            return false;
                         }
-                }
-
-                return true;
-                // const cell = grid[r][c];
-                // if (cell && cell !== word[i]) return false;
+                    }
+                } 
+                return true;        
             }
-
-            // return true;
+            
         }
 
         function placeClue(clue, row, col, orientation) {

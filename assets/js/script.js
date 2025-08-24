@@ -197,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.warn('Back handler: missing current or previous section', { prevId, currentSection, previousSection });
                 return;
             } 
-            
+
             const headingId = previousSection.getAttribute('aria-labelledby');
             const focusSel = headingId ? `#${headingId}` : null;
             goToSection(currentSection, previousSection, focusSel);
@@ -288,7 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 best = { filled, grid };
             }
         }
-        return best.grid;
+        return best ? best.grid : [];
     }
 
     // ============================

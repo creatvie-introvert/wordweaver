@@ -92,6 +92,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     modals.forEach(modal => {
         modal.addEventListener('click', e => {
+            if (e.target.closest('.close-modal')) {
+                e.preventDefault();
+                closeModal(modal);
+                return;
+            }
             const content = modal.querySelector('.modal-content');
             if (content && !content.contains(e.target)) closeModal(modal);
         });

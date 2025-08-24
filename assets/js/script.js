@@ -308,13 +308,73 @@ document.addEventListener('DOMContentLoaded', () => {
      * Fetch, sanitise, and render a crossword for the chosen category/difficulty.
      */
     async function loadCrossword(selectedCategory, chosenDifficulty) {
-        console.log('loadCrossword called with:', selectedCategory, chosenDifficulty);
+        // console.log('loadCrossword called with:', selectedCategory, chosenDifficulty);
 
         const categoryId = categoryMap[selectedCategory];
-        const gridSize = sizeByDifficulty[chosenDifficulty] || 13;
-        const attempts = attemptsByDifficulty[chosenDifficulty] || 36;
+        if (!categoryId) {
+            console.warn('Unknown category:', selectedCategory);
+            return;
+        }
 
-        console.log('Category ID:', categoryId);
+        const gridSize = sizeByDifficulty[chosenDifficulty] || 13;
+        const attempts = attemptsByDifficulty[chosenDifficulty] ?? 36;
+        const amount = ({
+            easy: 40,
+            medium: 40,
+            hard: 50
+        }[chosenDifficulty]) ?? 40;
+
+        const url = new URL('https://opentdb.com/api.php');
+        url.search = new URLSearchParams({
+            amount: String(amount),
+            category: String(categoryId),
+            difficulty: chosenDifficulty,
+            type: 'multiple'
+        }).toString();
+
+        let data;
+        try {
+            const res = await fetch(url);
+            data = await res.json();
+        }
+        catch (err) {
+            console.error('Failed to fetch trivia data', err);
+            return;
+        }
+
+        if (data?.response_code !== 0 || !Array.isArray(data.results)) {
+            console.warn('Unexpected API response:', data);
+            return;
+        }
+
+        const clues = sanitiseResults(data.results, gridSize);
+        if (clues.length === 0) {
+            console.warn('No valid clues after sanitisation');
+            return;
+        }
+
+        const bestGrid = buildBestLayout(clues, gridSize, attempts);
+        renderCrossword(bestGrid);
+
+        function sanitiseResults(results, maxLen) {
+            const seen = new Set();
+            const out = [];
+            for (const r of results) {
+                const clue = decodeHTML(r.question);
+                const answer = decodeHTML(r.correct_answer);
+                const clean = answer.replace(/[^A-Z]/gi, '').toUpperCase();
+                if (!clean) continue;
+                if (/\d/.test(answer)) continue;
+                if (clean.length > maxLen) continue;
+                if (seen.has(clean)) continue;
+                seen.add(clean);
+                out.push({ clue, answer: clean, id: `clue-${out.length}` });
+            }
+            return out;
+        }
+
+        /*
+        // console.log('Category ID:', categoryId);
 
         // Ask for enough questions to have option even after filtering
         let numQuestions = 50;
@@ -370,6 +430,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error('Error fetching trivia data', error);
         }
+            */
     }
 
     /**

@@ -49,8 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initThemeToggle(toggleBtn, html);
     
     /**
-     * Initialise the theme toggle: apply saved/system theme, switch on click,
-     * persist to localStorage, and update the button's aria-label.
+     * Initialise the theme toggle: apply saved/system theme, switch on click, persist to localStorage, and update the button's aria-label.
      */
     function initThemeToggle(btn, root = document.documentElement) {
         let theme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
@@ -73,11 +72,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     }
-
-    // ============================
-    // MODAL LOGIC
-    // ============================
-    // Generic show/hide for all modals via [data-model] triggers.
     
     let activeModal = null;
     let escHandler = null;
@@ -102,6 +96,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    /**
+     * Open a modal dialog.
+     */
     function openModal(modal, openerEl) {
         if (!modal) return;
         if (activeModal && activeModal !== modal) closeModal(activeModal);
@@ -149,6 +146,9 @@ document.addEventListener('DOMContentLoaded', () => {
         document.addEventListener('keydown', trapHandler);
     }
 
+    /**
+     * Close a modal dialog.
+     */
     function closeModal(modal) {
         if (!modal) return;
 
@@ -173,17 +173,13 @@ document.addEventListener('DOMContentLoaded', () => {
         activeModal = null;
     }
     
-    // ============================
-    // SCREEN FLOW (Hero -> show category selection)
-    // ============================
-    
     startBtn?.addEventListener('click', () => {
         goToSection(heroSection, categorySection, '#category-title');
     });
     
     categoryContainer?.addEventListener('click', (e) => {
         const categoryBtn = e.target.closest('[data-category]');
-        if (!categoryBtn) return;   // click wasn't on a category
+        if (!categoryBtn) return;
 
         selectedCategory = categoryBtn.getAttribute('data-category');
         goToSection(categorySection, difficultySection, '#difficulty-title');
@@ -216,10 +212,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // ============================
-    // UTILITIES
-    // ============================
-
+    /**
+     * Show or hide a section.
+     */
     function setSectionVisible (section, visible) {
         if (!section) return;
 
@@ -228,12 +223,18 @@ document.addEventListener('DOMContentLoaded', () => {
         section.setAttribute('aria-hidden', visible ? 'false' : 'true')
     }
 
+    /**
+     * Move focus to the first focusable descendant inside `root`.
+     */
     function focusFirstFocusable(root) {
         if (!root) return;
         const el = root.querySelector(`${FOCUSABLE_SELECTOR}:not([hidden]):not([aria-hidden="true"]):not([inert])`);
         (el || root).focus?.();
     }
 
+    /**
+     * Navigate from one section to another with proper focus management.
+     */
     function goToSection(from, to, focusSelector) {
         if (!from || !to) return;
             
@@ -249,9 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * Decode HTML entities API strings (e.g., &quot;, &#039;) 
-     * @param {string} html 
-     * @returns {string}
+     * Decode HTML entities API strings (e.g., &quot;, &#039;) using temporary <textarea>
      */
     function decodeHTML(html) {
         const txt = document.createElement('textarea');
@@ -260,10 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * In-place Fisher-Yates shuffle
-     * @template T
-     * @param {T[]} a 
-     * @returns {T[]}
+     * In-place Fisher-Yates shuffle.
      */
     function shuffle(a) {
         for (let i = a.length - 1; i > 0; i--) {
@@ -274,11 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * Try N randomised clue orders, keep the grid with the most filled letters.
-     * @param {Array} rawClues unsaintised clue objects from API
-     * @param {number} size gridSize (cells)
-     * @param {number} attempts how many randomised layouts to try
-     * @returns (Array<Array<Cell>>) the best grid found
+     * Try multiple randomised layouts and keep the fullest grid.
      */
     function buildBestLayout(rawClues, size, attempts = 12) {
         let best = null;
@@ -303,18 +295,11 @@ document.addEventListener('DOMContentLoaded', () => {
         return best ? best.grid : [];
     }
 
-    // ============================
-    // DATA FETCH + SANITISATION
-    // ============================
-
     /**
-     * Fetch questions for a category/difficulty, clean to {clue, answer}
-     * Then ask the layout planner for the best grid and render it.
+     * Fetch, sanitise, and render a crossword for the chosen category/difficulty.
      */
     async function loadCrossword(selectedCategory, chosenDifficulty) {
         console.log('loadCrossword called with:', selectedCategory, chosenDifficulty);
-
-        
 
         const categoryId = categoryMap[selectedCategory];
         const gridSize = sizeByDifficulty[chosenDifficulty] || 13;
@@ -378,27 +363,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // ============================
-    // LAYOUT PLANNER (word placement)
-    // ============================
-
     /**
-     * Place as many clues as possible into an internal char grid.
-     * Adds row/col/orientation/placed to each placed clue.
-     * @param {Array} cluesArray sanitised clies
-     * @param {number} gridSize 
-     * @returns (Array) only the clues that were successfully placed
+     * Place as many clues as possible onto an internal character grid.
      */
     function assignCluePositions(cluesArray, gridSize = 15) {
-        // Hard filter : A-Z only and must fit the grid
         cluesArray = cluesArray.filter(c => c.answer && /^[A-Z]+$/.test(c.answer) && c.answer.length <= gridSize);
 
-        // Internal char grid used only during placement checks
         const grid = Array.from({ length: gridSize }, () => Array(gridSize).fill(null));
 
         const inBounds = (r, c) => r >= 0 && r < gridSize && c >= 0 && c < gridSize;
 
-        // Write a word into the internal char grid and mark clue metadata
         const place = (clue, r, c, orientation) => {
             const w = clue.answer;
             for (let i = 0; i < w.length; i++) {
@@ -567,16 +541,8 @@ document.addEventListener('DOMContentLoaded', () => {
         return cluesArray.filter(c => c.placed);
     }
 
-    // ============================
-    // GRID BUILD (for rendering)
-    // ============================
-
     /**
-     * Convert placed clues into a grid of renderable cell objects.
-     * Also marks empty cells as blocks so the boards paints black squares.
-     * @param {Array} cluesArray already placed clues
-     * @param {number} gridSize 
-     * @returns {Array<Array<Cell>>}
+     * Build a renderable cell grid from placed clues.
      */
     function generateGrid(cluesArray, gridSize) {
         const grid = [];
@@ -680,14 +646,8 @@ document.addEventListener('DOMContentLoaded', () => {
         return grid;
     }
 
-    // ============================
-    // RENDERING
-    // ============================
-
     /**
-     * Render a cell grid into the #crossword-board using CSS Grid.
-     * Relies on CSS classes .cell and .black-cell for styling.
-     * The board's columns/rows are sized to match the grid shape.
+     * Render a 2D crossword grid into the board using CSS Grid.
      */
     function renderCrossword(grid) {
         

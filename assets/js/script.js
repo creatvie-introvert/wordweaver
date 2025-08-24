@@ -71,6 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Updates the aria-label for the theme toggle button
     function updateToggleLabel() {
+        if (!toggleBtn) return;
         const label = currentTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
         toggleBtn.setAttribute('aria-label', label);
     }

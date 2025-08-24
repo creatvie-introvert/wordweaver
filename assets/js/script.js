@@ -42,6 +42,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const modals = document.querySelectorAll('.modal');
     const body = document.body;
 
+    const FOCUSABLE_SELECTOR = [
+        '[autofocus]', 'a[href]', 'button:not([disabled])', 
+        'input:not([disabled]):not([type="hidden"])', 'select:not([disabled])', 'textarea:not([disabled])', '[tabindex]:not([tabindex="-1"])'
+    ].join(', ');
     
     // ============================
     // THEME TOGGLE LOGIC (light/dark)
@@ -225,14 +229,9 @@ document.addEventListener('DOMContentLoaded', () => {
         section.setAttribute('aria-hidden', visible ? 'false' : 'true')
     }
 
-    const FOCUSABLE_SELCTOR = [
-        '[autofocus]', 'a[href]', 'button:not([disabled])', 
-        'input:not([disabled]):not([type="hidden"])', 'select:not([disabled])', 'textarea:not([disabled])', '[tabindex]:not([tabindex="-1"])'
-    ].join(', ');
-
     function focuFirstFocusable(root) {
         if (!root) return;
-        const el = root.querySelector(`${FOCUSABLE_SELCTOR}:not([hidden]):not([aria-hidden="true"]):not([inert])`);
+        const el = root.querySelector(`${FOCUSABLE_SELECTOR}:not([hidden]):not([aria-hidden="true"]):not([inert])`);
         (el || root).focus?.();
     }
 
@@ -242,8 +241,8 @@ document.addEventListener('DOMContentLoaded', () => {
         setSectionVisible(to, true);
         focuFirstFocusable(to);
         setSectionVisible(from, false);
-        
     }
+
     /**
      * Decode HTML entities API strings (e.g., &quot;, &#039;) 
      * @param {string} html 

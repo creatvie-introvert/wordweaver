@@ -248,6 +248,42 @@ document.addEventListener('DOMContentLoaded', () => {
         return txt.value;
     }
 
+    const sizeByDifficulty = {
+        easy: 11,
+        medium: 13,
+        hard: 15
+    }
+
+    const attemptsByDifficulty = {
+        easy: 36,
+        medium: 60,
+        hard: 96
+    }
+
+    function shuffle(a) {
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
+    function buildBestLayout(rawClues, size, attempts = 12) {
+        let best = null;
+
+        for (let t = 0; t < attempts; t++) {
+            const clues = shuffle(rawClues.slice()).map(c => ({ ...c }));
+            const placed = assignCluePositions(clues, size);
+            const grid = generateGrid(placed, size);
+            const filled = grid.flat().filter(cell => !cell.isBlock && cell.letter).length;
+
+            if (!best || filled > best.filled) {
+                best = { filled, grid };
+            }
+        }
+        return best.grid;
+    }
+
     async function loadCrossword(selectedCategory, chosenDifficulty) {
         console.log('loadCrossword called with:', selectedCategory, chosenDifficulty);
 
@@ -265,19 +301,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const categoryId = categoryMap[selectedCategory];
 
+        const gridSize = sizeByDifficulty[chosenDifficulty] || 13;
+
+        const sttempts = attemptsByDifficulty[chosenDifficulty] || 36;
+
         console.log('Category ID:', categoryId);
 
-        let numQuestions;
+        let numQuestions = 50;
 
         switch (chosenDifficulty) {
             case 'easy':
-                numQuestions = 10;
+                numQuestions = 40;
                 break;
             case 'medium':
-                numQuestions = 14;
+                numQuestions = 40;
                 break;
             case 'hard':
-                numQuestions = 20;
+                numQuestions = 50;
                 break;
             default:
                 console.warn(`Unexpected difficulty level: ${chosenDifficulty}`);
@@ -294,33 +334,52 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('API response data:', data);
 
             if (data.response_code === 0) {
+                const seen = new Set();
                 let cluesArray = [];
 
-                data.results.forEach(result => {
+                data.results.forEach((result) => {
                     const clueText = decodeHTML(result.question);
                     const answerText = decodeHTML(result.correct_answer);
 
-                    if (/\d/.test(answerText)) return;
-                    
-                    const cleanAnswer = answerText.replace(/[^A-Z]/gi, '').toUpperCase();
+                    const clean = answerText.replace(/[^A-Z]/gi, '').toUpperCase();
+                    if (!clean) return;
 
-                    console.log('Parse clue:', clueText, '| Clean answer:', cleanAnswer);
+                    if (/\d/.test(answerText)) return;
+                    if (clean.length > gridSize) return;
+
+                    if (seen.has(clean)) return;
+                    seen.add(clean);
 
                     cluesArray.push({
                         clue: clueText,
-                        answer: cleanAnswer,
-                        // Temporary debugging code
-                        row: 0,
-                        col:cluesArray.length * 2,
+                        answer: clean,
                         id: `clue-${cluesArray.length}`
                     });
                 });
+                // data.results.forEach(result => {
+                //     const clueText = decodeHTML(result.question);
+                //     const answerText = decodeHTML(result.correct_answer);
 
-                cluesArray = assignCluePositions(cluesArray);
+                //     if (/\d/.test(answerText)) return;
+                    
+                //     const cleanAnswer = answerText.replace(/[^A-Z]/gi, '').toUpperCase();
+
+                //     console.log('Parse clue:', clueText, '| Clean answer:', cleanAnswer);
+
+                //     cluesArray.push({
+                //         clue: clueText,
+                //         answer: cleanAnswer,
+                //         // Temporary debugging code
+                //         row: 0,
+                //         col:cluesArray.length * 2,
+                //         id: `clue-${cluesArray.length}`
+                //     });
+                // });
 
                 console.log('Final cluesArray with orientations:', cluesArray);
 
-                buildCrosswordGrid(cluesArray);
+                const bestGrid = buildBestLayout(cluesArray, gridSize, attempts);
+                renderCrossword(bestGrid);
             }
         } catch (error) {
             console.error('Error fetching trivia data', error);
@@ -328,6 +387,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function assignCluePositions(cluesArray, gridSize = 15) {
+        cluesArray = cluesArray.filter(c => c.answer && /^[A-Z]+$/.test(c.answer) && c.answer.length <= gridSize);
+
         const grid = Array.from({ length: gridSize }, () => Array(gridSize).fill(null));
 
         const inBounds = (r, c) => r >= 0 && r < gridSize && c >= 0 && c < gridSize;
@@ -352,7 +413,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const lastC = orientation === 'across' ? c + w.length - 1 : c;
             if (!inBounds(r, c) || !inBounds(lastR, lastC)) return false;
 
-            const beforeR = orientation == 'across' ? r : r - 1;
+            const beforeR = orientation === 'across' ? r : r - 1;
             const beforeC = orientation === 'across' ? c - 1 : c;
             const afterR = orientation === 'across' ? r : r + w.length;
             const afterC = orientation === 'across' ? c + w.length : c;
@@ -380,74 +441,112 @@ document.addEventListener('DOMContentLoaded', () => {
             return true;
         };
 
-        cluesArray.sort((a, b) => b.answer.length - a.answer.length);
+        cluesArray.sort((a, b) => {
+            const d = b.answer.length;
+            return d !== 0 ? d : Math.random() - 0.5;
+        });
+
         const first = cluesArray[0];
-        const seedRow = Math.floor(gridSize / 2);
-        const seedCol = Math.floor((gridSize - first.answer.length) / 2);
-        place(first, seedRow, seedCol, 'across');
+        if (first) {
+            const seedRow = Math.floor(gridSize / 2);
+            const seedCol = Math.floor((gridSize - first.answer.length) / 2);
 
-        for (let k = 1; k < cluesArray.length; k++) {
-            const clue = cluesArray[k];
-            const w = clue.answer;
-
-            const candidates = [];
-
-            for (let i = 0; i < w.length; i++) {
-                for (let r = 0; r < gridSize; r++) {
+            if (canPlace(first, seedRow, seedCol, 'across')) {
+                place(first, seedRow, seedCol, 'across');
+            }
+            else {
+                let seeded = false;
+                outerSeed: for (let r = 0; r < gridSize; r++) {
                     for (let c = 0; c < gridSize; c++) {
-                        if (grid[r][c] === w[i]) {
-                            const rDown = r - i, cDown = c;
-                            if (canPlace(clue, rDown, cDown, 'down')) {
-                                candidates.push({ r: rDown, c: cDown, ori: 'down' });
-                            }
-                            const rAcross = r, cAcross = c - i;
-                            if (canPlace(clue, rAcross, cAcross, 'across')) {
-                                candidates.push({ r: rAcross, c: cAcross, ori: 'across' });
-                            }
+                        if (canPlace(first, r, c, 'across')) {
+                            place(first, r, c, 'across');
+                            seeded = true;
+                            break outerSeed;
+                        }
+                        if (canPlace(first, r, c, 'down')) {
+                            place(first, r, c, 'down');
+                            seeded = true;
+                            break outerSeed;
                         }
                     }
                 }
+                if (!seeded) {
+                    console.warn(`Could not place seed: ${first.answer}`);
+                }
             }
 
-            const crossingScore = cand => {
-                let crosses = 0;
+            for (let k = 1; k < cluesArray.length; k++) {
+                const clue = cluesArray[k];
+                const w = clue.answer;
+
+                const candidates = [];
+
                 for (let i = 0; i < w.length; i++) {
-                    const rr = cand.ori === 'across' ? cand.r : cand.r + i;
-                    const cc = cand.ori === 'across' ? cand.c + i : cand.c;
-                    if (grid[rr]?.[cc] === w[i]) crosses++;
-                }
-                return -crosses;
-            };
-            candidates.sort((a, b) => crossingScore(a) - crossingScore(b));
-
-            let placed = false;
-            for (const cand of candidates) {
-                if (canPlace(clue, cand.r, cand.c, cand.ori)) {
-                    place(clue, cand.r, cand.c, cand.ori);
-                    placed = true;
-                    break;
-                }
-            }
-            if (!placed) {
-                outer: for (let r = 0; r < gridSize; r++) {
-                    for (let c = 0; c < gridSize; c++) {
-                        if (canPlace(clue, r, c, 'across')) {
-                            place(clue, r, c, 'across');
-                            placed = true;
-                            break outer;
-                        }
-                        if (canPlace(clue, r, c, 'down')) {
-                            place(clue, r, c, 'down');
-                            placed = true;
-                            break outer;
+                    for (let r = 0; r < gridSize; r++) {
+                        for (let c = 0; c < gridSize; c++) {
+                            if (grid[r][c] === w[i]) {
+                                const rDown = r - i, cDown = c;
+                                if (canPlace(clue, rDown, cDown, 'down')) {
+                                    candidates.push({ r: rDown, c: cDown, ori: 'down' });
+                                }
+                                const rAcross = r, cAcross = c - i;
+                                if (canPlace(clue, rAcross, cAcross, 'across')) {
+                                    candidates.push({ r: rAcross, c: cAcross, ori: 'across' });
+                                }
+                            }
                         }
                     }
                 }
-            }
 
-            if (!placed) console.warn(`Could not place: ${clue.answer}`);
+                const center = (gridSize - 1) / 2;
+
+                const score = cand => {
+                    let crosses = 0;
+                    for (let i = 0; i < w.length; i++) {
+                        const rr = cand.ori === 'across' ? cand.r : cand.r + i;
+                        const cc = cand.ori === 'across' ? cand.c + i : cand.c;
+                        if (grid[rr]?.[cc] === w[i]) crosses++;
+                    }
+                    const midR = cand.ori === 'down' ? cand.r + (w.length - 1) / 2 : cand.r;
+                    const midC = cand.ori === 'across' ? cand.c + (w.length - 1) / 2 : cand.c;
+                    const dist = Math.abs(midR - center) + Math.abs(midC - center);
+                    return [-crosses, dist];
+                };
+
+                candidates.sort((a, b) => {
+                    const [c1, d1] = score(a);
+                    const [c2, d2] = score(b);
+                    return c1 - c2 || d1 - d2;
+                });
+
+                let placed = false;
+                for (const cand of candidates) {
+                    if (canPlace(clue, cand.r, cand.c, cand.ori)) {
+                        place(clue, cand.r, cand.c, cand.ori);
+                        placed = true;
+                        break;
+                    }
+                }
+                if (!placed) {
+                    outer: for (let r = 0; r < gridSize; r++) {
+                        for (let c = 0; c < gridSize; c++) {
+                            if (canPlace(clue, r, c, 'across')) {
+                                place(clue, r, c, 'across');
+                                placed = true;
+                                break outer;
+                            }
+                            if (canPlace(clue, r, c, 'down')) {
+                                place(clue, r, c, 'down');
+                                placed = true;
+                                break outer;
+                            }
+                        }
+                    }
+                }
+
+                if (!placed) console.warn(`Could not place: ${clue.answer}`);
+            } 
         }
-
         return cluesArray.filter(c => c.placed);
     }
 
@@ -496,16 +595,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     row += i;
                 }
 
-                if (row >= gridSize || col >= gridSize) {
+                if (row < 0 || col < 0 || row >= gridSize || col >= gridSize) {
                     canPlace = false;
                     break;
                 }
 
-                if (!grid[row] || !grid[row][col]) {
-                    console.warn(`Skipping letter "${answer[i]}" at (${row}, ${col}) - out of bounds`);
-                    canPlace = false;
-                    break;
-                }
                 const cell = grid[row][col];
                 cell.letter = answer[i];
             }
@@ -559,17 +653,17 @@ document.addEventListener('DOMContentLoaded', () => {
         return grid;
     }
 
-    function buildCrosswordGrid(cluesArray) {
-        console.log('Grid rendering function called with:', cluesArray);
+    // function buildCrosswordGrid(cluesArray) {
+    //     console.log('Grid rendering function called with:', cluesArray);
 
-        // TODO: Build crossword rendering logic
-        const gridSize = 15;
-        const grid = generateGrid(cluesArray, gridSize);
+    //     // TODO: Build crossword rendering logic
+    //     const gridSize = 15;
+    //     const grid = generateGrid(cluesArray, gridSize);
 
-        console.table(grid);
+    //     console.table(grid);
 
-        renderCrossword(grid)
-    }
+    //     renderCrossword(grid)
+    // }
 
     function renderCrossword(grid) {
         const board = document.getElementById('crossword-board');
@@ -577,6 +671,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const gridSize = grid.length;
         board.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
+        board.style.gridTemplateRows = `repeat(${grid.length}, 1fr)`;
 
         grid.forEach((row) => {
             row.forEach((cell) => {

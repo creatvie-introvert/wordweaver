@@ -513,8 +513,8 @@ a:focus-visible,
 
 #crossword-board {
     display: grid;
-    grid-template-columns: repeat(15, 1fr);
-    grid-template-rows: repeat(15, 1fr);
+    /* grid-template-columns: repeat(15, 1fr);
+    grid-template-rows: repeat(15, 1fr); */
     gap: 1px;
 }
 

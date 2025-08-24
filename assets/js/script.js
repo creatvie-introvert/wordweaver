@@ -79,80 +79,93 @@ document.addEventListener('DOMContentLoaded', () => {
     // ============================
     // Generic show/hide for all modals via [data-model] triggers.
     
-    let escHandler = null;  // store an actove ESC listener while modal is open
+    let activeModal = null;
+    let escHandler = null;
+    let trapHandler = null;
 
-    // Wire up open actions for each modal trigger
     modalButtons.forEach(button => {
         button.addEventListener('click', () => {
             const modalId = button.getAttribute('data-modal');
-            const modal = document.getElementById(modalId);
-            openModal(modal, button);
+            openModal(document.getElementById(modalId), button);
         });
     });
 
-    // Clicking outside modal content closes the modal
     modals.forEach(modal => {
         modal.addEventListener('click', e => {
-            const modalContent = modal.querySelector('.modal-content');
-            if (!modalContent.contains(e.target)) {
-                closeModal(modal);
-            }
+            const content = modal.querySelector('.modal-content');
+            if (content && !content.contains(e.target)) closeModal(modal);
         });
     });
 
-    // Show a modal and trap focus
     function openModal(modal, openerEl) {
         if (!modal) return;
+        if (activeModal && activeModal !== modal) closeModal(activeModal);
 
+        activeModal = modal
         modal.dataset.returnFocusId = openerEl?.id || '';
-
-        // Reveal modal and mark as visible for assistive tech
         modal.hidden = false;
         modal.setAttribute('aria-hidden', 'false');
+        modal.setAttribute('aria-modal', true);
+        if (!modal.getAttribute('role')) modal.setAttribute('role', 'dialog');
 
-        // Prevent background scrolling while modal is open
         body.classList.add('modal-open');
 
-        const closeBtn = modal.querySelector('.close-modal');
-
-        // Ensure focus occurs after the modal loads
         requestAnimationFrame(() => {
-            if (closeBtn) {
-                closeBtn.focus();
-                closeBtn.onclick = () => closeModal(modal);
-            }
+            const firstFocus = modal.querySelector('.close-modal') 
+                || modal.querySelector(FOCUSABLE_SELECTOR)
+                || modal;
+            firstFocus.focus?.();
         });
 
-        // Create and store escape handler
-        escHandler = e => {
-            if (e.key === 'Escape') {
-                closeModal(modal);
-            }
-        }
+        escHandler = (e) => {
+            if (e.key === 'Escape') closeModal(modal);
+        };
 
-        // Attach ESC listener while modal is open
+        trapHandler = (e) => {
+            if (e.key !== 'Tab') return;
+            const focusables = [...modal.querySelectorAll(FOCUSABLE_SELECTOR)]. filter(el => !el.hasAttribute('disabled') && el.offsetParent !== null);
+            if (!focusables.length) return;
+
+            const first = focusables[0];
+            const last = focusables[focusables.length - 1];
+            const current = document.activeElement;
+
+            if (e.shiftKey && current === first) {
+                e.preventDefault();
+                last.focus();
+            }
+            else if (!e.shiftKey && current === last) {
+                e.preventDefault()
+                first.focus();
+            }
+        };
+
         document.addEventListener('keydown', escHandler);
+        document.addEventListener('keydown', trapHandler);
     }
 
-    
-    // Hide a modal, restore attributes, and re-enable page scrolling
     function closeModal(modal) {
-        const returnId = modal.dataset.returnFocusId;
-        const returnEl = returnId ? document.getElementById(returnId) : null;
-        (returnEl || document.querySelector('#site-header a, #site-header button'))?.focus?.(); 
+        if (!modal) return;
 
-        // Hide visually and from assistive tech
         modal.hidden = true;
-        modal.setAttribute('aria-hidden', 'true');
-
-        // Restore body scroll
+        modal.setAttribute('aria-hidden', true);
+        modal.removeAttribute('aria-modal');
         body.classList.remove('modal-open');
 
-        // Clean up ESC listener if present
         if (escHandler) {
             document.removeEventListener('keydown', escHandler);
             escHandler = null;
         }
+        if (trapHandler) {
+            document.removeEventListener('keydown', trapHandler);
+            trapHandler = null;
+        }
+
+        const returnId = modal.dataset.returnFocusId;
+        const fallback = document.querySelector('#site-header a, #site-header button');
+        (returnId ? document.getElementById(returnId) : fallback)?.focus?.();
+
+        activeModal = null;
     }
     
     // ============================

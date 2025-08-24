@@ -1,4 +1,3 @@
-// Run code after the DOM has finished loading
 document.addEventListener('DOMContentLoaded', () => {
     const categoryMap = {
         'general-knowledge': 9,
@@ -46,31 +45,28 @@ document.addEventListener('DOMContentLoaded', () => {
         '[autofocus]', 'a[href]', 'button:not([disabled])', 
         'input:not([disabled]):not([type="hidden"])', 'select:not([disabled])', 'textarea:not([disabled])', '[tabindex]:not([tabindex="-1"])'
     ].join(', ');
+
+    initThemeToggle(toggleBtn, html);
     
-    // ============================
-    // THEME TOGGLE LOGIC (light/dark)
-    // ============================
-    // Stores the user's choice in localStorade and falls back to
-    // the OS preferance on first load. 
-    let currentTheme = localStorage.getItem('theme');
+    function initThemeToggle(btn, root = document.documentElement) {
+        let theme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 
-    // If no theme saved, fall back to system preference
-    if (!currentTheme) {
-        currentTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    }
+        apply(theme);
 
-    // Apply initial theme to <html> and update toggle label
-    html.setAttribute('data-theme', currentTheme);
-    updateToggleLabel();
+        if (btn) {
+            btn.addEventListener('click', () => {
+                theme = theme === 'dark' ? 'light' : 'dark';
+                localStorage.setItem('theme', theme);
+                apply(theme);
+            });
+        }
 
-    // Handle theme toggle button click (guard against null)
-    if (toggleBtn) {
-        toggleBtn.addEventListener('click', () => {
-            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            html.setAttribute('data-theme', currentTheme);
-            localStorage.setItem('theme', currentTheme);    // Save choice
-            updateToggleLabel();
-        });
+        function apply(t) {
+            root.setAttribute('data-theme', t);
+            if (btn) {
+                btn.setAttribute('aria-label', t === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+            }
+        }
     }
 
     // Updates the aria-label for the theme toggle button

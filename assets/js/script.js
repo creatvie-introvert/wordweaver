@@ -469,10 +469,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Seed with the longest word (centred if possible)
         // NOTE: fixed comparator buy to sort by length (desc) and tiebreak randomly
-        cluesArray.sort((a, b) => {
-            const d = b.answer.length;
-            return d !== 0 ? d : Math.random() - 0.5;
-        });
+        // cluesArray.sort(
+        //     (a, b) => (b.answer.length - a.answer.length) || (Math.random() - 0.5)
+        // );
+
+        shuffle(cluesArray);
+        cluesArray.sort((a, b) => b.answer.length - a.answer.length);
 
         const first = cluesArray[0];
         if (first) {

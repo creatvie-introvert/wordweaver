@@ -165,40 +165,28 @@ document.addEventListener('DOMContentLoaded', () => {
     // SCREEN FLOW (Hero -> show category selection)
     // ============================
     
+    startBtn?.addEventListener('click', () => {
+        goToSection(heroSection, categorySection, '#category-title');
+    });
+    
+    categoryContainer?.addEventListener('click', (e) => {
+        const categoryBtn = e.target.closest('[data-category]');
+        if (!categoryBtn) return;   // click wasn't on a category
 
-    if (startBtn) {
-        startBtn.addEventListener('click', () => {
-            goToSection(heroSection, categorySection);
-        });
-    }
+        selectedCategory = categoryBtn.getAttribute('data-category');
+        goToSection(categorySection, difficultySection, '#difficulty-title');
+    });
 
-    if (categoryContainer) {
-        categoryContainer.addEventListener('click', (e) => {
-            const categoryBtn = e.target.closest('[data-category]');
-            if (!categoryBtn) return;   // click wasn't on a category
+    difficultyContainer?.addEventListener('click', (e) => {
+        const difficultyBtn = e.target.closest('[data-difficulty]');
+        if (!difficultyBtn) return;
 
-            selectedCategory = categoryBtn.getAttribute('data-category');
-            console.log('Category chosen:', selectedCategory);
+        chosenDifficulty = difficultyBtn.getAttribute('data-difficulty');
+        goToSection(difficultySection, gameSection, '#game-title');
 
-            goToSection(categorySection, difficultySection);
-        });
-    }
-
-    if (difficultyContainer) {
-        difficultyContainer.addEventListener('click', (e) => {
-            const difficultyBtn = e.target.closest('[data-difficulty]');
-            if (!difficultyBtn) return;
-
-            chosenDifficulty = difficultyBtn.getAttribute('data-difficulty');
-            console.log('Difficulty chosen:', chosenDifficulty);
-
-            goToSection(difficultySection, gameSection);
-
-            loadCrossword(selectedCategory, chosenDifficulty);
-        });
-    }
-
-    // Back Buttons
+        loadCrossword(selectedCategory, chosenDifficulty);
+    });
+    
     backBtns.forEach(backBtn => {
         backBtn.addEventListener('click', () => {
             const prevId = backBtn.getAttribute('data-prev');
@@ -208,12 +196,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!currentSection || !previousSection) {
                 console.warn('Back handler: missing current or previous section', { prevId, currentSection, previousSection });
                 return;
-            }
-
-            goToSection(currentSection, previousSection);
-
+            } 
+            
             const headingId = previousSection.getAttribute('aria-labelledby');
-            const heading = headingId ? document.getElementById(headingId) : null;
+            const focusSel = headingId ? `#${headingId}` : null;
+            goToSection(currentSection, previousSection, focusSel);
         });
     });
 
@@ -229,17 +216,23 @@ document.addEventListener('DOMContentLoaded', () => {
         section.setAttribute('aria-hidden', visible ? 'false' : 'true')
     }
 
-    function focuFirstFocusable(root) {
+    function focusFirstFocusable(root) {
         if (!root) return;
         const el = root.querySelector(`${FOCUSABLE_SELECTOR}:not([hidden]):not([aria-hidden="true"]):not([inert])`);
         (el || root).focus?.();
     }
 
-    function goToSection(from, to) {
+    function goToSection(from, to, focusSelector) {
         if (!from || !to) return;
             
         setSectionVisible(to, true);
-        focuFirstFocusable(to);
+
+        if (focusSelector) {
+            to.querySelector(focusSelector)?.focus?.();
+        }
+        else {
+            focusFirstFocusable(to);
+        }
         setSectionVisible(from, false);
     }
 
@@ -253,8 +246,6 @@ document.addEventListener('DOMContentLoaded', () => {
         txt.innerHTML = html;
         return txt.value;
     }
-
-    
 
     /**
      * In-place Fisher-Yates shuffle

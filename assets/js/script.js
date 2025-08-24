@@ -162,23 +162,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // ============================
     
 
-    // Start -> show category selection
     if (startBtn) {
         startBtn.addEventListener('click', () => {
-            heroSection.classList.add('hidden');
-            heroSection.setAttribute('aria-hidden', 'true');
-            heroSection.setAttribute('hidden', '');
-
-            categorySection.classList.remove('hidden');
-            categorySection.removeAttribute('hidden');
-            categorySection.setAttribute('aria-hidden', 'false');
-
-            const categoryHeading = document.getElementById('category-title');
-            categoryHeading?.focus();
+            goToSection(heroSection, categorySection);
         });
     }
 
-    // Choose category -> show difficulty
     if (categoryContainer) {
         categoryContainer.addEventListener('click', (e) => {
             const categoryBtn = e.target.closest('[data-category]');
@@ -187,50 +176,25 @@ document.addEventListener('DOMContentLoaded', () => {
             selectedCategory = categoryBtn.getAttribute('data-category');
             console.log('Category chosen:', selectedCategory);
 
-            categorySection.classList.add('hidden');
-            categorySection.setAttribute('aria-hidden', 'true');
-            categorySection.setAttribute('hidden', '');
-
-            difficultySection.classList.remove('hidden');
-            difficultySection.setAttribute('aria-hidden', 'false');
-            difficultySection.removeAttribute('hidden');
-
-            // Move focus for acessibility: first interactove element
-            const focusTarget = difficultySection.querySelector('[autofocus], button, a, [tabindex]:not([tabindex="-1"])');
-            (focusTarget || difficultySection).focus?.();
+            goToSection(categorySection, difficultySection);
         });
     }
 
-    // Difficulty -> show game + build crossword
-    
- 
     if (difficultyContainer) {
         difficultyContainer.addEventListener('click', (e) => {
             const difficultyBtn = e.target.closest('[data-difficulty]');
-
             if (!difficultyBtn) return;
 
             chosenDifficulty = difficultyBtn.getAttribute('data-difficulty');
-
             console.log('Difficulty chosen:', chosenDifficulty);
 
-            difficultySection.classList.add('hidden');
-            difficultySection.setAttribute('aria-hidden', 'true');
-            difficultySection.setAttribute('hidden', '');
+            goToSection(difficultySection, gameSection);
 
-            gameSection.classList.remove('hidden');
-            gameSection.removeAttribute('hidden');
-            gameSection.setAttribute('aria-hidden', 'false');
-
-            document.getElementById('game-title')?.focus();
-
-            // Start of crossword build
             loadCrossword(selectedCategory, chosenDifficulty);
         });
     }
 
     // Back Buttons
-    
     backBtns.forEach(backBtn => {
         backBtn.addEventListener('click', () => {
             const prevId = backBtn.getAttribute('data-prev');
@@ -238,22 +202,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const previousSection = document.getElementById(prevId);
 
             if (!currentSection || !previousSection) {
-                console.warn('Back handler: missing current or previous section', {prevId, currentSection, previousSection});
+                console.warn('Back handler: missing current or previous section', { prevId, currentSection, previousSection });
                 return;
             }
 
-            currentSection.classList.add('hidden');
-            currentSection.setAttribute('aria-hidden', 'true');
-            currentSection.setAttribute('hidden', '');
-
-            previousSection.classList.remove('hidden');
-            previousSection.removeAttribute('hidden');
-            previousSection.setAttribute('aria-hidden', 'false');
+            goToSection(currentSection, previousSection);
 
             const headingId = previousSection.getAttribute('aria-labelledby');
             const heading = headingId ? document.getElementById(headingId) : null;
-
-            (heading || previousSection).focus();
         });
     });
 
@@ -261,6 +217,33 @@ document.addEventListener('DOMContentLoaded', () => {
     // UTILITIES
     // ============================
 
+    function setSectionVisible (section, visible) {
+        if (!section) return;
+
+        section.classList.toggle('hidden', !visible);
+        section.toggleAttribute('hidden', !visible);
+        section.setAttribute('aria-hidden', visible ? 'false' : 'true')
+    }
+
+    const FOCUSABLE_SELCTOR = [
+        '[autofocus]', 'a[href]', 'button:not([disabled])', 
+        'input:not([disabled]):not([type="hidden"])', 'select:not([disabled])', 'textarea:not([disabled])', '[tabindex]:not([tabindex="-1"])'
+    ].join(', ');
+
+    function focuFirstFocusable(root) {
+        if (!root) return;
+        const el = root.querySelector(`${FOCUSABLE_SELCTOR}:not([hidden]):not([aria-hidden="true"]):not([inert])`);
+        (el || root).focus?.();
+    }
+
+    function goToSection(from, to) {
+        if (!from || !to) return;
+            
+        setSectionVisible(to, true);
+        focuFirstFocusable(to);
+        setSectionVisible(from, false);
+        
+    }
     /**
      * Decode HTML entities API strings (e.g., &quot;, &#039;) 
      * @param {string} html 
@@ -466,12 +449,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             return true;
         };
-
-        // Seed with the longest word (centred if possible)
-        // NOTE: fixed comparator buy to sort by length (desc) and tiebreak randomly
-        // cluesArray.sort(
-        //     (a, b) => (b.answer.length - a.answer.length) || (Math.random() - 0.5)
-        // );
 
         shuffle(cluesArray);
         cluesArray.sort((a, b) => b.answer.length - a.answer.length);

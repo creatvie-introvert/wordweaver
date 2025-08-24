@@ -303,7 +303,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const gridSize = sizeByDifficulty[chosenDifficulty] || 13;
 
-        const sttempts = attemptsByDifficulty[chosenDifficulty] || 36;
+        const attempts = attemptsByDifficulty[chosenDifficulty] || 36;
 
         console.log('Category ID:', categoryId);
 

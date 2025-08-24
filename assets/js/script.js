@@ -1,8 +1,11 @@
 // Run code after the DOM has finished loading
 document.addEventListener('DOMContentLoaded', () => {
 
-    // THEME TOGGLE LOGIC - Handles light/dark mode switching and saves user preference to localStorage
-
+    // ============================
+    // THEME TOGGLE LOGIC (light/dark)
+    // ============================
+    // Stores the user's choice in localStorade and falls back to
+    // the OS preferance on first load. 
     const html = document.documentElement;
     const toggleBtn = document.querySelector('[data-theme-toggle]');
     let currentTheme = localStorage.getItem('theme');
@@ -32,11 +35,14 @@ document.addEventListener('DOMContentLoaded', () => {
         toggleBtn.setAttribute('aria-label', label);
     }
 
-    // MODAL LOGIC - Handles opening, closing, and accessibility for all modals in the app
+    // ============================
+    // MODAL LOGIC
+    // ============================
+    // Generic show/hide for all modals via [data-model] triggers.
     const modalButtons = document.querySelectorAll('[data-modal]');
     const modals = document.querySelectorAll('.modal');
     const body = document.body;
-    let escHandler = null;
+    let escHandler = null;  // store an actove ESC listener while modal is open
 
     // Wire up open actions for each modal trigger
     modalButtons.forEach(button => {
@@ -57,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Show a modal
+    // Show a modal and trap focus
     function openModal(modal, openerEl) {
         if (!modal) return;
 
@@ -91,9 +97,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.addEventListener('keydown', escHandler);
     }
 
-    /**
-     * Hide a modal, restore attributes, and re-enable page scrolling
-     */
+    
+    // Hide a modal, restore attributes, and re-enable page scrolling
     function closeModal(modal) {
         const returnId = modal.dataset.returnFocusId;
         const returnEl = returnId ? document.getElementById(returnId) : null;
@@ -113,7 +118,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // START GAME BUTTON LOGIC - Handles transition from Hero to Category selection
+    // ============================
+    // SCREEN FLOW (Hero -> show category selection)
+    // ============================
     const startBtn = document.querySelector('#start-game-btn');
 
     // Get references to the hero, category, and difficulty sections
@@ -123,57 +130,50 @@ document.addEventListener('DOMContentLoaded', () => {
     const difficultySection = document.querySelector('#difficulty-section');
     const difficultyTitle = document.querySelector('#difficulty-title');
 
-    // state holder for API
+    // State used later when fetching trivia
     let selectedCategory = null;
     let chosenDifficulty = null;
 
+    // Start -> show category selection
     if (startBtn) {
-        // Listen for clicks on the Start Game Button
         startBtn.addEventListener('click', () => {
-            // Hide the hero section
             heroSection.classList.add('hidden');
             heroSection.setAttribute('aria-hidden', 'true');
             heroSection.setAttribute('hidden', '');
 
-            // Show the category selection section
             categorySection.classList.remove('hidden');
             categorySection.removeAttribute('hidden');
             categorySection.setAttribute('aria-hidden', 'false');
 
-            // Move focus to category title
             const categoryHeading = document.getElementById('category-title');
             categoryHeading?.focus();
         });
     }
 
-    // CATEGORY SELECTION LOGIC - Use event delegation on the category container
+    // Choose category -> show difficulty
     if (categoryContainer) {
         categoryContainer.addEventListener('click', (e) => {
-            const categoryBtn = e.target.closest('[data-category]');    // any button with data-category attribute
-
-            if (!categoryBtn) return;   // ignore clicks outside buttons
+            const categoryBtn = e.target.closest('[data-category]');
+            if (!categoryBtn) return;   // click wasn't on a category
 
             selectedCategory = categoryBtn.getAttribute('data-category');
-
             console.log('Category chosen:', selectedCategory);
 
-            // Hide category section
             categorySection.classList.add('hidden');
             categorySection.setAttribute('aria-hidden', 'true');
             categorySection.setAttribute('hidden', '');
 
-            // Show difficulty section
             difficultySection.classList.remove('hidden');
             difficultySection.setAttribute('aria-hidden', 'false');
             difficultySection.removeAttribute('hidden');
 
-            // Move focus for acessibility
+            // Move focus for acessibility: first interactove element
             const focusTarget = difficultySection.querySelector('[autofocus], button, a, [tabindex]:not([tabindex="-1"])');
             (focusTarget || difficultySection).focus?.();
         });
     }
 
-    // DIFFICULTY SELECTION LOGIC
+    // Difficulty -> show game + build crossword
     const difficutyContainer = difficultySection?.querySelector('.difficulty-btn-container');
     const gameSection = document.querySelector('#game-section');
 
@@ -187,28 +187,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
             console.log('Difficulty chosen:', chosenDifficulty);
 
-            // Hide difficulty section
             difficultySection.classList.add('hidden');
             difficultySection.setAttribute('aria-hidden', 'true');
             difficultySection.setAttribute('hidden', '');
 
-            // Show game section
             gameSection.classList.remove('hidden');
             gameSection.removeAttribute('hidden');
             gameSection.setAttribute('aria-hidden', 'false');
 
-            // Focus game title
             document.getElementById('game-title')?.focus();
 
-            // TODO: Load crossword board & clues via API
-
+            // Start of crossword build
             loadCrossword(selectedCategory, chosenDifficulty);
         });
     }
 
-    // BACK BUTTON LOGIC - handles all .back-btn elements
+    // Back Buttons
     const backBtns = document.querySelectorAll('.back-btn');
-
     backBtns.forEach(backBtn => {
         backBtn.addEventListener('click', () => {
             const prevId = backBtn.getAttribute('data-prev');
@@ -220,21 +215,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Hide current section
             currentSection.classList.add('hidden');
-
             currentSection.setAttribute('aria-hidden', 'true');
-
             currentSection.setAttribute('hidden', '');
 
-            // Show previous section
             previousSection.classList.remove('hidden');
-
             previousSection.removeAttribute('hidden');
-
             previousSection.setAttribute('aria-hidden', 'false');
 
-            // Move focus to a sensible target
             const headingId = previousSection.getAttribute('aria-labelledby');
             const heading = headingId ? document.getElementById(headingId) : null;
 
@@ -242,12 +230,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // ============================
+    // UTILITIES
+    // ============================
+
+    /**
+     * Decode HTML entities API strings (e.g., &quot;, &#039;) 
+     * @param {string} html 
+     * @returns {string}
+     */
     function decodeHTML(html) {
         const txt = document.createElement('textarea');
         txt.innerHTML = html;
         return txt.value;
     }
 
+    // Grid sizes and layout attempt counts per difficulty.
+    // Smaller grids + fewer attempts for easier settings.
     const sizeByDifficulty = {
         easy: 11,
         medium: 13,
@@ -260,6 +259,12 @@ document.addEventListener('DOMContentLoaded', () => {
         hard: 96
     }
 
+    /**
+     * In-place Fisher-Yates shuffle
+     * @template T
+     * @param {T[]} a 
+     * @returns {T[]}
+     */
     function shuffle(a) {
         for (let i = a.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -268,13 +273,27 @@ document.addEventListener('DOMContentLoaded', () => {
         return a;
     }
 
+    /**
+     * Try N randomised clue orders, keep the grid with the most filled letters.
+     * @param {Array} rawClues unsaintised clue objects from API
+     * @param {number} size gridSize (cells)
+     * @param {number} attempts how many randomised layouts to try
+     * @returns (Array<Array<Cell>>) the best grid found
+     */
     function buildBestLayout(rawClues, size, attempts = 12) {
         let best = null;
 
         for (let t = 0; t < attempts; t++) {
+            // Shuffle clues to vary the seed and crossing candidates
             const clues = shuffle(rawClues.slice()).map(c => ({ ...c }));
+            
+            // Place words into a temporary internal char-grid
             const placed = assignCluePositions(clues, size);
+            
+            // Convert placed clues into a renderable cell grid
             const grid = generateGrid(placed, size);
+
+            // Seed by number of filed letters (higher = better)
             const filled = grid.flat().filter(cell => !cell.isBlock && cell.letter).length;
 
             if (!best || filled > best.filled) {
@@ -284,9 +303,18 @@ document.addEventListener('DOMContentLoaded', () => {
         return best.grid;
     }
 
+    // ============================
+    // DATA FETCH + SANITISATION
+    // ============================
+
+    /**
+     * Fetch questions for a category/difficulty, clean to {clue, answer}
+     * Then ask the layout planner for the best grid and render it.
+     */
     async function loadCrossword(selectedCategory, chosenDifficulty) {
         console.log('loadCrossword called with:', selectedCategory, chosenDifficulty);
 
+        // Map UI category slugs + OpenTDB category IDs
         const categoryMap = {
             'general-knowledge': 9,
             'science-and-nature': 17,
@@ -300,19 +328,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const categoryId = categoryMap[selectedCategory];
-
         const gridSize = sizeByDifficulty[chosenDifficulty] || 13;
-
         const attempts = attemptsByDifficulty[chosenDifficulty] || 36;
 
         console.log('Category ID:', categoryId);
 
+        // Ask for enough questions to have option even after filtering
         let numQuestions = 50;
-
         switch (chosenDifficulty) {
             case 'easy':
-                numQuestions = 40;
-                break;
             case 'medium':
                 numQuestions = 40;
                 break;
@@ -324,16 +348,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const apiURL = `https://opentdb.com/api.php?amount=${numQuestions}&category=${categoryId}&difficulty=${chosenDifficulty}&type=multiple`;
-
         console.log('API URL:', apiURL)
 
         try {
             const response = await fetch(apiURL);
             const data = await response.json();
-
             console.log('API response data:', data);
 
             if (data.response_code === 0) {
+                // Sanitise: strip punctuation, duplicates, numbers, fit grid length
                 const seen = new Set();
                 let cluesArray = [];
 
@@ -342,42 +365,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     const answerText = decodeHTML(result.correct_answer);
 
                     const clean = answerText.replace(/[^A-Z]/gi, '').toUpperCase();
-                    if (!clean) return;
+                    if (!clean) return; // empty after stripping
+                    if (/\d/.test(answerText)) return; // exclude numeric answers
+                    if (clean.length > gridSize) return; // too long for current grid
+                    if (seen.has(clean)) return; // avoid duplicates
 
-                    if (/\d/.test(answerText)) return;
-                    if (clean.length > gridSize) return;
-
-                    if (seen.has(clean)) return;
                     seen.add(clean);
-
                     cluesArray.push({
                         clue: clueText,
                         answer: clean,
                         id: `clue-${cluesArray.length}`
                     });
                 });
-                // data.results.forEach(result => {
-                //     const clueText = decodeHTML(result.question);
-                //     const answerText = decodeHTML(result.correct_answer);
-
-                //     if (/\d/.test(answerText)) return;
-                    
-                //     const cleanAnswer = answerText.replace(/[^A-Z]/gi, '').toUpperCase();
-
-                //     console.log('Parse clue:', clueText, '| Clean answer:', cleanAnswer);
-
-                //     cluesArray.push({
-                //         clue: clueText,
-                //         answer: cleanAnswer,
-                //         // Temporary debugging code
-                //         row: 0,
-                //         col:cluesArray.length * 2,
-                //         id: `clue-${cluesArray.length}`
-                //     });
-                // });
 
                 console.log('Final cluesArray with orientations:', cluesArray);
 
+                // Build several candidate layouts and keep the fullest
                 const bestGrid = buildBestLayout(cluesArray, gridSize, attempts);
                 renderCrossword(bestGrid);
             }
@@ -386,13 +389,27 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // ============================
+    // LAYOUT PLANNER (word placement)
+    // ============================
+
+    /**
+     * Place as many clues as possible into an internal char grid.
+     * Adds row/col/orientation/placed to each placed clue.
+     * @param {Array} cluesArray sanitised clies
+     * @param {number} gridSize 
+     * @returns (Array) only the clues that were successfully placed
+     */
     function assignCluePositions(cluesArray, gridSize = 15) {
+        // Hard filter : A-Z only and must fit the grid
         cluesArray = cluesArray.filter(c => c.answer && /^[A-Z]+$/.test(c.answer) && c.answer.length <= gridSize);
 
+        // Internal char grid used only during placement checks
         const grid = Array.from({ length: gridSize }, () => Array(gridSize).fill(null));
 
         const inBounds = (r, c) => r >= 0 && r < gridSize && c >= 0 && c < gridSize;
 
+        // Write a word into the internal char grid and mark clue metadata
         const place = (clue, r, c, orientation) => {
             const w = clue.answer;
             for (let i = 0; i < w.length; i++) {
@@ -406,13 +423,16 @@ document.addEventListener('DOMContentLoaded', () => {
             clue.placed = true;
         };
 
+        // Rules for whether a word can start at (r,c) in a given orientation
         const canPlace = (clue, r, c, orientation) => {
             const w = clue.answer;
 
+            // Ensure the whole span is inside the grid
             const lastR = orientation === 'across' ? r : r + w.length - 1;
             const lastC = orientation === 'across' ? c + w.length - 1 : c;
             if (!inBounds(r, c) || !inBounds(lastR, lastC)) return false;
 
+            // No letter immediately before or after the word (keeps words separated)
             const beforeR = orientation === 'across' ? r : r - 1;
             const beforeC = orientation === 'across' ? c - 1 : c;
             const afterR = orientation === 'across' ? r : r + w.length;
@@ -420,6 +440,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (inBounds(beforeR, beforeC) && grid[beforeR][beforeC] !== null) return false;
             if (inBounds(afterR, afterC) && grid[afterR][afterC] !== null) return false;
 
+            // Walk each letter; allow same-letter crossings only
             for (let i = 0; i < w.length; i++) {
                 const rr = orientation === 'across' ? r : r + i;
                 const cc = orientation === 'across' ? c + i : c;
@@ -427,6 +448,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const existing = grid[rr][cc];
                 if (existing !== null && existing !== w[i]) return false;
 
+                // If this cell is empty, ensure we don't touch parallel neighbours
                 if (existing === null) {
                     if (orientation === 'across') {
                         if (inBounds(rr - 1, cc) && grid[rr - 1][cc] !== null) return false;
@@ -441,6 +463,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return true;
         };
 
+        // Seed with the longest word (centred if possible)
+        // NOTE: fixed comparator buy to sort by length (desc) and tiebreak randomly
         cluesArray.sort((a, b) => {
             const d = b.answer.length;
             return d !== 0 ? d : Math.random() - 0.5;
@@ -455,6 +479,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 place(first, seedRow, seedCol, 'across');
             }
             else {
+                // Fallback: scan grid for any legal start for the seed
                 let seeded = false;
                 outerSeed: for (let r = 0; r < gridSize; r++) {
                     for (let c = 0; c < gridSize; c++) {
@@ -475,21 +500,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
+            // Try to place remaining words, preferring high-crossing candidates
             for (let k = 1; k < cluesArray.length; k++) {
                 const clue = cluesArray[k];
                 const w = clue.answer;
-
                 const candidates = [];
 
+                // For each letter in the word, look for matching letter already on the grid
                 for (let i = 0; i < w.length; i++) {
                     for (let r = 0; r < gridSize; r++) {
                         for (let c = 0; c < gridSize; c++) {
                             if (grid[r][c] === w[i]) {
-                                const rDown = r - i, cDown = c;
+                                // Candidate if we align this letter on the crossing
+                                const rDown = r - i, cDown = c; // place vertically
                                 if (canPlace(clue, rDown, cDown, 'down')) {
                                     candidates.push({ r: rDown, c: cDown, ori: 'down' });
                                 }
-                                const rAcross = r, cAcross = c - i;
+                                const rAcross = r, cAcross = c - i; // place horizontally
                                 if (canPlace(clue, rAcross, cAcross, 'across')) {
                                     candidates.push({ r: rAcross, c: cAcross, ori: 'across' });
                                 }
@@ -498,8 +525,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
 
+                // Prefer more crossings and placements that are closer to centre
                 const center = (gridSize - 1) / 2;
-
                 const score = cand => {
                     let crosses = 0;
                     for (let i = 0; i < w.length; i++) {
@@ -510,7 +537,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const midR = cand.ori === 'down' ? cand.r + (w.length - 1) / 2 : cand.r;
                     const midC = cand.ori === 'across' ? cand.c + (w.length - 1) / 2 : cand.c;
                     const dist = Math.abs(midR - center) + Math.abs(midC - center);
-                    return [-crosses, dist];
+                    return [-crosses, dist]; // lower is better
                 };
 
                 candidates.sort((a, b) => {
@@ -519,6 +546,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     return c1 - c2 || d1 - d2;
                 });
 
+                // Place at the first legal candidate
                 let placed = false;
                 for (const cand of candidates) {
                     if (canPlace(clue, cand.r, cand.c, cand.ori)) {
@@ -527,6 +555,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         break;
                     }
                 }
+
+                // Last-Resort: force scan for any legal start
                 if (!placed) {
                     outer: for (let r = 0; r < gridSize; r++) {
                         for (let c = 0; c < gridSize; c++) {
@@ -547,12 +577,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!placed) console.warn(`Could not place: ${clue.answer}`);
             } 
         }
+
+        // Only return the ones that actually fit
         return cluesArray.filter(c => c.placed);
     }
 
+    // ============================
+    // GRID BUILD (for rendering)
+    // ============================
+
+    /**
+     * Convert placed clues into a grid of renderable cell objects.
+     * Also marks empty cells as blocks so the boards paints black squares.
+     * @param {Array} cluesArray already placed clues
+     * @param {number} gridSize 
+     * @returns {Array<Array<Cell>>}
+     */
     function generateGrid(cluesArray, gridSize) {
         const grid = [];
 
+        // Initialise empty grid with metadata per cell
         for (let i = 0; i < gridSize; i++) {
             grid[i] = [];
             for (let j = 0; j < gridSize; j++) {
@@ -568,10 +612,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
+        // Paint letters for each placed clue
         cluesArray.forEach(clue => {
-
-            
-
             const answer = clue.answer.toUpperCase();
             const orientation = clue.orientation;
             const startRow = clue.row;
@@ -582,12 +624,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
+            //Bounds check before writing
             let canPlace = true;
-
             for (let i = 0; i < answer.length; i++) {
                 let row = startRow;
                 let col = startCol;
-
                 if (orientation === 'across') {
                     col += i;
                 }
@@ -600,8 +641,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     break;
                 }
 
-                const cell = grid[row][col];
-                cell.letter = answer[i];
+                grid[row][col].letter = answer[i];
             }
 
             if (!canPlace) {
@@ -609,10 +649,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
+            // Second pass: tag metadata for UI (starts, across/down IDs)
             for (let i = 0; i < answer.length; i++) {
                 let row = startRow;
                 let col = startCol;
-
+                
                 if (orientation === 'across') {
                     col += i;
                 }
@@ -639,8 +680,9 @@ document.addEventListener('DOMContentLoaded', () => {
             
         });
 
-        console.table(grid);
+        console.table(grid); // debuging code
 
+        // Mark empty cells as blocks for rendering
         for (let i = 0; i < gridSize; i++) {
             for (let j = 0; j < gridSize; j++) {
                 const cell = grid[i][j];
@@ -653,18 +695,15 @@ document.addEventListener('DOMContentLoaded', () => {
         return grid;
     }
 
-    // function buildCrosswordGrid(cluesArray) {
-    //     console.log('Grid rendering function called with:', cluesArray);
+    // ============================
+    // RENDERING
+    // ============================
 
-    //     // TODO: Build crossword rendering logic
-    //     const gridSize = 15;
-    //     const grid = generateGrid(cluesArray, gridSize);
-
-    //     console.table(grid);
-
-    //     renderCrossword(grid)
-    // }
-
+    /**
+     * Render a cell grid into the #crossword-board using CSS Grid.
+     * Relies on CSS classes .cell and .block-cell for styling.
+     * The board's columns/rows are sized to match the grid shape.
+     */
     function renderCrossword(grid) {
         const board = document.getElementById('crossword-board');
         board.innerHTML = '';
@@ -684,6 +723,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     cellDiv.classList.add('black-cell');
                 }
                 else {
+                    // For debuggin: show the letter: later replace this with inputs
                     cellDiv.textContent = cell.letter;  // Use for debugging
                 }
 

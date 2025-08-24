@@ -1,13 +1,53 @@
 // Run code after the DOM has finished loading
 document.addEventListener('DOMContentLoaded', () => {
+    const categoryMap = {
+        'general-knowledge': 9,
+        'science-and-nature': 17,
+        'film': 11,
+        'music': 12,
+        'video-games': 15,
+        'sports': 21,
+        'geography': 22,
+        'history': 23,
+        'computers': 18
+    }
 
+    const sizeByDifficulty = {
+        easy: 11,
+        medium: 13,
+        hard: 15
+    }
+
+    const attemptsByDifficulty = {
+        easy: 36,
+        medium: 60,
+        hard: 96
+    }
+
+    let selectedCategory = null;
+    let chosenDifficulty = null;
+    
+    const html = document.documentElement;
+    const toggleBtn = document.querySelector('[data-theme-toggle]');
+    const startBtn = document.querySelector('#start-game-btn');
+    const heroSection = document.querySelector('#hero-section');
+    const categorySection = document.querySelector('#category-section');
+    const categoryContainer = categorySection?.querySelector('.category-container');
+    const difficultySection = document.querySelector('#difficulty-section');
+    const difficultyContainer = difficultySection?.querySelector('.difficulty-btn-container');
+    const gameSection = document.querySelector('#game-section');
+    const board = document.getElementById('crossword-board');
+    const backBtns = document.querySelectorAll('.back-btn');
+    const modalButtons = document.querySelectorAll('[data-modal]');
+    const modals = document.querySelectorAll('.modal');
+    const body = document.body;
+
+    
     // ============================
     // THEME TOGGLE LOGIC (light/dark)
     // ============================
     // Stores the user's choice in localStorade and falls back to
     // the OS preferance on first load. 
-    const html = document.documentElement;
-    const toggleBtn = document.querySelector('[data-theme-toggle]');
     let currentTheme = localStorage.getItem('theme');
 
     // If no theme saved, fall back to system preference
@@ -39,9 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // MODAL LOGIC
     // ============================
     // Generic show/hide for all modals via [data-model] triggers.
-    const modalButtons = document.querySelectorAll('[data-modal]');
-    const modals = document.querySelectorAll('.modal');
-    const body = document.body;
+    
     let escHandler = null;  // store an actove ESC listener while modal is open
 
     // Wire up open actions for each modal trigger
@@ -121,18 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ============================
     // SCREEN FLOW (Hero -> show category selection)
     // ============================
-    const startBtn = document.querySelector('#start-game-btn');
-
-    // Get references to the hero, category, and difficulty sections
-    const heroSection = document.querySelector('#hero-section');
-    const categorySection = document.querySelector('#category-section');
-    const categoryContainer = categorySection?.querySelector('.category-container');
-    const difficultySection = document.querySelector('#difficulty-section');
-    const difficultyTitle = document.querySelector('#difficulty-title');
-
-    // State used later when fetching trivia
-    let selectedCategory = null;
-    let chosenDifficulty = null;
+    
 
     // Start -> show category selection
     if (startBtn) {
@@ -174,11 +201,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Difficulty -> show game + build crossword
-    const difficutyContainer = difficultySection?.querySelector('.difficulty-btn-container');
-    const gameSection = document.querySelector('#game-section');
-
-    if (difficutyContainer) {
-        difficutyContainer.addEventListener('click', (e) => {
+    
+ 
+    if (difficultyContainer) {
+        difficultyContainer.addEventListener('click', (e) => {
             const difficultyBtn = e.target.closest('[data-difficulty]');
 
             if (!difficultyBtn) return;
@@ -203,7 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Back Buttons
-    const backBtns = document.querySelectorAll('.back-btn');
+    
     backBtns.forEach(backBtn => {
         backBtn.addEventListener('click', () => {
             const prevId = backBtn.getAttribute('data-prev');
@@ -245,19 +271,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return txt.value;
     }
 
-    // Grid sizes and layout attempt counts per difficulty.
-    // Smaller grids + fewer attempts for easier settings.
-    const sizeByDifficulty = {
-        easy: 11,
-        medium: 13,
-        hard: 15
-    }
-
-    const attemptsByDifficulty = {
-        easy: 36,
-        medium: 60,
-        hard: 96
-    }
+    
 
     /**
      * In-place Fisher-Yates shuffle
@@ -314,18 +328,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function loadCrossword(selectedCategory, chosenDifficulty) {
         console.log('loadCrossword called with:', selectedCategory, chosenDifficulty);
 
-        // Map UI category slugs + OpenTDB category IDs
-        const categoryMap = {
-            'general-knowledge': 9,
-            'science-and-nature': 17,
-            'film': 11,
-            'music': 12,
-            'video-games': 15,
-            'sports': 21,
-            'geography': 22,
-            'history': 23,
-            'computers': 18
-        }
+        
 
         const categoryId = categoryMap[selectedCategory];
         const gridSize = sizeByDifficulty[chosenDifficulty] || 13;
@@ -701,11 +704,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /**
      * Render a cell grid into the #crossword-board using CSS Grid.
-     * Relies on CSS classes .cell and .block-cell for styling.
+     * Relies on CSS classes .cell and .black-cell for styling.
      * The board's columns/rows are sized to match the grid shape.
      */
     function renderCrossword(grid) {
-        const board = document.getElementById('crossword-board');
+        
         board.innerHTML = '';
 
         const gridSize = grid.length;

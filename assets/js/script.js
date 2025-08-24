@@ -372,70 +372,182 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             return out;
         }
-
-        /*
-        // console.log('Category ID:', categoryId);
-
-        // Ask for enough questions to have option even after filtering
-        let numQuestions = 50;
-        switch (chosenDifficulty) {
-            case 'easy':
-            case 'medium':
-                numQuestions = 40;
-                break;
-            case 'hard':
-                numQuestions = 50;
-                break;
-            default:
-                console.warn(`Unexpected difficulty level: ${chosenDifficulty}`);
-        }
-
-        const apiURL = `https://opentdb.com/api.php?amount=${numQuestions}&category=${categoryId}&difficulty=${chosenDifficulty}&type=multiple`;
-        console.log('API URL:', apiURL)
-
-        try {
-            const response = await fetch(apiURL);
-            const data = await response.json();
-            console.log('API response data:', data);
-
-            if (data.response_code === 0) {
-                // Sanitise: strip punctuation, duplicates, numbers, fit grid length
-                const seen = new Set();
-                let cluesArray = [];
-
-                data.results.forEach((result) => {
-                    const clueText = decodeHTML(result.question);
-                    const answerText = decodeHTML(result.correct_answer);
-
-                    const clean = answerText.replace(/[^A-Z]/gi, '').toUpperCase();
-                    if (!clean) return; // empty after stripping
-                    if (/\d/.test(answerText)) return; // exclude numeric answers
-                    if (clean.length > gridSize) return; // too long for current grid
-                    if (seen.has(clean)) return; // avoid duplicates
-
-                    seen.add(clean);
-                    cluesArray.push({
-                        clue: clueText,
-                        answer: clean,
-                        id: `clue-${cluesArray.length}`
-                    });
-                });
-
-                console.log('Final cluesArray with orientations:', cluesArray);
-
-                // Build several candidate layouts and keep the fullest
-                const bestGrid = buildBestLayout(cluesArray, gridSize, attempts);
-                renderCrossword(bestGrid);
-            }
-        } catch (error) {
-            console.error('Error fetching trivia data', error);
-        }
-            */
     }
 
     /**
      * Place as many clues as possible onto an internal character grid.
      */
+    function assignCluePositions(clues, gridSize = 15) {
+        const ACROSS = 'across';
+        const DOWN = 'down';
+
+        const valid = clues.filter(c => 
+            c?.answer && /^[A-Z]+$/.test(c.answer) && 
+            c.answer.length <= gridSize
+        );
+        if (valid.length === 0) return [];
+
+        const grid = makeGrid(gridSize);
+
+        valid.sort((a, b) =>
+            b.answer.length - a.answer.length || (Math.random() - 0.5)
+        );
+
+        placeSeed(valid[0]);
+
+        for (let i = 1; i < valid.length; i++) {
+            const clue = valid[i];
+            const candidates = getCandidates(clue).sort(compareCandidates(clue));
+            let placed = false;
+
+            for (const cand of candidates) {
+                if (canPlace(clue, cand.r, cand.c, cand.ori)) {
+                    place(clue, cand.r, cand.c, cand.ori);
+                    placed = true;
+                    break;
+                }
+            }
+
+            if (!placed) {
+                const spot = findFirstSpot(clue);
+                if (spot) place(clue, spot.r, spot.c, spot.ori);
+                else console.warn(`Could not place: ${clue.answer}`);
+            }
+        }
+
+        return valid.filter(c => c.placed);
+
+        function makeGrid(n) {
+            return Array.from({ length: n }, () => Array(n).fill(null));
+        }
+
+        function inBounds(r, c) {
+            return r >= 0 && r < gridSize && c >= 0 && c < gridSize;
+        }
+
+        function place(clue, r, c, ori) {
+            const w = clue.answer;
+            for (let i = 0; i < w.length; i++) {
+                const rr = ori === ACROSS ? r : r + i;
+                const cc = ori === ACROSS ? c + i : c;
+                grid[rr][cc] = w[i];
+            }
+            clue.row = r;
+            clue.col = c;
+            clue.orientation = ori;
+            clue.placed = true;
+        }
+
+        function canPlace(clue, r, c, ori) {
+            const w = clue.answer;
+
+            const lastR = ori === ACROSS ? r : r + w.length - 1;
+            const lastC = ori === ACROSS ? c + w.length - 1 : c;
+            if (!inBounds(r, c) || !inBounds(lastR, lastC)) return false;
+
+            const beforeR = ori === ACROSS ? r : r - 1;
+            const beforeC = ori === ACROSS ? c - 1 : c;
+            const afterR = ori === ACROSS ? r : r + w.length;
+            const afterC = ori === ACROSS ? c + w.length : c;
+
+            if (inBounds(beforeR, beforeC) && grid[beforeR][beforeC] !== null) return false; 
+            if (inBounds(afterR, afterC) && grid[afterR][afterC] !== null) return false; 
+
+            for (let i = 0; i < w.length; i ++) {
+                const rr = ori === ACROSS ? r : r + i;
+                const cc = ori === ACROSS ? c + i : c;
+                const existing = grid[rr][cc];
+                
+                if (existing !== null && existing !==w[i]) return false;
+
+                if (existing === null) {
+                    if (ori === ACROSS) {
+                        if (inBounds(rr - 1, cc) && grid[rr - 1][cc] !== null) return false;
+                        if (inBounds(rr + 1, cc) && grid[rr + 1][cc] !== null) return false;
+                    }
+                    else {
+                        if (inBounds(rr, cc - 1) && grid[rr][cc - 1] !== null) return false;
+                        if (inBounds(rr, cc + 1) && grid[rr][cc + 1] !== null) return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        function placeSeed(first) {
+            if (!first) return;
+            const r = Math.floor(gridSize / 2);
+            const c = Math.floor((gridSize - first.answer.length) / 2);
+            if (canPlace(first, r, c, ACROSS)) {
+                place(first, r, c, ACROSS);
+                return;
+            }
+            const spot = findFirstSpot(first);
+            if (spot) place(first, spot.r, spot.c, spot.ori);
+            else console.warn(`Could not place seed: ${first.answer}`);
+        }
+
+        function getCandidates(clue) {
+            const w = clue.answer;
+            const out = [];
+            for (let i = 0; i < w.length; i++) {
+                for (let r = 0; r < gridSize; r++) {
+                    for (let c = 0; c < gridSize; c++) {
+                        if (grid[r][c] !== w[i]) continue;
+
+                        const rDown = r - i, cDown = c;
+                        if (canPlace(clue, rDown, cDown, DOWN)) out.push({ r: rDown, c: cDown, ori: DOWN });
+
+                        const rAcross = r, cAcross = c - i;
+                        if (canPlace(clue, rAcross, cAcross, ACROSS)) out.push({ r: rAcross, c: cAcross, ori: ACROSS });
+                    }
+                }
+            }
+            return out;
+        }
+
+        function compareCandidates(clue) {
+            const w = clue.answer;
+            const centre = (gridSize - 1) / 2;
+
+            return (a, b) => {
+                const cA = countCrosses(a, w);
+                const cB = countCrosses(b, w);
+                if (cB !== cA) return cB - cA;
+
+                const dA = centreDistance(a, w.length, centre);
+                const dB = centreDistance(b, w.length, centre);
+                return dA - dB;
+            };
+        }
+
+        function countCrosses(cand, w) {
+            let crosses = 0;
+            for (let i = 0; i < w.length; i++) {
+                const rr = cand.ori === ACROSS ? cand.r : cand.r + i;
+                const cc = cand.ori === ACROSS ? cand.c + i : cand.c;
+                if (grid[rr]?.[cc] === w[i]) crosses++;
+            }
+            return crosses;
+        }
+
+        function centreDistance(cand, len, centre) {
+            const midR = cand.ori === DOWN ? cand.r + (len - 1) / 2 : cand.r;
+            const midC = cand.ori === ACROSS ? cand.c + (len - 1) / 2 : cand.c;
+            return Math.abs(midR - centre) + Math.abs(midC - centre);
+        }
+
+        function findFirstSpot(clue) {
+            for (let r = 0; r < gridSize; r++) {
+                for (let c = 0; c < gridSize; c++) {
+                    if (canPlace(clue, r, c, ACROSS)) return { r, c, ori: DOWN };
+                    if (canPlace(clue, r, c, DOWN))   return { r, c, ori: DOWN };
+                    return null;
+                }
+            }
+        }
+    }
+    /*
     function assignCluePositions(cluesArray, gridSize = 15) {
         cluesArray = cluesArray.filter(c => c.answer && /^[A-Z]+$/.test(c.answer) && c.answer.length <= gridSize);
 
@@ -610,6 +722,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Only return the ones that actually fit
         return cluesArray.filter(c => c.placed);
     }
+    */
 
     /**
      * Build a renderable cell grid from placed clues.

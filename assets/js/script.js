@@ -271,27 +271,37 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * Try multiple randomised layouts and keep the fullest grid.
      */
-    function buildBestLayout(rawClues, size, attempts = 12) {
-        let best = null;
+    function buildBestLayout(rawClues, gridSize, attempts = 12) {
+        if (!Array.isArray(rawClues) || rawClues.length === 0) return [];
 
-        for (let t = 0; t < attempts; t++) {
-            // Shuffle clues to vary the seed and crossing candidates
-            const clues = shuffle(rawClues.slice()).map(c => ({ ...c }));
-            
-            // Place words into a temporary internal char-grid
-            const placed = assignCluePositions(clues, size);
-            
-            // Convert placed clues into a renderable cell grid
-            const grid = generateGrid(placed, size);
+        const tryLayout = (clues) => {
+            const placedClues = assignCluePositions(clues, gridSize);
+            const candidateGrid = generateGrid(placedClues, gridSize);
+            const filledCount = countFilledCells(candidateGrid);
+            return { grid: candidateGrid, filled: filledCount };
+        };
 
-            // Seed by number of filed letters (higher = better)
-            const filled = grid.flat().filter(cell => !cell.isBlock && cell.letter).length;
+        let bestCandidate = null;
 
-            if (!best || filled > best.filled) {
-                best = { filled, grid };
+        for (let attemptIndex = 0; attemptIndex < attempts; attemptIndex++) {
+            const shuffledClues = shuffle(rawClues.map(c => ({ ...c })));
+            const candidate = tryLayout(shuffledClues);
+            if (!bestCandidate || candidate.filled > bestCandidate.filled) {
+                bestCandidate = candidate;
             }
         }
-        return best ? best.grid : [];
+
+        return bestCandidate?.grid ?? [];
+
+        function countFilledCells(grid) {
+            let count = 0;
+            for (const row of grid) {
+                for (const cell of row) {
+                    if (!cell.isBlock && cell.letter) count++;
+                }
+            }
+            return count;
+        }
     }
 
     /**

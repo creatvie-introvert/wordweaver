@@ -328,125 +328,127 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function assignCluePositions(cluesArray, gridSize = 15) {
-        const grid = Array.from({ length: gridSize }, () => Array.from({length: gridSize}, () => null));
+        const grid = Array.from({ length: gridSize }, () => Array(gridSize).fill(null));
 
-        function canPlace(clue, row, col, orientation) {
-            const word = clue.answer;
+        const inBounds = (r, c) => r >= 0 && r < gridSize && c >= 0 && c < gridSize;
 
-            for (let i = 0; i < word.length; i++) {
-                const r = orientation === 'across' ? row : row + i;
-                const c = orientation === 'across' ? col + i : col;
-
-                const beforeR = orientation === 'across' ? row : row - 1;
-                const beforeC = orientation === 'across' ? col - 1 : col;
-                const afterR = orientation === 'across' ? row : row + word.length;
-                const afterC = orientation === 'across' ? col + word.length : col;
-
-                if (
-                    beforeR >= 0 && beforeR < gridSize &&
-                    beforeC >= 0 && beforeC < gridSize &&
-                    grid[beforeR][beforeC]
-                ) {
-                    return false;
-                }
-
-                if (
-                    afterR >= 0 && afterR < gridSize &&
-                    afterC >= 0 && afterC < gridSize &&
-                    grid[afterR][afterC]
-                ) {
-                    return false;
-                }
-
-                for (let i = 0; i < word.length; i++) {
-                    const r = orientation = 'across' ? row : row + i;
-                    const c = orientation = 'across' ? col + i : col;
-
-                    if (r < 0 || r >= gridSize || c < 0 || c >= gridSize) {
-                        return false;
-                    }
-
-                    const cell = grid[r][c];
-
-                    if (cell && cell !== word[i]) {
-                        return false;
-                    }
-
-                    const adjacentCoords = orientation === 'across'
-                        ? [[r - 1, c], [r + 1, c]]
-                        : [[r, c - 1], [r, c + 1]];
-
-                    for (const [ar, ac] of adjacentCoords) {
-                        if (
-                            ar >= 0 && ar < gridSize &&
-                            ac >= 0 && ac < gridSize &&
-                            grid[ar][ac] && grid[ar][ac] !== word[i]
-                        ) {
-                            return false;
-                        }
-                    }
-                } 
-                return true;        
+        const place = (clue, r, c, orientation) => {
+            const w = clue.answer;
+            for (let i = 0; i < w.length; i++) {
+                const rr = orientation === 'across' ? r : r + i;
+                const cc = orientation === 'across' ? c + i : c;
+                grid[rr][cc] = w[i];
             }
-            
-        }
-
-        function placeClue(clue, row, col, orientation) {
-            const word = clue.answer;
-
-            for (let i = 0; i < word.length; i++) {
-                const r = orientation === 'across' ? row : row + i;
-                const c = orientation === 'across' ? col + i : col;
-                grid[r][c] = word[i];
-            }
-
-            clue.row = row;
-            clue.col = col;
+            clue.row = r;
+            clue.col = c;
             clue.orientation = orientation;
-        }
+            clue.placed = true;
+        };
 
-        const firstClue = cluesArray[0];
-        const startRow = Math.floor(gridSize / 2);
-        const startCol = Math.floor((gridSize - firstClue.answer.length) / 2);
-        placeClue(firstClue, startRow, startCol, 'across');
+        const canPlace = (clue, r, c, orientation) => {
+            const w = clue.answer;
 
-        for (let index = 1; index < cluesArray.length; index++) {
-            const clue = cluesArray[index];
-            const word = clue.answer;
-            let placed = false;
+            const lastR = orientation === 'across' ? r : r + w.length - 1;
+            const lastC = orientation === 'across' ? c + w.length - 1 : c;
+            if (!inBounds(r, c) || !inBounds(lastR, lastC)) return false;
 
-            for (let prevClue of cluesArray.slice(0, index)) {
-                const prevWord = prevClue.answer;
+            const beforeR = orientation == 'across' ? r : r - 1;
+            const beforeC = orientation === 'across' ? c - 1 : c;
+            const afterR = orientation === 'across' ? r : r + w.length;
+            const afterC = orientation === 'across' ? c + w.length : c;
+            if (inBounds(beforeR, beforeC) && grid[beforeR][beforeC] !== null) return false;
+            if (inBounds(afterR, afterC) && grid[afterR][afterC] !== null) return false;
 
-                for (let i = 0; i < word.length; i++) {
-                    for (let j = 0; j < prevWord.length; j++) {
-                        if (word[i] === prevWord[j]) {
-                            const newOrientation = prevClue.orientation === 'across' ? 'down' : 'across';
-                            const r = newOrientation === 'across'
-                                ? prevClue.row + j
-                                : prevClue.row - i;
-                            const c = newOrientation === 'across'
-                                ? prevClue.col - i
-                                : prevClue.col + j;
-                            
-                                if (canPlace(clue, r, c, newOrientation)) {
-                                    placeClue(clue, r, c, newOrientation);
-                                    placed =true;
-                                    break;
-                                }
+            for (let i = 0; i < w.length; i++) {
+                const rr = orientation === 'across' ? r : r + i;
+                const cc = orientation === 'across' ? c + i : c;
+
+                const existing = grid[rr][cc];
+                if (existing !== null && existing !== w[i]) return false;
+
+                if (existing === null) {
+                    if (orientation === 'across') {
+                        if (inBounds(rr - 1, cc) && grid[rr - 1][cc] !== null) return false;
+                        if (inBounds(rr + 1, cc) && grid[rr + 1][cc] !== null) return false;
+                    }
+                    else {
+                        if (inBounds(rr, cc - 1) && grid[rr][cc - 1] !== null) return false;
+                        if (inBounds(rr, cc + 1) && grid[rr][cc + 1] !== null) return false;
+                    }
+                }
+            }
+            return true;
+        };
+
+        cluesArray.sort((a, b) => b.answer.length - a.answer.length);
+        const first = cluesArray[0];
+        const seedRow = Math.floor(gridSize / 2);
+        const seedCol = Math.floor((gridSize - first.answer.length) / 2);
+        place(first, seedRow, seedCol, 'across');
+
+        for (let k = 1; k < cluesArray.length; k++) {
+            const clue = cluesArray[k];
+            const w = clue.answer;
+
+            const candidates = [];
+
+            for (let i = 0; i < w.length; i++) {
+                for (let r = 0; r < gridSize; r++) {
+                    for (let c = 0; c < gridSize; c++) {
+                        if (grid[r][c] === w[i]) {
+                            const rDown = r - i, cDown = c;
+                            if (canPlace(clue, rDown, cDown, 'down')) {
+                                candidates.push({ r: rDown, c: cDown, ori: 'down' });
+                            }
+                            const rAcross = r, cAcross = c - i;
+                            if (canPlace(clue, rAcross, cAcross, 'across')) {
+                                candidates.push({ r: rAcross, c: cAcross, ori: 'across' });
+                            }
                         }
                     }
-                    if (placed) break;
                 }
-                if (placed) break;
             }
 
-            if (!placed) {
-                console.warn(`Could not place: ${clue.answer}`);
+            const crossingScore = cand => {
+                let crosses = 0;
+                for (let i = 0; i < w.length; i++) {
+                    const rr = cand.ori === 'across' ? cand.r : cand.r + i;
+                    const cc = cand.ori === 'across' ? cand.c + i : cand.c;
+                    if (grid[rr]?.[cc] === w[i]) crosses++;
+                }
+                return -crosses;
+            };
+            candidates.sort((a, b) => crossingScore(a) - crossingScore(b));
+
+            let placed = false;
+            for (const cand of candidates) {
+                if (canPlace(clue, cand.r, cand.c, cand.ori)) {
+                    place(clue, cand.r, cand.c, cand.ori);
+                    placed = true;
+                    break;
+                }
             }
+            if (!placed) {
+                outer: for (let r = 0; r < gridSize; r++) {
+                    for (let c = 0; c < gridSize; c++) {
+                        if (canPlace(clue, r, c, 'across')) {
+                            place(clue, r, c, 'across');
+                            placed = true;
+                            break outer;
+                        }
+                        if (canPlace(clue, r, c, 'down')) {
+                            place(clue, r, c, 'down');
+                            placed = true;
+                            break outer;
+                        }
+                    }
+                }
+            }
+
+            if (!placed) console.warn(`Could not place: ${clue.answer}`);
         }
 
-        return cluesArray;
+        return cluesArray.filter(c => c.placed);
     }
 
     function generateGrid(cluesArray, gridSize) {

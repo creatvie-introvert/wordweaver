@@ -48,23 +48,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initThemeToggle(toggleBtn, html);
     
+    /**
+     * Initialise the theme toggle: apply saved/system theme, switch on click,
+     * persist to localStorage, and update the button's aria-label.
+     */
     function initThemeToggle(btn, root = document.documentElement) {
         let theme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 
-        apply(theme);
+        applyTheme(theme);
 
         if (btn) {
             btn.addEventListener('click', () => {
                 theme = theme === 'dark' ? 'light' : 'dark';
                 localStorage.setItem('theme', theme);
-                apply(theme);
+                applyTheme(theme);
             });
         }
 
-        function apply(t) {
-            root.setAttribute('data-theme', t);
+        function applyTheme(theme) {
+            root.setAttribute('data-theme', theme);
             if (btn) {
-                btn.setAttribute('aria-label', t === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+                btn.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+                btn.setAttribute('aria-pressed', String(theme === 'dark'));
             }
         }
     }

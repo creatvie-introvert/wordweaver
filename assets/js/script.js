@@ -636,33 +636,4 @@ document.addEventListener('DOMContentLoaded', () => {
             return el;
         }
     }
-    /*
-    function renderCrossword(grid) {
-        
-        board.innerHTML = '';
-
-        const gridSize = grid.length;
-        board.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
-        board.style.gridTemplateRows = `repeat(${grid.length}, 1fr)`;
-
-        grid.forEach((row) => {
-            row.forEach((cell) => {
-                const cellDiv = document.createElement('div');
-                cellDiv.classList.add('cell');
-                cellDiv.dataset.row = cell.row;
-                cellDiv.dataset.col = cell.col;
-
-                if (cell.isBlock) {
-                    cellDiv.classList.add('black-cell');
-                }
-                else {
-                    // For debuggin: show the letter: later replace this with inputs
-                    cellDiv.textContent = cell.letter;  // Use for debugging
-                }
-
-                board.appendChild(cellDiv);
-            });
-        });
-    }
-    */
 });

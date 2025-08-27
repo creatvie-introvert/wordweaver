@@ -550,7 +550,62 @@ document.addEventListener('DOMContentLoaded', () => {
     
     /**
      * Build a renderable cell grid from placed clues.
+     * Assumes each clue has {answer, row, col, orientation, id}
      */
+    function generateGrid(cluesArray, gridSize) {
+        const ACROSS = 'across';
+
+        const grid = Array.from({ length: gridSize }, (_, r) =>
+            Array.from({ length: gridSize }, (_, c) => ({
+                row: r,
+                col: c,
+                isBlock: true,
+                letter: '',
+                acrossClueId: null,
+                downClueId: null,
+                isStartOfClue: false
+            }))
+        );
+
+        const positionsFor = (clue) => {
+            const letters = clue.answer.toUpperCase().split('');
+            return letters.map((ch, i) => ({
+                row: clue.orientation === ACROSS ? clue.row : clue.row + i,
+                col: clue.orientation === ACROSS ? clue.col + i : clue.col,
+                ch,
+            })); 
+        };
+
+        for (const clue of cluesArray) {
+            if (!Number.isInteger(clue.row) || !Number.isInteger(clue.col)) {
+                continue;
+            }
+
+            const cells = positionsFor(clue);
+
+            const outOfBounds = cells.some(p =>
+                p.row < 0 || p.col < 0 || p.row >= gridSize || p.col >= gridSize
+            );
+            if (outOfBounds) {
+                console.warn(`Skipping "${clue.answer}" due to conflict`);
+                continue;
+            }
+
+            cells.forEach((p, i) => {
+                const cell = grid[p.row][p.col];
+                cell.letter = p.ch;
+                cell.isBlock = false;
+                if (clue.orientation === ACROSS) cell.acrossClueId = clue.id;
+                else cell.downClueId = clue.id;
+                if (i === 0) cell.isStartOfClue = true;
+            });
+
+            clue.placed = true;
+        }
+
+        return grid;
+    }
+    /*
     function generateGrid(cluesArray, gridSize) {
         const grid = [];
 
@@ -652,6 +707,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         return grid;
     }
+    */
 
     /**
      * Render a 2D crossword grid into the board using CSS Grid.

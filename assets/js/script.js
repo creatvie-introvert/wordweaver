@@ -41,13 +41,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalButtons = document.querySelectorAll('[data-modal]');
     const modals = document.querySelectorAll('.modal');
     const body = document.body;
-    initModals({ buttons: modalButtons, modals, body });
 
     const FOCUSABLE_SELECTOR = [
         '[autofocus]', 'a[href]', 'button:not([disabled])', 
         'input:not([disabled]):not([type="hidden"])', 'select:not([disabled])', 'textarea:not([disabled])', '[tabindex]:not([tabindex="-1"])'
     ].join(', ');
 
+    initModals({ buttons: modalButtons, modals, body });
     initThemeToggle(toggleBtn, html);
     
     /**
@@ -610,6 +610,34 @@ document.addEventListener('DOMContentLoaded', () => {
      * Render a 2D crossword grid into the board using CSS Grid.
      */
     function renderCrossword(grid) {
+        if (!board || !Array.isArray(grid) || grid.length === 0) return;
+
+        const size = grid.length;
+        board.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+        board.style.gridTemplateRows = `repeat(${size}, 1fr)`;
+        board.replaceChildren();
+
+        const frag = document.createDocumentFragment();
+
+        for (const row of grid) {
+            for (const cell of row) {
+                frag.appendChild(buildCell(cell));
+            }
+        }
+
+        board.appendChild(frag);
+
+        function buildCell(cell) {
+            const el = document.createElement('div');
+            el.className = cell.isBlock ? 'cell black-cell' : 'cell';
+            el.dataset.row = String(cell.row);
+            el.dataset.col = String(cell.col);
+            if (!cell.isBlock) el.textContent = cell.letter || '';
+            return el;
+        }
+    }
+    /*
+    function renderCrossword(grid) {
         
         board.innerHTML = '';
 
@@ -636,4 +664,5 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
+    */
 });

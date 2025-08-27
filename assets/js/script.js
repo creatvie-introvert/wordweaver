@@ -540,11 +540,11 @@ document.addEventListener('DOMContentLoaded', () => {
         function findFirstSpot(clue) {
             for (let r = 0; r < gridSize; r++) {
                 for (let c = 0; c < gridSize; c++) {
-                    if (canPlace(clue, r, c, ACROSS)) return { r, c, ori: DOWN };
+                    if (canPlace(clue, r, c, ACROSS)) return { r, c, ori: ACROSS };
                     if (canPlace(clue, r, c, DOWN))   return { r, c, ori: DOWN };
-                    return null;
                 }
             }
+            return null;
         }
     }
     

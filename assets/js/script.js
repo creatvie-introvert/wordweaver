@@ -662,6 +662,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    /**
+     * Compute crossword numbering: scans the grid and ssigns numbers to the cells that start across and/or down answer, rendering their coordinates and ids.
+     */
     function computeClueNumbers(grid) {
         const nums = { across: [], down: [] };
         let n = 1

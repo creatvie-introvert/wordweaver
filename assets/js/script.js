@@ -612,13 +612,23 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderCrossword(grid) {
         if (!board || !Array.isArray(grid) || grid.length === 0) return;
 
+        const numMap = (() => {
+            const m = new Map();
+            const nums = computeClueNumbers(grid);
+            for (const a of nums.across) m.set(`${a.row},${a.col}`, a.number);
+            for (const d of nums.down) {
+                const k = `${d.row},${d.col}`;
+                if (!m.has(k)) m.set(k, d.number);
+            }
+            return m;
+        })();
+
         const size = grid.length;
         board.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
         board.style.gridTemplateRows = `repeat(${size}, 1fr)`;
         board.replaceChildren();
 
         const frag = document.createDocumentFragment();
-
         for (const row of grid) {
             for (const cell of row) {
                 frag.appendChild(buildCell(cell));
@@ -632,8 +642,47 @@ document.addEventListener('DOMContentLoaded', () => {
             el.className = cell.isBlock ? 'cell black-cell' : 'cell';
             el.dataset.row = String(cell.row);
             el.dataset.col = String(cell.col);
-            if (!cell.isBlock) el.textContent = cell.letter || '';
+
+            if (!cell.isBlock) {
+                const key = `${cell.row},${cell.col}`;
+                const num = numMap.get(key);
+                if (num) {
+                    const badge = document.createElement('span');
+                    badge.className = 'cell-num';
+                    badge.textContent = String(num);
+                    el.appendChild(badge);
+                }
+
+                const letter = document.createElement('span');
+                letter.className = 'cell-letter';
+                letter.textContent = cell.letter || '';
+                el.appendChild(letter);
+            } //el.textContent = cell.letter || '';
             return el;
         }
+    }
+
+    function computeClueNumbers(grid) {
+        const nums = { across: [], down: [] };
+        let n = 1
+
+        for (let r = 0; r < grid.length; r++) {
+            for (let c = 0; c < grid.length; c++) {
+                const cell = grid[r][c];
+                if (cell.isBlock) continue;
+
+                const startsAcross = (!grid[r][c-1] || grid[r][c-1].isBlock) &&
+                                     (grid[r][c+1] && !grid[r][c+1].isBlock);
+                const startsDown = (!grid[r-1]?.[c] || grid[r-1][c].isBlock) &&
+                                   (grid[r+1]?.[c] && !grid[r+1][c].isBlock);
+                
+                if (startsAcross || startsDown) {
+                    if (startsAcross) nums.across.push({ number: n, row: r, col: c, id: cell.acrossClueId });
+                    if (startsDown) nums.down.push({ number: n, row: r, col: c, id: cell.downClueId});
+                    n++;
+                }
+            }
+        }
+        return nums;
     }
 });

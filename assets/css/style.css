@@ -519,6 +519,7 @@ a:focus-visible,
 }
 
 .cell {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -530,6 +531,23 @@ a:focus-visible,
     color: #000;
 
     background-color: #fff;
+}
+
+.cell .cell-num {
+    position: absolute;
+    top: 2px;
+    left: 3px;
+
+    font-size: 0.65rem;
+    line-height: 1;
+
+    opacity: 0.85;
+
+    pointer-events: none;
+}
+
+.cell .cell-letter {
+    display: inline-block;
 }
 
 .black-cell {
@@ -620,7 +638,7 @@ a:focus-visible,
         --font-paragraph: 2rem;
         --font-button: 2.2rem;
         --font-caption: 1.8rem;
-        --font-tag: 1.6;
+        --font-tag: 1.6rem;
     }
 
     #site-header {

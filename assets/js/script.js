@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let selectedCategory = null;
     let chosenDifficulty = null;
+    let clueBank = new Map(); 
     
     const html = document.documentElement;
     const toggleBtn = document.querySelector('[data-theme-toggle]');
@@ -349,13 +350,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const clues = sanitiseResults(data.results, gridSize);
-        if (clues.length === 0) {
-            console.warn('No valid clues after sanitisation');
-            return;
-        }
+        clueBank = new Map(clues.map(c => [c.id, c]));
+
+        // if (clues.length === 0) {
+        //     console.warn('No valid clues after sanitisation');
+        //     return;
+        // }
 
         const bestGrid = buildBestLayout(clues, gridSize, attempts);
-        renderCrossword(bestGrid);
+        renderCrossword(bestGrid, clueBank);
 
         function sanitiseResults(results, maxLen) {
             const seen = new Set();
@@ -708,4 +711,55 @@ document.addEventListener('DOMContentLoaded', () => {
         const el = document.getElementById('game-title');
         if (el) el.textContent = `${label} Crossword`;
     }
+
+    /**
+     * Compute lengths and friendly records for Across/Down from the rendered grid.
+     * Uses the computeClueNumbers() + the global clueBank.
+     */
+    function buildClueIndex(grid, bank) {
+        const nums = computeClueNumbers(grid);
+
+        const takeLen = (r, c, ori) => {
+            let len = 0;
+            if (ori === 'across') {
+                for (let cc = c; cc < grid.length && !grid[r][cc].isBlock; cc++) {
+                    len++;
+                }
+            }
+            else {
+                for (let rr = r; rr < grid.length && !grid[rr][c].isBlock; cc++) {
+                    len++;
+                }
+            }
+            return len;
+        };
+
+        const mk = (arr, ori) => arr.map(item => {
+            const meta = bank.get(item.id) || {};
+            return {
+                ...item,
+                orientation: ori,
+                clue: meta.clue || '(missing clue)',
+                answer: meta.answer || '',
+                length: takeLen(item.row, item.col, ori)
+            };
+        });
+
+        return {
+            across: mk(nums.across, 'across'),
+            down: mk(nums.down, 'down')
+        };
+    }
+
+    /**
+     * Render mobile carousel + tablet/desktop two panel lists, and wire up interactions (prev/next, click to focus).
+     */
+
+    /**
+     * Highlight the cells for a clue starting at (row,col) and orientation.
+     */
+
+    /**
+     * Get the .cell element at a board coordinate.
+     */
 });

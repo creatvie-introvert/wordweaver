@@ -189,8 +189,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!difficultyBtn) return;
 
         chosenDifficulty = difficultyBtn.getAttribute('data-difficulty');
-        goToSection(difficultySection, gameSection, '#game-title');
+        setGameTitle(selectedCategory);
 
+        goToSection(difficultySection, gameSection, '#game-title');
         loadCrossword(selectedCategory, chosenDifficulty);
     });
     
@@ -687,5 +688,24 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         return nums;
+    }
+
+    /**
+     * Update the game title to reflect the chosen category
+     */
+    function setGameTitle(categorySlug) {
+        const label = ({
+            'general-knowledge': 'General Knowledge',
+            'science-and-nature': 'Science & Nature',
+            'film': 'Film',
+            'music': 'Music',
+            'sports': 'Sports',
+            'geography': 'Geography',
+            'history': 'History',
+            'computers': 'Computers'
+        }[categorySlug]) ?? categorySlug.replaces(/-/g, ' ').replace(/\b\w/g, s => s.toUpperCase());
+
+        const el = document.getElementById('game-title');
+        if (el) el.textContent = `${label} Crossword`;
     }
 });

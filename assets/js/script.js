@@ -754,12 +754,122 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * Render mobile carousel + tablet/desktop two panel lists, and wire up interactions (prev/next, click to focus).
      */
+    function renderClues(grid, bank) {
+        const container = document.getElementById('clues-container');
+        if (!container) return;
+
+        const clueIndex = buildClueIndex(grid, bank);
+
+        const linear = [...clueIndex.across, ...clueIndex.down];
+
+        container.innerHTML = `
+            <div class="clue-carousel" role="region" aria-label="Current clue">
+                <button class="clue-nav prev" aria-label="Previous clue" type="button" title="Previous clue"><i class="fa-solid fa-caret-left"></i></button>
+                <div class="clue-display" aria-live="polite">
+                    <span class="clue-line">
+                        <span class="clue-no"></span>
+                        <span class="clue-direction"></span>
+                        <span class="clue-meta"></span>
+                    </span>
+                    <span class="clue-text"></span>
+                </div>
+                <button class="clue-nav next" aria-label="Next clue" type="button" title="Next clue"><i class="fa-solid fa-caret-right"></i></button>
+            </div>
+
+            <div class="clues-panels" role="region" aria-label="Clues">
+                <section class="class-panel">
+                    <h3>Across</h3>
+                    <ol class="across-list"></ol>
+                </section>
+                <section class="class-panel">
+                    <h3>Down</h3>
+                    <ol class="down-list"></ol>
+                </section>
+            </div>
+        `;
+
+        const acrossOl = container.querySelector('.across-list');
+        const downOl = container.querySelector('.down-list');
+
+        const liFor = clue => {
+            const li = document.createElement('li');
+            li.dataset.clueId = clue.id || '';
+            li.dataset.row = clue.row;
+            li.dataset.col = clue.col;
+            li.dataset.ori = clue.orientation;
+            li.innerHTML = `<span class="no">${clue.number}.</span> ${clue.clue} <span class="clue-meta">(${clue.length})</span>`;
+            li.tabIndex = 0;
+            return li;
+        };
+
+        clueIndex.across.forEach(c => acrossOl?.appendChild(liFor(c)));
+        clueIndex.down.forEach(c => downOl?.appendChild(liFor(c)));
+
+        const prevBtn = container.querySelector('.clue-nav.prev');
+        const nextBtn = container.querySelector('.clue-nav.next');
+        const clueNumberEl = container.querySelector('.clue-no');
+        const clueDirectionEl = container.querySelector('.clue-direction');
+        const clueMetaEl = container.querySelector('.clue-meta');
+        const clueTextEl = container.querySelector('.clue-text');
+
+        let pos = 0;
+
+        function updateCarousel() {
+            if (!linear.length) return;
+            const c = linear[pos];
+
+            clueNumberEl.textContent = `${c.number}.`;
+            clueDirectionEl.textContent = c.orientation === 'across' ? 'Across' : 'Down';
+            clueMetaEl.textContent = `(${c.length})`;
+            clueTextEl.textContent = c.clue;
+
+            setActiveListItem(c.id);
+            highlightClueOnBoard(c);
+        }
+
+        prevBtn?.addEventListener('click', () => {
+            pos = (pos - 1 + linear.length) % linear.length;
+            updateCarousel();
+        });
+        nextBtn?.addEventListener('click', () => {
+            pos = (pos + 1 + linear.length) % linear.length;
+            updateCarousel();
+        });
+
+        container.addEventListener('click', (e) => {
+            const li = e.target.closest('li[data-clue-id]');
+            if (!li) return;
+            const id = li.dataset.clueId;
+            const list = linear.findIndex(c => c.id === id);
+            if (list >= 0) pos = list;
+            updateCarousel();
+        });
+
+        container.addEventListener('keydown', (e) => {
+            const li = e.target.closest('li[data-clue-id]');
+            if (!li) return;
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                li.click();
+            }
+        });
+
+        function setActiveListItem(id) {
+            container.querySelectorAll('.clues-panel li').forEach(li => {
+                li.classList.toggle('is-active', li.dataset.clueId === id);
+            });
+        }
+
+        updateCarousel();
+    }
 
     /**
      * Highlight the cells for a clue starting at (row,col) and orientation.
      */
+    function highlightClueOnBoard() {}
 
     /**
      * Get the .cell element at a board coordinate.
      */
+    function getCellEl(r,c) {}
 });

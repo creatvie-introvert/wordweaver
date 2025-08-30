@@ -604,19 +604,27 @@ a:focus-visible,
 
 .clue-nav {
     width: 3.2rem;
-    height: 3.2rem;
+    aspect-ratio: 1/1;
+    border: 1px solid var(--border-color);
+    border-radius: 0.8rem;
+
+    background: linear-gradient(180deg, color-mix(in srgb, var(--text-color) 12%, var(--panel-color)), var(--panel-color));
+    box-shadow: 0 2px 0 color-mix(in srgb, var(--border-color) 70%, transparent), 0 0.8rem 1.8rem color-mix(in srgb, var(--panel-color) 55%, transform);
+
     display: grid;
     place-items: center;
 
     color: var(--button-bg);
 
-    background: transparent;
+    /* background: transparent; */
 
     cursor: pointer;
+    transition: transform .1s ease, box-shadow .15s ease, background-color .15s ease;
 }
 
 .clue-display {
     text-align: center;
+    font-size: var(--font-caption);
     line-height: var(--line-height-paragraph);
 }
 

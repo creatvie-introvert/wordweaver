@@ -726,9 +726,39 @@ a:focus-visible,
         display: none;
     }
 
+    #game-section {
+        display: grid;
+        grid-template-areas: 
+            "header header"
+            "board clues";
+        grid-template-columns: 1fr min(36rem, 35%);
+        grid-template-rows: auto 1fr;
+        column-gap: 2.4rem;
+        align-items: start;
+    }
+
+    .section-header {
+        grid-area: header;
+        margin-bottom: 1.6rem;
+    }
+
+    #crossword-board {
+        grid-area: board;
+        justify-self: center;
+        inline-size: min(75vmin, 60rem);
+    }
+
+    #clues-container {
+        grid-area: clues;
+        align-self: start;
+        position: sticky;
+        top: 1.2rem;
+    }
+
     .clues-panels {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-auto-rows: max-content;
+        grid-template-columns: 1fr;
         gap: 1.2rem;
     }
 
@@ -755,9 +785,11 @@ a:focus-visible,
         overflow: auto;
         margin: 0;
         padding: 0.8rem 1.2rem 1.2rem 2.4rem;
-        text-align: left;
         display: grid;
         gap: 4px;
+
+        text-align: left;
+        list-style: none;
     }
 
     .clues-panel li {

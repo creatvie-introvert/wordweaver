@@ -866,10 +866,42 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * Highlight the cells for a clue starting at (row,col) and orientation.
      */
-    function highlightClueOnBoard() {}
+    function highlightClueOnBoard(clue) {
+        if (!clue || !board) return;
+
+        clearBoardHighlights();
+
+        const stepR = clue.orientation === 'down' ? 1 : 0;
+        const stepC = clue.orientation === 'across' ? 1 : 0;
+
+        let r = Number(clue.row);
+        let c = Numner(clue.col);
+
+        while (true) {
+            const cell = getCellEl(r, c);
+            if (!cell || cell.classList.contains('black-cell')) break;
+
+            cell.classList.add('is-active');
+            r += stepR;
+            c =+ stepC;
+        }
+
+        const head = getCellEl(clue.row, clue.col);
+        if (head) {
+            head.classList.add('is-head');
+            head.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
+        }
+    }
 
     /**
      * Get the .cell element at a board coordinate.
      */
-    function getCellEl(r,c) {}
+    function getCellEl(row , col) {
+        return board?.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
+    }
+
+    function clearBoardHighlights() {
+        if (!board) return;
+        board.querySelectorAll('.cell.is-active, .cell.is-head').forEach(el => el.classList.remove('is-active', 'is-head'));
+    }
 });

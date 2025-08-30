@@ -643,6 +643,10 @@ a:focus-visible,
     background-color: yellow;
 }
 
+.cell.is-active {
+    outline: 2px solid var(--accent);
+}
+
 /* Media Queries */
 @media (min-width: 480px) {
     #hero-section {

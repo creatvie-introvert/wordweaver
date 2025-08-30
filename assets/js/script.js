@@ -352,13 +352,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const clues = sanitiseResults(data.results, gridSize);
         clueBank = new Map(clues.map(c => [c.id, c]));
 
-        // if (clues.length === 0) {
-        //     console.warn('No valid clues after sanitisation');
-        //     return;
-        // }
-
         const bestGrid = buildBestLayout(clues, gridSize, attempts);
         renderCrossword(bestGrid, clueBank);
+        renderClues(bestGrid, clueBank);
 
         function sanitiseResults(results, maxLen) {
             const seen = new Set();
@@ -671,7 +667,7 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     function computeClueNumbers(grid) {
         const nums = { across: [], down: [] };
-        let n = 1
+        let n = 1;
 
         for (let r = 0; r < grid.length; r++) {
             for (let c = 0; c < grid.length; c++) {
@@ -706,7 +702,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'geography': 'Geography',
             'history': 'History',
             'computers': 'Computers'
-        }[categorySlug]) ?? categorySlug.replaces(/-/g, ' ').replace(/\b\w/g, s => s.toUpperCase());
+        }[categorySlug]) ?? categorySlug.replace(/-/g, ' ').replace(/\b\w/g, s => s.toUpperCase());
 
         const el = document.getElementById('game-title');
         if (el) el.textContent = `${label} Crossword`;
@@ -727,7 +723,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
             else {
-                for (let rr = r; rr < grid.length && !grid[rr][c].isBlock; cc++) {
+                for (let rr = r; rr < grid.length && !grid[rr][c].isBlock; rr++) {
                     len++;
                 }
             }
@@ -777,11 +773,11 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
 
             <div class="clues-panels" role="region" aria-label="Clues">
-                <section class="class-panel">
+                <section class="clues-panel">
                     <h3>Across</h3>
                     <ol class="across-list"></ol>
                 </section>
-                <section class="class-panel">
+                <section class="clues-panel">
                     <h3>Down</h3>
                     <ol class="down-list"></ol>
                 </section>
@@ -875,7 +871,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const stepC = clue.orientation === 'across' ? 1 : 0;
 
         let r = Number(clue.row);
-        let c = Numner(clue.col);
+        let c = Number(clue.col);
 
         while (true) {
             const cell = getCellEl(r, c);
@@ -883,7 +879,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             cell.classList.add('is-active');
             r += stepR;
-            c =+ stepC;
+            c += stepC;
         }
 
         const head = getCellEl(clue.row, clue.col);

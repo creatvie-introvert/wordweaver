@@ -262,12 +262,12 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * In-place Fisher-Yates shuffle.
      */
-    function shuffle(a) {
-        for (let i = a.length - 1; i > 0; i--) {
+    function shuffle(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
-            [a[i], a[j]] = [a[j], a[i]];
+            [arr[i], arr[j]] = [arr[j], arr[i]];
         }
-        return a;
+        return arr;
     }
 
     /**
@@ -381,167 +381,171 @@ document.addEventListener('DOMContentLoaded', () => {
         const ACROSS = 'across';
         const DOWN = 'down';
 
-        const valid = clues.filter(c => 
-            c?.answer && /^[A-Z]+$/.test(c.answer) && 
-            c.answer.length <= gridSize
+        const validClues = clues.filter(clue => 
+            clue?.answer && /^[A-Z]+$/.test(clue.answer) && 
+            clue.answer.length <= gridSize
         );
-        if (valid.length === 0) return [];
+        if (validClues.length === 0) return [];
 
-        const grid = makeGrid(gridSize);
+        const gridChars = makeGrid(gridSize);
 
-        valid.sort((a, b) =>
-            b.answer.length - a.answer.length || (Math.random() - 0.5)
+        validClues.sort((clueA, clueB) =>
+            clueB.answer.length - clueA.answer.length || (Math.random() - 0.5)
         );
 
-        placeSeed(valid[0]);
+        placeSeed(validClues[0]);
 
-        for (let i = 1; i < valid.length; i++) {
-            const clue = valid[i];
-            const candidates = getCandidates(clue).sort(compareCandidates(clue));
+        for (let clueIndex = 1; clueIndex < validClues.length; clueIndex++) {
+            const clue = validClues[clueIndex];
+            const candidatePlacements = getCandidates(clue).sort(compareCandidates(clue));
             let placed = false;
 
-            for (const cand of candidates) {
-                if (canPlace(clue, cand.r, cand.c, cand.ori)) {
-                    place(clue, cand.r, cand.c, cand.ori);
+            for (const candidate of candidatePlacements) {
+                if (canPlace(clue, candidate.startRow, candidate.startCol, candidate.ori)) {
+                    place(clue, candidate.startRow, candidate.startCol, candidate.ori);
                     placed = true;
                     break;
                 }
             }
 
             if (!placed) {
-                const spot = findFirstSpot(clue);
-                if (spot) place(clue, spot.r, spot.c, spot.ori);
+                const fallbackSpot = findFirstSpot(clue);
+                if (fallbackSpot) place(clue, fallbackSpot.startRow, fallbackSpot.startCol, fallbackSpot.ori);
                 else console.warn(`Could not place: ${clue.answer}`);
             }
         }
 
-        return valid.filter(c => c.placed);
+        return validClues.filter(c => c.placed);
 
-        function makeGrid(n) {
-            return Array.from({ length: n }, () => Array(n).fill(null));
+        function makeGrid(size) {
+            return Array.from({ length: size }, () => Array(size).fill(null));
         }
 
-        function inBounds(r, c) {
-            return r >= 0 && r < gridSize && c >= 0 && c < gridSize;
+        function inBounds(row, col) {
+            return row >= 0 && row < gridSize && col >= 0 && col < gridSize;
         }
 
-        function place(clue, r, c, ori) {
-            const w = clue.answer;
-            for (let i = 0; i < w.length; i++) {
-                const rr = ori === ACROSS ? r : r + i;
-                const cc = ori === ACROSS ? c + i : c;
-                grid[rr][cc] = w[i];
+        function place(clue, startRow, startCol, ori) {
+            const word = clue.answer;
+            for (let i = 0; i < word.length; i++) {
+                const row = ori === ACROSS ? startRow : startRow + i;
+                const col = ori === ACROSS ? startCol + i : startCol;
+                gridChars[row][col] = word[i];
             }
-            clue.row = r;
-            clue.col = c;
+            clue.row = startRow;
+            clue.col = startCol;
             clue.orientation = ori;
             clue.placed = true;
         }
 
-        function canPlace(clue, r, c, ori) {
-            const w = clue.answer;
+        function canPlace(clue, startRow, startCol, ori) {
+            const word = clue.answer;
 
-            const lastR = ori === ACROSS ? r : r + w.length - 1;
-            const lastC = ori === ACROSS ? c + w.length - 1 : c;
-            if (!inBounds(r, c) || !inBounds(lastR, lastC)) return false;
+            const lastRow = ori === ACROSS ? startRow : startRow + word.length - 1;
+            const lastCol = ori === ACROSS ? startCol + word.length - 1 : startCol;
+            if (!inBounds(startRow, startCol) || !inBounds(lastRow, lastCol)) return false;
 
-            const beforeR = ori === ACROSS ? r : r - 1;
-            const beforeC = ori === ACROSS ? c - 1 : c;
-            const afterR = ori === ACROSS ? r : r + w.length;
-            const afterC = ori === ACROSS ? c + w.length : c;
+            const prevRow = ori === ACROSS ? startRow : startRow - 1;
+            const prevCol = ori === ACROSS ? startCol - 1 : startCol;
+            const nextRow = ori === ACROSS ? startRow : startRow + word.length;
+            const nextCol = ori === ACROSS ? startCol + word.length : startCol;
 
-            if (inBounds(beforeR, beforeC) && grid[beforeR][beforeC] !== null) return false; 
-            if (inBounds(afterR, afterC) && grid[afterR][afterC] !== null) return false; 
+            if (inBounds(prevRow, prevCol) && gridChars[prevRow][prevCol] !== null) return false; 
+            if (inBounds(nextRow, nextCol) && gridChars[nextRow][nextCol] !== null) return false; 
 
-            for (let i = 0; i < w.length; i ++) {
-                const rr = ori === ACROSS ? r : r + i;
-                const cc = ori === ACROSS ? c + i : c;
-                const existing = grid[rr][cc];
+            for (let i = 0; i < word.length; i++) {
+                const row = ori === ACROSS ? startRow : startRow + i;
+                const col = ori === ACROSS ? startCol + i : startCol;
+                const existingChar = gridChars[row][col];
                 
-                if (existing !== null && existing !==w[i]) return false;
+                if (existingChar !== null && existingChar !== word[i]) return false;
 
-                if (existing === null) {
+                if (existingChar === null) {
                     if (ori === ACROSS) {
-                        if (inBounds(rr - 1, cc) && grid[rr - 1][cc] !== null) return false;
-                        if (inBounds(rr + 1, cc) && grid[rr + 1][cc] !== null) return false;
+                        if (inBounds(row - 1, col) && gridChars[row - 1][col] !== null) return false;
+                        if (inBounds(row + 1, col) && gridChars[row + 1][col] !== null) return false;
                     }
                     else {
-                        if (inBounds(rr, cc - 1) && grid[rr][cc - 1] !== null) return false;
-                        if (inBounds(rr, cc + 1) && grid[rr][cc + 1] !== null) return false;
+                        if (inBounds(row, col - 1) && gridChars[row][col - 1] !== null) return false;
+                        if (inBounds(row, col + 1) && gridChars[row][col + 1] !== null) return false;
                     }
                 }
             }
             return true;
         }
 
-        function placeSeed(first) {
-            if (!first) return;
-            const r = Math.floor(gridSize / 2);
-            const c = Math.floor((gridSize - first.answer.length) / 2);
-            if (canPlace(first, r, c, ACROSS)) {
-                place(first, r, c, ACROSS);
+        function placeSeed(firstClue) {
+            if (!firstClue) return;
+            const startRow = Math.floor(gridSize / 2);
+            const startCol = Math.floor((gridSize - firstClue.answer.length) / 2);
+            if (canPlace(firstClue, startRow, startCol, ACROSS)) {
+                place(firstClue, startRow, startCol, ACROSS);
                 return;
             }
-            const spot = findFirstSpot(first);
-            if (spot) place(first, spot.r, spot.c, spot.ori);
-            else console.warn(`Could not place seed: ${first.answer}`);
+            const fallbackSpot = findFirstSpot(firstClue);
+            if (fallbackSpot) place(firstClue, fallbackSpot.startRow, fallbackSpot.startCol, fallbackSpot.ori);
+            else console.warn(`Could not place seed: ${firstClue.answer}`);
         }
 
         function getCandidates(clue) {
-            const w = clue.answer;
-            const out = [];
-            for (let i = 0; i < w.length; i++) {
-                for (let r = 0; r < gridSize; r++) {
-                    for (let c = 0; c < gridSize; c++) {
-                        if (grid[r][c] !== w[i]) continue;
+            const word = clue.answer;
+            const placements = [];
+            for (let letterIndex = 0; letterIndex < word.length; letterIndex++) {
+                for (let row = 0; row < gridSize; row++) {
+                    for (let col = 0; col < gridSize; col++) {
+                        if (gridChars[row][col] !== word[letterIndex]) continue;
 
-                        const rDown = r - i, cDown = c;
-                        if (canPlace(clue, rDown, cDown, DOWN)) out.push({ r: rDown, c: cDown, ori: DOWN });
+                        const startRowDown = row - letterIndex, startColDown = col;
+                        if (canPlace(clue, startRowDown, startColDown, DOWN)) {
+                            placements.push({ startRow: startRowDown, startCol: startColDown, ori: DOWN });
+                        }
 
-                        const rAcross = r, cAcross = c - i;
-                        if (canPlace(clue, rAcross, cAcross, ACROSS)) out.push({ r: rAcross, c: cAcross, ori: ACROSS });
+                        const startRowAcross = row, startColAcross = col - letterIndex;
+                        if (canPlace(clue, startRowAcross, startColAcross, ACROSS)) {
+                            placements.push({ startRow: startRowAcross, startCol: startColAcross, ori: ACROSS });
+                        }
                     }
                 }
             }
-            return out;
+            return placements;
         }
 
         function compareCandidates(clue) {
-            const w = clue.answer;
-            const centre = (gridSize - 1) / 2;
+            const word = clue.answer;
+            const centreCoord = (gridSize - 1) / 2;
 
-            return (a, b) => {
-                const cA = countCrosses(a, w);
-                const cB = countCrosses(b, w);
-                if (cB !== cA) return cB - cA;
+            return (candA, candB) => {
+                const crossesA = countCrosses(candA, word);
+                const crossesB = countCrosses(candB, word);
+                if (crossesB !== crossesA) return crossesB - crossesA;
 
-                const dA = centreDistance(a, w.length, centre);
-                const dB = centreDistance(b, w.length, centre);
-                return dA - dB;
+                const distA = centreDistance(candA, word.length, centreCoord);
+                const distB = centreDistance(candB, word.length, centreCoord);
+                return distA - distB;
             };
         }
 
-        function countCrosses(cand, w) {
+        function countCrosses(candidate, word) {
             let crosses = 0;
-            for (let i = 0; i < w.length; i++) {
-                const rr = cand.ori === ACROSS ? cand.r : cand.r + i;
-                const cc = cand.ori === ACROSS ? cand.c + i : cand.c;
-                if (grid[rr]?.[cc] === w[i]) crosses++;
+            for (let i = 0; i < word.length; i++) {
+                const row = candidate.ori === ACROSS ? candidate.startRow : candidate.startRow + i;
+                const col = candidate.ori === ACROSS ? candidate.startCol + i : candidate.startCol;
+                if (gridChars[row]?.[col] === word[i]) crosses++;
             }
             return crosses;
         }
 
-        function centreDistance(cand, len, centre) {
-            const midR = cand.ori === DOWN ? cand.r + (len - 1) / 2 : cand.r;
-            const midC = cand.ori === ACROSS ? cand.c + (len - 1) / 2 : cand.c;
-            return Math.abs(midR - centre) + Math.abs(midC - centre);
+        function centreDistance(candidate, length, centreCoord) {
+            const midpointRow = candidate.ori === DOWN ? candidate.startRow + (length - 1) / 2 : candidate.startRow;
+            const midpointCol = candidate.ori === ACROSS ? candidate.startCol + (length - 1) / 2 : candidate.startCol;
+            return Math.abs(midpointRow - centreCoord) + Math.abs(midpointCol - centreCoord);
         }
 
         function findFirstSpot(clue) {
-            for (let r = 0; r < gridSize; r++) {
-                for (let c = 0; c < gridSize; c++) {
-                    if (canPlace(clue, r, c, ACROSS)) return { r, c, ori: ACROSS };
-                    if (canPlace(clue, r, c, DOWN))   return { r, c, ori: DOWN };
+            for (let row = 0; row < gridSize; row++) {
+                for (let col = 0; col < gridSize; col++) {
+                    if (canPlace(clue, row, col, ACROSS)) return { startRow: row, startCol: col, ori: ACROSS };
+                    if (canPlace(clue, row, col, DOWN))   return { startRow:row, startCol: col, ori: DOWN };
                 }
             }
             return null;
@@ -552,13 +556,13 @@ document.addEventListener('DOMContentLoaded', () => {
      * Build a renderable cell grid from placed clues.
      * Assumes each clue has {answer, row, col, orientation, id}
      */
-    function generateGrid(cluesArray, gridSize) {
+    function generateGrid(placedClues, gridSize) {
         const ACROSS = 'across';
 
-        const grid = Array.from({ length: gridSize }, (_, r) =>
-            Array.from({ length: gridSize }, (_, c) => ({
-                row: r,
-                col: c,
+        const cellGrid = Array.from({ length: gridSize }, (_, rowIndex) =>
+            Array.from({ length: gridSize }, (_, colIndex) => ({
+                row: rowIndex,
+                col: colIndex,
                 isBlock: true,
                 letter: '',
                 acrossClueId: null,
@@ -567,95 +571,97 @@ document.addEventListener('DOMContentLoaded', () => {
             }))
         );
 
-        const positionsFor = (clue) => {
-            const letters = clue.answer.toUpperCase().split('');
-            return letters.map((ch, i) => ({
-                row: clue.orientation === ACROSS ? clue.row : clue.row + i,
-                col: clue.orientation === ACROSS ? clue.col + i : clue.col,
-                ch,
+        const positionsForClue = (placedClue) => {
+            const lettersArr = placedClue.answer.toUpperCase().split('');
+            return lettersArr.map((letter, offsetIndex) => ({
+                row: placedClue.orientation === ACROSS ? placedClue.row : placedClue.row + offsetIndex,
+                col: placedClue.orientation === ACROSS ? placedClue.col + offsetIndex : placedClue.col,
+                letter
             })); 
         };
 
-        for (const clue of cluesArray) {
-            if (!Number.isInteger(clue.row) || !Number.isInteger(clue.col)) {
+        for (const placedClue of placedClues) {
+            if (!Number.isInteger(placedClue.row) || !Number.isInteger(placedClue.col)) {
                 continue;
             }
 
-            const cells = positionsFor(clue);
+            const positions = positionsForClue(placedClue);
 
-            const outOfBounds = cells.some(p =>
-                p.row < 0 || p.col < 0 || p.row >= gridSize || p.col >= gridSize
+            const isOutOfBounds = positions.some(pos =>
+                pos.row < 0 || pos.col < 0 || pos.row >= gridSize || pos.col >= gridSize
             );
-            if (outOfBounds) {
-                console.warn(`Skipping "${clue.answer}" due to conflict`);
+            if (isOutOfBounds) {
+                console.warn(`Skipping "${placedClue.answer}" due to conflict`);
                 continue;
             }
 
-            cells.forEach((p, i) => {
-                const cell = grid[p.row][p.col];
-                cell.letter = p.ch;
-                cell.isBlock = false;
-                if (clue.orientation === ACROSS) cell.acrossClueId = clue.id;
-                else cell.downClueId = clue.id;
-                if (i === 0) cell.isStartOfClue = true;
+            positions.forEach((pos, letterIndex) => {
+                const gridCell = cellGrid[pos.row][pos.col];
+                gridCell.letter = pos.letter;
+                gridCell.isBlock = false;
+                if (placedClue.orientation === ACROSS) gridCell.acrossClueId = placedClue.id;
+                else gridCell.downClueId = placedClue.id;
+                if (letterIndex === 0) gridCell.isStartOfClue = true;
             });
 
-            clue.placed = true;
+            placedClue.placed = true;
         }
 
-        return grid;
+        return cellGrid;
     }
     
     /**
      * Render a 2D crossword grid into the board using CSS Grid.
      */
-    function renderCrossword(grid) {
-        if (!board || !Array.isArray(grid) || grid.length === 0) return;
+    function renderCrossword(cellGrid) {
+        if (!board || !Array.isArray(cellGrid) || cellGrid.length === 0) return;
 
-        const numMap = (() => {
-            const m = new Map();
-            const nums = computeClueNumbers(grid);
-            for (const a of nums.across) m.set(`${a.row},${a.col}`, a.number);
-            for (const d of nums.down) {
-                const k = `${d.row},${d.col}`;
-                if (!m.has(k)) m.set(k, d.number);
+        const clueNumberByCoord = (() => {
+            const numberMap = new Map();
+            const clueNumbers = computeClueNumbers(cellGrid);
+            for (const acrossStart of clueNumbers.across) {
+                numberMap.set(`${acrossStart.row},${acrossStart.col}`, acrossStart.number);
             }
-            return m;
+            for (const downStart of clueNumbers.down) {
+                const coordKey = `${downStart.row},${downStart.col}`;
+                if (!numberMap.has(coordKey)) numberMap.set(coordKey, downStart.number);
+            }
+            return numberMap;
         })();
 
-        const size = grid.length;
-        board.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
-        board.style.gridTemplateRows = `repeat(${size}, 1fr)`;
+        const gridSize = cellGrid.length;
+        board.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
+        board.style.gridTemplateRows = `repeat(${gridSize}, 1fr)`;
         board.replaceChildren();
 
         const frag = document.createDocumentFragment();
-        for (const row of grid) {
-            for (const cell of row) {
-                frag.appendChild(buildCell(cell));
+        for (const rowCells of cellGrid) {
+            for (const gridCell of rowCells) {
+                frag.appendChild(buildCell(gridCell));
             }
         }
 
         board.appendChild(frag);
 
-        function buildCell(cell) {
+        function buildCell(gridCell) {
             const el = document.createElement('div');
-            el.className = cell.isBlock ? 'cell black-cell' : 'cell';
-            el.dataset.row = String(cell.row);
-            el.dataset.col = String(cell.col);
+            el.className = gridCell.isBlock ? 'cell black-cell' : 'cell';
+            el.dataset.row = String(gridCell.row);
+            el.dataset.col = String(gridCell.col);
 
-            if (!cell.isBlock) {
-                const key = `${cell.row},${cell.col}`;
-                const num = numMap.get(key);
-                if (num) {
-                    const badge = document.createElement('span');
-                    badge.className = 'cell-num';
-                    badge.textContent = String(num);
-                    el.appendChild(badge);
+            if (!gridCell.isBlock) {
+                const coordKey = `${gridCell.row},${gridCell.col}`;
+                const clueNumber = clueNumberByCoord.get(coordKey);
+                if (clueNumber) {
+                    const badgeNumber = document.createElement('span');
+                    badgeNumber.className = 'cell-num';
+                    badgeNumber.textContent = String(clueNumber);
+                    el.appendChild(badgeNumber);
                 }
 
                 const letter = document.createElement('span');
                 letter.className = 'cell-letter';
-                letter.textContent = cell.letter || '';
+                letter.textContent = gridCell.letter || '';
                 el.appendChild(letter);
             } //el.textContent = cell.letter || '';
             return el;
@@ -666,27 +672,27 @@ document.addEventListener('DOMContentLoaded', () => {
      * Compute crossword numbering: scans the grid and ssigns numbers to the cells that start across and/or down answer, rendering their coordinates and ids.
      */
     function computeClueNumbers(grid) {
-        const nums = { across: [], down: [] };
-        let n = 1;
+        const clueNumbers = { across: [], down: [] };
+        let nextClueNumber = 1;
 
-        for (let r = 0; r < grid.length; r++) {
-            for (let c = 0; c < grid.length; c++) {
-                const cell = grid[r][c];
+        for (let row = 0; row < grid.length; row++) {
+            for (let col = 0; col < grid.length; col++) {
+                const cell = grid[row][col];
                 if (cell.isBlock) continue;
 
-                const startsAcross = (!grid[r][c-1] || grid[r][c-1].isBlock) &&
-                                     (grid[r][c+1] && !grid[r][c+1].isBlock);
-                const startsDown = (!grid[r-1]?.[c] || grid[r-1][c].isBlock) &&
-                                   (grid[r+1]?.[c] && !grid[r+1][c].isBlock);
+                const startsAcross = (!grid[row][col-1] || grid[row][col-1].isBlock) &&
+                                     (grid[row][col+1] && !grid[row][col+1].isBlock);
+                const startsDown = (!grid[row-1]?.[col] || grid[row-1][col].isBlock) &&
+                                   (grid[row+1]?.[col] && !grid[row+1][col].isBlock);
                 
                 if (startsAcross || startsDown) {
-                    if (startsAcross) nums.across.push({ number: n, row: r, col: c, id: cell.acrossClueId });
-                    if (startsDown) nums.down.push({ number: n, row: r, col: c, id: cell.downClueId});
-                    n++;
+                    if (startsAcross) clueNumbers.across.push({ number: nextClueNumber, row, col, id: cell.acrossClueId });
+                    if (startsDown) clueNumbers.down.push({ number: nextClueNumber, row, col, id: cell.downClueId});
+                    nextClueNumber++;
                 }
             }
         }
-        return nums;
+        return clueNumbers;
     }
 
     /**
@@ -713,37 +719,41 @@ document.addEventListener('DOMContentLoaded', () => {
      * Uses the computeClueNumbers() + the global clueBank.
      */
     function buildClueIndex(grid, bank) {
-        const nums = computeClueNumbers(grid);
+        const clueNumbers = computeClueNumbers(grid);
 
-        const takeLen = (r, c, ori) => {
-            let len = 0;
+        const getAnswerLength = (startRow, startCol, ori) => {
+            let length = 0;
             if (ori === 'across') {
-                for (let cc = c; cc < grid.length && !grid[r][cc].isBlock; cc++) {
-                    len++;
+                for (let col = startCol; col < grid.length && !grid[startRow][startCol].isBlock; col++) {
+                    length++;
                 }
             }
             else {
-                for (let rr = r; rr < grid.length && !grid[rr][c].isBlock; rr++) {
-                    len++;
+                for (let row = startRow; row < grid.length && !grid[startRow][startCol].isBlock; row++) {
+                    length++;
                 }
             }
-            return len;
+            return length;
         };
 
-        const mk = (arr, ori) => arr.map(item => {
-            const meta = bank.get(item.id) || {};
+        const attachMetaData = (entries, ori) => entries.map(({ number, row: startRow, col: startCol, id }) => {
+            const clueMeta = bank.get(id) || {};
             return {
-                ...item,
+                number,
                 orientation: ori,
-                clue: meta.clue || '(missing clue)',
-                answer: meta.answer || '',
-                length: takeLen(item.row, item.col, ori)
+                row: startRow,
+                col: startCol,
+                id,
+                orientation: ori,
+                clue: clueMeta.clue || '(missing clue)',
+                answer: clueMeta.answer || '',
+                length: getAnswerLength(startRow, startCol, ori)
             };
         });
 
         return {
-            across: mk(nums.across, 'across'),
-            down: mk(nums.down, 'down')
+            across: attachMetaData(clueNumbers.across, 'across'),
+            down: attachMetaData(clueNumbers.down, 'down')
         };
     }
 
@@ -756,7 +766,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const clueIndex = buildClueIndex(grid, bank);
 
-        const linear = [...clueIndex.across, ...clueIndex.down];
+        const linearClues = [...clueIndex.across, ...clueIndex.down];
 
         container.innerHTML = `
             <div class="clue-carousel" role="region" aria-label="Current clue">
@@ -808,36 +818,36 @@ document.addEventListener('DOMContentLoaded', () => {
         const clueMetaEl = container.querySelector('.clue-meta');
         const clueTextEl = container.querySelector('.clue-text');
 
-        let pos = 0;
+        let currentIndex = 0;
 
         function updateCarousel() {
-            if (!linear.length) return;
-            const c = linear[pos];
+            if (!linearClues.length) return;
+            const current = linearClues[currentIndex];
 
-            clueNumberEl.textContent = `${c.number}.`;
-            clueDirectionEl.textContent = c.orientation === 'across' ? 'Across' : 'Down';
-            clueMetaEl.textContent = `(${c.length})`;
-            clueTextEl.textContent = c.clue;
+            clueNumberEl.textContent = `${current.number}.`;
+            clueDirectionEl.textContent = current.orientation === 'across' ? 'Across' : 'Down';
+            clueMetaEl.textContent = `(${current.length})`;
+            clueTextEl.textContent = current.clue;
 
-            setActiveListItem(c.id);
-            highlightClueOnBoard(c);
+            setActiveListItem(current.id);
+            highlightClueOnBoard(current);
         }
 
         prevBtn?.addEventListener('click', () => {
-            pos = (pos - 1 + linear.length) % linear.length;
+            currentIndex = (currentIndex - 1 + linearClues.length) % linearClues.length;
             updateCarousel();
         });
         nextBtn?.addEventListener('click', () => {
-            pos = (pos + 1 + linear.length) % linear.length;
+            currentIndex = (currentIndex + 1 + linearClues.length) % linearClues.length;
             updateCarousel();
         });
 
         container.addEventListener('click', (e) => {
             const li = e.target.closest('li[data-clue-id]');
             if (!li) return;
-            const id = li.dataset.clueId;
-            const list = linear.findIndex(c => c.id === id);
-            if (list >= 0) pos = list;
+            const idx = li.dataset.clueId;
+            const list = linearClues.findIndex(c => c.id === li.dataset.clueId);
+            if (idx >= 0) currentIndex = idx;
             updateCarousel();
         });
 
@@ -867,19 +877,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         clearBoardHighlights();
 
-        const stepR = clue.orientation === 'down' ? 1 : 0;
-        const stepC = clue.orientation === 'across' ? 1 : 0;
+        const rowStep = clue.orientation === 'down' ? 1 : 0;
+        const colStep = clue.orientation === 'across' ? 1 : 0;
 
-        let r = Number(clue.row);
-        let c = Number(clue.col);
+        let row = Number(clue.row);
+        let col = Number(clue.col);
 
         while (true) {
-            const cell = getCellEl(r, c);
+            const cell = getCellEl(row, col);
             if (!cell || cell.classList.contains('black-cell')) break;
 
             cell.classList.add('is-active');
-            r += stepR;
-            c += stepC;
+            row += rowStep;
+            col += colStep;
         }
 
         const head = getCellEl(clue.row, clue.col);

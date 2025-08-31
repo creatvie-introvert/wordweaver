@@ -62,7 +62,7 @@ h1, h2, h3, h4, h5, h6 {
     --focus-ring: #397C3D;
     --panel-color: #fff;
 
-    /* --header-h: 6.4rem; */
+    --header-h: 6.4rem;
     --header-shadow: 0 4px 0.8rem rgba(0, 0, 0, 0.08);
 
     --font-hero: 4rem;
@@ -654,6 +654,12 @@ a:focus-visible,
 
 .cell.is-active {
     outline: 2px solid var(--accent);
+}
+
+#category-title,
+#difficulty-title,
+#game-title {
+    scroll-margin-top: calc(var(--header-h) + 1rem);
 }
 
 /* Media Queries */

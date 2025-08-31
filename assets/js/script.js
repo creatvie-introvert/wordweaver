@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let selectedCategory = null;
     let chosenDifficulty = null;
     let clueBank = new Map(); 
+    let currentOrientation = 'across';
     
     const html = document.documentElement;
     const toggleBtn = document.querySelector('[data-theme-toggle]');
@@ -914,6 +915,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!clue || !board) return;
 
         clearBoardHighlights();
+        currentOrientation = clue.orientation;
 
         const rowStep = clue.orientation === 'down' ? 1 : 0;
         const colStep = clue.orientation === 'across' ? 1 : 0;
@@ -953,8 +955,71 @@ document.addEventListener('DOMContentLoaded', () => {
         board.addEventListener('input', (e) => {
             const input = e.target.closest('.cell-input');
             if (!input) return;
+
             const v = input.value.replace(/[^A-Za-z]/g, '').toUpperCase().slice(0, 1);
             input.value = v;
-        })
+
+            if (v) {
+                const cell = input.closest('.cell');
+                moveRelative(cell, 1);
+            }
+        });
+
+        board.addEventListener('keydown', (e) => {
+            const input = e.target.closest('.cell-input');
+            if (!input) return;
+
+            if (e.key === 'Backspace') {
+                const cell = input.closest('.cell');
+                if (input.value) {
+                    input.value = '';
+                    e.preventDefault();
+                    return;
+                }
+
+                moveRelative(cell, -1);
+                const prev = document.activeElement?.closest('.cell')?.querySelector('.cell-input');
+                if (prev) prev.value = '';
+                e.preventDefault();
+            }
+        });
+    }
+
+    function activeCellsSorted() {
+        const activeCells = [...board.querySelectorAll('.cell.is-active:not(.black-cell')];
+        if (!activeCells.length) return [];
+        const compareNumbers = (a, b) => Number(a) - Number(b);
+
+        if (currentOrientation === 'across') {
+            return activeCells.sort((cellA, cellB) => {
+                const rowA = Number(cellA.dataset.row);
+                const rowB = Number(cellB.dataset.row);
+                const colA = Number(cellA.dataset.col);
+                const colB = Number(cellB.dataset.col);
+                return rowA === rowB ? compareNumbers(colA, colB) : compareNumbers(rowA, rowB);
+            });
+        }
+        else {
+            return activeCells.sort((cellA, cellB) => {
+                const rowA = Number(cellA.dataset.row);
+                const rowB = Number(cellB.dataset.row);
+                const colA = Number(cellA.dataset.col);
+                const colB = Number(cellB.dataset.col);
+                return colA === colB ? compareNumbers(rowA, rowB) : compareNumbers(colA, colB);
+            });
+        }
+    }
+
+    function moveRelative(currentCell, offset) {
+        const orderedActiveCells = activeCellsSorted();
+        if (orderedActiveCells.length === 0) return;
+
+        const currentIndex = Math.max(0, orderedActiveCells.indexOf(currentCell));
+        const targetIndex = Math.min(Math.max(currentIndex + offset, 0), orderedActiveCells.length - 1);
+
+        const targetCell = orderedActiveCells[targetIndex];
+        const targetInput = targetCell?.querySelector('.cell-input');
+        targetInput?.focus();
+        targetInput?.select?.();
     }
 });

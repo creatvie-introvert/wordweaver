@@ -172,6 +172,21 @@ document.addEventListener('DOMContentLoaded', () => {
             activeModal = null;
         }
     }
+
+    const headerEl = document.getElementById('site-header');
+    if (headerEl) {
+    const updateHeaderHeight = () => { // ← fixed: arrow function
+        const h = Math.ceil(headerEl.getBoundingClientRect().height);
+        const root = document.documentElement;
+        root.style.setProperty('--header-h', `${h}px`); // ← fixed: set var + value
+        // (optional) if you want a single var for padding:
+        root.style.setProperty('--scroll-pad-top', `calc(${h}px + 1rem)`);
+    };
+    updateHeaderHeight();
+    new ResizeObserver(updateHeaderHeight).observe(headerEl);
+    window.addEventListener('orientationchange', updateHeaderHeight);
+    window.addEventListener('resize', updateHeaderHeight);
+}
     
     startBtn?.addEventListener('click', () => {
         goToSection(heroSection, categorySection, '#category-title');
@@ -238,16 +253,22 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     function goToSection(from, to, focusSelector) {
         if (!from || !to) return;
-            
+
+        setSectionVisible(from, false);
         setSectionVisible(to, true);
 
-        if (focusSelector) {
-            to.querySelector(focusSelector)?.focus?.();
-        }
-        else {
-            focusFirstFocusable(to);
-        }
-        setSectionVisible(from, false);
+        requestAnimationFrame(() => {
+            const target = focusSelector ? to.querySelector(focusSelector) : to;
+            if (!target) return;
+
+            const headerPx = parseFloat(
+                getComputedStyle(document.documentElement).getPropertyValue('--header-h')
+            ) || 0;
+
+            const y = target.getBoundingClientRect().top + window.scrollY - headerPx - 10;
+            window.scrollTo({ top: y, heaviour: 'smooth' });
+            target.focus?.({ preventScroll: true });
+        });
     }
 
     /**

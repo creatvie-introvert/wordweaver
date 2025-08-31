@@ -62,7 +62,7 @@ h1, h2, h3, h4, h5, h6 {
     --focus-ring: #397C3D;
     --panel-color: #fff;
 
-    --header-h: 6.4rem;
+    --header-h: 7.2rem;
     --header-shadow: 0 4px 0.8rem rgba(0, 0, 0, 0.08);
 
     --font-hero: 4rem;
@@ -206,6 +206,11 @@ nav ul {
     list-style: none;  
 }
 
+/* html,
+.section-wrapper {
+    scroll-margin-top: calc(var(--header-h) + 1rem);
+} */
+
 .section-wrapper {
     flex: 1 1 auto;
     min-height: 0;
@@ -236,6 +241,8 @@ nav ul {
 /* 
     Header Styles
 */
+
+
 #site-header {
     display: flex;
     justify-content: space-between;
@@ -659,7 +666,8 @@ a:focus-visible,
 #category-title,
 #difficulty-title,
 #game-title {
-    scroll-margin-top: calc(var(--header-h) + 1rem);
+    /* scroll-margin-top: calc(var(--header-h) + 1rem); */
+    scroll-padding-top: var(--header-h);
 }
 
 /* Media Queries */

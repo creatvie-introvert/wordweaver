@@ -842,13 +842,17 @@ document.addEventListener('DOMContentLoaded', () => {
             updateCarousel();
         });
 
+        function selectClueById(clueId) {
+            const i = linearClues.findIndex(c => c.id === clueId);
+            if (i === -1) return;
+            currentIndex = i;
+            updateCarousel();
+        }
+
         container.addEventListener('click', (e) => {
             const li = e.target.closest('li[data-clue-id]');
             if (!li) return;
-            const idx = li.dataset.clueId;
-            const list = linearClues.findIndex(c => c.id === li.dataset.clueId);
-            if (idx >= 0) currentIndex = idx;
-            updateCarousel();
+            selectClueById(li.dataset.clueId);
         });
 
         container.addEventListener('keydown', (e) => {
@@ -856,7 +860,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!li) return;
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
-                li.click();
+                selectClueById(li.dataset.clueId)
             }
         });
 

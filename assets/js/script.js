@@ -376,6 +376,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const bestGrid = buildBestLayout(clues, gridSize, attempts);
         renderCrossword(bestGrid, clueBank);
         renderClues(bestGrid, clueBank);
+        wireBoardInputs();
 
         function sanitiseResults(results, maxLen) {
             const seen = new Set();
@@ -946,5 +947,14 @@ document.addEventListener('DOMContentLoaded', () => {
     function clearBoardHighlights() {
         if (!board) return;
         board.querySelectorAll('.cell.is-active, .cell.is-head').forEach(el => el.classList.remove('is-active', 'is-head'));
+    }
+
+    function wireBoardInputs() {
+        board.addEventListener('input', (e) => {
+            const input = e.target.closest('.cell-input');
+            if (!input) return;
+            const v = input.value.replace(/[^A-Za-z]/g, '').toUpperCase().slice(0, 1);
+            input.value = v;
+        })
     }
 });

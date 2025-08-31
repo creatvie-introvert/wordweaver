@@ -680,11 +680,23 @@ document.addEventListener('DOMContentLoaded', () => {
                     el.appendChild(badgeNumber);
                 }
 
-                const letter = document.createElement('span');
-                letter.className = 'cell-letter';
-                letter.textContent = gridCell.letter || '';
-                el.appendChild(letter);
-            } //el.textContent = cell.letter || '';
+                el.dataset.solution = (gridCell.letter || '').toUpperCase();
+
+                const input = document.createElement('input');
+                input.className = 'cell-input';
+                input.type = 'text';
+                input.inputMode = 'latin';
+                input.maxLength = 1;
+                input.autocomplete = false;
+                input.setAttribute('aria-label', `Row ${gridCell.row + 1}, column ${gridCell.col + 1}`);
+
+                el.appendChild(input);
+                // const letter = document.createElement('span');
+                // letter.className = 'cell-letter';
+                // letter.textContent = gridCell.letter || '';
+                // el.appendChild(letter);
+            } 
+            
             return el;
         }
     }

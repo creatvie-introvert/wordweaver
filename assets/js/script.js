@@ -175,21 +175,25 @@ document.addEventListener('DOMContentLoaded', () => {
             activeModal = null;
         }
     }
+    
+    function initHeaderHeightObserver() {
+        const headerEl = document.getElementById('site-header');
+        if (headerEl) {
+            const updateHeaderHeight = () => { 
+                const h = Math.ceil(headerEl.getBoundingClientRect().height);
+                const root = document.documentElement;
+                root.style.setProperty('--header-h', `${h}px`); 
 
-    const headerEl = document.getElementById('site-header');
-    if (headerEl) {
-    const updateHeaderHeight = () => { // ← fixed: arrow function
-        const h = Math.ceil(headerEl.getBoundingClientRect().height);
-        const root = document.documentElement;
-        root.style.setProperty('--header-h', `${h}px`); // ← fixed: set var + value
-        // (optional) if you want a single var for padding:
-        root.style.setProperty('--scroll-pad-top', `calc(${h}px + 1rem)`);
-    };
-    updateHeaderHeight();
-    new ResizeObserver(updateHeaderHeight).observe(headerEl);
-    window.addEventListener('orientationchange', updateHeaderHeight);
-    window.addEventListener('resize', updateHeaderHeight);
-}
+                root.style.setProperty('--scroll-pad-top', `calc(${h}px + 1rem)`);
+            };
+            updateHeaderHeight();
+            new ResizeObserver(updateHeaderHeight).observe(headerEl);
+            window.addEventListener('orientationchange', updateHeaderHeight);
+            window.addEventListener('resize', updateHeaderHeight);
+        }
+    }
+
+    initHeaderHeightObserver();
     
     startBtn?.addEventListener('click', () => {
         goToSection(heroSection, categorySection, '#category-title');

@@ -51,6 +51,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initModals({ buttons: modalButtons, modals, body });
     initThemeToggle(toggleBtn, html);
+
+    const log = (...args) => console.log('[WW]', ...args);
     
     /**
      * Initialise the theme toggle: apply saved/system theme, switch on click, persist to localStorage, and update the button's aria-label.
@@ -267,7 +269,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ) || 0;
 
             const y = target.getBoundingClientRect().top + window.scrollY - headerPx - 10;
-            window.scrollTo({ top: y, heaviour: 'smooth' });
+            window.scrollTo({ top: y, behavior: 'smooth' });
             target.focus?.({ preventScroll: true });
         });
     }
@@ -759,12 +761,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const getAnswerLength = (startRow, startCol, ori) => {
             let length = 0;
             if (ori === 'across') {
-                for (let col = startCol; col < grid.length && !grid[startRow][startCol].isBlock; col++) {
+                for (let c = startCol; c < grid.length && !grid[startRow][c].isBlock; c++) {
                     length++;
                 }
             }
             else {
-                for (let row = startRow; row < grid.length && !grid[startRow][startCol].isBlock; row++) {
+                for (let r = startRow; r < grid.length && !grid[r][startCol].isBlock; r++) {
                     length++;
                 }
             }
@@ -915,6 +917,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!clue || !board) return;
 
         clearBoardHighlights();
+        log('highlightClueOnBoard', clue);
         currentOrientation = clue.orientation;
 
         const rowStep = clue.orientation === 'down' ? 1 : 0;
@@ -952,6 +955,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function wireBoardInputs() {
+        board.addEventListener('focusin', (e) => {
+            const input = e.target.closest('.cell-input');
+            if (!input) return;
+            const cell = input.closest('.cell');
+            log('focusin -> highlightFromCell', cell?.dataset);
+            highlightFromCell(cell, currentOrientation);
+        });
+
         board.addEventListener('input', (e) => {
             const input = e.target.closest('.cell-input');
             if (!input) return;
@@ -961,6 +972,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (v) {
                 const cell = input.closest('.cell');
+                log('input letter', v, '-> moveRelative +1');
                 moveRelative(cell, 1);
             }
         });
@@ -968,25 +980,103 @@ document.addEventListener('DOMContentLoaded', () => {
         board.addEventListener('keydown', (e) => {
             const input = e.target.closest('.cell-input');
             if (!input) return;
+            const cell = input.closest('.cell');
 
             if (e.key === 'Backspace') {
                 const cell = input.closest('.cell');
+
                 if (input.value) {
+                    log('Backspace: clearing current cell'); 
                     input.value = '';
                     e.preventDefault();
                     return;
                 }
-
+                log('Backspace: moveRelatice -1 and clear previous');
                 moveRelative(cell, -1);
                 const prev = document.activeElement?.closest('.cell')?.querySelector('.cell-input');
                 if (prev) prev.value = '';
                 e.preventDefault();
+                return;
+            }
+
+            if (e.key === 'ArrowRight') {
+                log('ArrowRight -> across, move +1');
+                highlightFromCell(cell, 'across');
+                moveRelative(cell, 1);
+                e.preventDefault();
+                return;
+            }
+            else if (e.key === 'ArrowLeft') {
+                log('ArrowLeft -> across, move -1');
+                highlightFromCell(cell, 'across');
+                moveRelative(cell, -1);
+                e.preventDefault();
+                return;
+            }
+            else if (e.key === 'ArrowDown') {
+                log('ArrowDown -> down, move +1');
+                highlightFromCell(cell, 'down');
+                moveRelative(cell, 1);
+                e.preventDefault();
+                return;
+            }
+            else if (e.key === 'ArrowUp') {
+                log('ArrowUp -> down, move -1');
+                highlightFromCell(cell, 'down');
+                moveRelative(cell, -1);
+                e.preventDefault();
+                return;
+            }
+
+            if (e.code === 'Space' || e.key === ' ' || e.key === 'Spacebar') {
+                const nextOri = currentOrientation === 'across' ? 'down' : 'across';
+                log('Space: toggle orientation', currentOrientation, '->', nextOri);
+                highlightFromCell(cell, nextOri)
+                e.preventDefault();
+                return;
             }
         });
+
+        board.addEventListener('click', (e) => {
+            const cell = e.target.closest('.cell:not(.black-cell)');
+            if (!cell) return;
+            log('click cell', cell.dataset);
+            const input =  cell.querySelector('.cell-input');
+            input?.focus();
+            input?.select?.();
+        });
+        board.addEventListener('dblclick', (e) => {
+            const cell = e.target.closest('.cell:not(.black-cell)');
+            if (!cell) return;
+            const nextOri = currentOrientation === 'across' ? 'down' : 'across';
+            log('dblclick cell', cell.dataset, 'toggle to', nextOri);
+            highlightFromCell(cell, nextOri);
+            const input = cell.querySelector('.cell-input');
+            input?.focus();
+            input?.select?.();
+        });
+
+        // let lastClickedCell = null;
+        // let lastClickedTime = 0;
+        // board.addEventListener('dblclick', (e) => {
+        //     const cell = e.target.closest('.cell:not(.black-cell)');
+        //     if (!cell) return;
+        //     const now = performance.now();
+
+        //     if (lastClickedCell === cell && (now - lastClickedTime) < 300) {
+        //         currentOrientation = currentOrientation === 'across' ? 'down' : 'across';
+        //     }
+        //     lastClickedCell = cell;
+        //     lastClickedTime = now;
+
+        //     const input = cell.querySelector('.cell-input');
+        //     input?.focus();
+        //     input?.select?.();
+        // });
     }
 
     function activeCellsSorted() {
-        const activeCells = [...board.querySelectorAll('.cell.is-active:not(.black-cell')];
+        const activeCells = [...board.querySelectorAll('.cell.is-active:not(.black-cell)')];
         if (!activeCells.length) return [];
         const compareNumbers = (a, b) => Number(a) - Number(b);
 
@@ -1021,5 +1111,62 @@ document.addEventListener('DOMContentLoaded', () => {
         const targetInput = targetCell?.querySelector('.cell-input');
         targetInput?.focus();
         targetInput?.select?.();
+    }
+
+    function highlightFromCell(cell, ori) {
+        if (!cell) return;
+        clearBoardHighlights();
+        currentOrientation = ori;
+
+        const row = Number(cell.dataset.row);
+        const col = Number(cell.dataset.col);
+
+        log('highlightFromCell start', { row, col, ori });
+        if (ori === 'across') {
+            let startCol = col;
+            while (true) {
+                const prev = getCellEl(row, startCol - 1);
+                if (!prev || prev.classList.contains('black-cell')) break;
+                startCol--;
+            }
+
+            let endCol = startCol;
+            for (let colIndex = startCol; ; colIndex++) {
+                const el = getCellEl(row, colIndex);
+                if (!el || el.classList.contains('black-cell')) {
+                    endCol = colIndex - 1;
+                    break;
+                }
+                el.classList.add('is-active');
+            }
+            // const head = getCellEl(row, startCol);
+            // head?.classList.add('is-head');
+                        getCellEl(row, startCol)?.classList.add('is-head');
+            log('across head', { row, startCol, endCol });
+            getCellEl(row, startCol)?.classList.add('.is-head');
+        }
+        else {
+            let startRow = row;
+            while (true) {
+                const prev = getCellEl(startRow - 1, col);
+                if (!prev || prev.classList.contains('black-cell')) break;
+                startRow--;
+            }
+
+            let endRow = startRow;
+            for (let rowIndex = startRow; ; rowIndex++ ) {
+                const el = getCellEl(rowIndex, col);
+                if (!el || el.classList.contains('black-cell')) {
+                    endRow = rowIndex - 1;
+                    break;
+                } 
+                el.classList.add('is-active');
+            }
+            // const head = getCellEl(startRow, col);
+            // head?.classList.add('is-head');
+            getCellEl(startRow, col)?.classList.add('is-head');
+            log('down head', { col, startRow, endRow });
+            // getCellEl(startRow, col)?.classList.add('.is-head');
+        }
     }
 });

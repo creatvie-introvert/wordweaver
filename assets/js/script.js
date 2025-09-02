@@ -1143,7 +1143,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // head?.classList.add('is-head');
                         getCellEl(row, startCol)?.classList.add('is-head');
             log('across head', { row, startCol, endCol });
-            getCellEl(row, startCol)?.classList.add('.is-head');
+            getCellEl(row, startCol)?.classList.add('is-head');
         }
         else {
             let startRow = row;

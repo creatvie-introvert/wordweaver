@@ -604,6 +604,8 @@ a:focus-visible,
     font-size: clamp(1.4rem, 2.5vmin, 2.2rem);
     text-transform: uppercase;
     caret-color: var(--accent);
+
+    background: transparent;
 }
 
 .black-cell .cell-input {

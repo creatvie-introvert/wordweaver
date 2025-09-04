@@ -679,6 +679,11 @@ document.addEventListener('DOMContentLoaded', () => {
             el.dataset.col = String(gridCell.col);
 
             if (!gridCell.isBlock) {
+                el.dataset.acrossId = gridCell.acrossClueId || '';
+                el.dataset.downId = gridCell.downClueId || '';
+            }
+
+            if (!gridCell.isBlock) {
                 const coordKey = `${gridCell.row},${gridCell.col}`;
                 const clueNumber = clueNumberByCoord.get(coordKey);
                 if (clueNumber) {
@@ -699,10 +704,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 input.setAttribute('aria-label', `Row ${gridCell.row + 1}, column ${gridCell.col + 1}`);
 
                 el.appendChild(input);
-                // const letter = document.createElement('span');
-                // letter.className = 'cell-letter';
-                // letter.textContent = gridCell.letter || '';
-                // el.appendChild(letter);
             } 
             
             return el;
@@ -890,6 +891,12 @@ document.addEventListener('DOMContentLoaded', () => {
             updateCarousel();
         }
 
+        container.addEventListener('select-clue', (e) => {
+            const id = e.detail?.clueId;
+            log('event: select-clue', id);
+            if (id) selectClueById(id);
+        });
+
         container.addEventListener('click', (e) => {
             const li = e.target.closest('li[data-clue-id]');
             if (!li) return;
@@ -965,12 +972,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const cell = input.closest('.cell');
             log('focusin -> highlightFromCell', cell?.dataset);
             highlightFromCell(cell, currentOrientation);
+            selectClueFromCell(cell, currentOrientation);
         });
 
         board.addEventListener('input', (e) => {
             const input = e.target.closest('.cell-input');
             if (!input) return;
-
+            
             const v = input.value.replace(/[^A-Za-z]/g, '').toUpperCase().slice(0, 1);
             input.value = v;
 
@@ -1006,6 +1014,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.key === 'ArrowRight') {
                 log('ArrowRight -> across, move +1');
                 highlightFromCell(cell, 'across');
+                selectClueFromCell(cell, 'across');
                 moveRelative(cell, 1);
                 e.preventDefault();
                 return;
@@ -1013,6 +1022,7 @@ document.addEventListener('DOMContentLoaded', () => {
             else if (e.key === 'ArrowLeft') {
                 log('ArrowLeft -> across, move -1');
                 highlightFromCell(cell, 'across');
+                selectClueFromCell(cell, 'across');
                 moveRelative(cell, -1);
                 e.preventDefault();
                 return;
@@ -1020,6 +1030,7 @@ document.addEventListener('DOMContentLoaded', () => {
             else if (e.key === 'ArrowDown') {
                 log('ArrowDown -> down, move +1');
                 highlightFromCell(cell, 'down');
+                selectClueFromCell(cell, 'down');
                 moveRelative(cell, 1);
                 e.preventDefault();
                 return;
@@ -1027,6 +1038,7 @@ document.addEventListener('DOMContentLoaded', () => {
             else if (e.key === 'ArrowUp') {
                 log('ArrowUp -> down, move -1');
                 highlightFromCell(cell, 'down');
+                selectClueFromCell(cell, 'down');
                 moveRelative(cell, -1);
                 e.preventDefault();
                 return;
@@ -1035,7 +1047,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.code === 'Space' || e.key === ' ' || e.key === 'Spacebar') {
                 const nextOri = currentOrientation === 'across' ? 'down' : 'across';
                 log('Space: toggle orientation', currentOrientation, '->', nextOri);
-                highlightFromCell(cell, nextOri)
+                highlightFromCell(cell, nextOri);
+                selectClueFromCell(cell, nextOri);
                 e.preventDefault();
                 return;
             }
@@ -1048,7 +1061,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const input =  cell.querySelector('.cell-input');
             input?.focus();
             input?.select?.();
+            selectClueFromCell(cell, currentOrientation);
         });
+
         board.addEventListener('dblclick', (e) => {
             const cell = e.target.closest('.cell:not(.black-cell)');
             if (!cell) return;
@@ -1058,6 +1073,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const input = cell.querySelector('.cell-input');
             input?.focus();
             input?.select?.();
+            selectClueFromCell(cell, nextOri);
         });
 
         // let lastClickedCell = null;
@@ -1172,5 +1188,19 @@ document.addEventListener('DOMContentLoaded', () => {
             log('down head', { col, startRow, endRow });
             // getCellEl(startRow, col)?.classList.add('.is-head');
         }
+    }
+
+    function selectClueFromCell(cell, ori) {
+        ori = currentOrientation;
+        if (!cell) return;
+        const id = cell.dataset[ori === 'across' ? 'acrossId' : 'downId'];
+        log('selectClueFromCell', { ori, id, cell: cell.dataset });
+        if (!id) return;
+
+        const container = document.getElementById('clues-container');
+        container?.dispatchEvent(new CustomEvent('select-clue', {
+            detail: { clueId: id },
+            bubbles: true
+        }));
     }
 });

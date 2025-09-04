@@ -1223,7 +1223,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function resetGrid() {}
+    function resetGrid() {
+        if (!board) return;
+        board.querySelectorAll('.cell-input').forEach(i => (i.value = ''));
+        board.querySelectorAll('.cell').forEach(c => c.classList.remove('is-wrong', 'is-correct', 'is-hint'));
+    }
 
     function setupHintGestures(hintBtn) {
         if (!hintBtn) return;

@@ -980,6 +980,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!el) {
             el = document.createElement('div');
             el.id = 'board-actions';
+            el.className = 'board-actions';
             boardEl.insertAdjacentElement('afterend', el);
         }
         return el;

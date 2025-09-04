@@ -925,6 +925,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         updateCarousel();
+        wireActionButtons(container.querySelector('.game-ctrls'));
     }
 
     /**
@@ -969,6 +970,36 @@ document.addEventListener('DOMContentLoaded', () => {
     function clearBoardHighlights() {
         if (!board) return;
         board.querySelectorAll('.cell.is-active, .cell.is-head').forEach(el => el.classList.remove('is-active', 'is-head'));
+    }
+
+    function ensureBoardActions() {
+        const boardEl = document.getElementById('crossword-board');
+        if (!boardEl) return null;
+        let el = document.getElementById('board-actions');
+        if (!el) {
+            el = document.createElement('div');
+            el.id = 'board-actions';
+            boardEl.insertAdjacentElement('afterend', el);
+        }
+        return el;
+    }
+
+    function renderBoardActions() {
+        const root = ensureBoardActions();
+        if (!root) return;
+        root.innerHTML = `
+            <button class="ctrl-btn hint" type="button" aria-label="Hint">Hint</button>
+            <button class="ctrl-btn submit" type="button" aria-label="Submit">Submit</button>
+            <button class="ctrl-btn reset" type="button" aria-label="Reset">Reset</button>
+        `;
+        wireActionButtons(root);
+    }
+
+    function wireActionButtons(scopeEl) {
+        if (!scopeEl) return;
+        scopeEl.querySelector('.hint')?.addEventListener('click', revealHint);
+        scopeEl.querySelector('.submit')?.addEventListener('click', checkAnswers);
+        scopeEl.querySelector('.reset')?.addEventListener('click', resetGrid);
     }
 
     function wireBoardInputs() {

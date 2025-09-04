@@ -824,6 +824,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 <button class="clue-nav next" aria-label="Next clue" type="button" title="Next clue"><i class="fa-solid fa-caret-right"></i></button>
             </div>
 
+            <div class="gane-ctrls" aria-label="Game controls">
+                <button class="ctrl-btn hint" type="button" aria-label="Hint">Hint</button>
+                <button class="ctrl-btn submit" type="button" aria-label="Submit">Submit</button>
+                <button class="ctrl-btn reset" type="button" aria-label="Reset">Reset</button>
+            </div>
+
             <div class="clues-panels" role="region" aria-label="Clues">
                 <section class="clues-panel">
                     <h3>Across</h3>

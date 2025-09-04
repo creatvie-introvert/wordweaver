@@ -383,6 +383,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const bestGrid = buildBestLayout(clues, gridSize, attempts);
         renderCrossword(bestGrid, clueBank);
         renderClues(bestGrid, clueBank);
+        renderBoardActions();
         wireBoardInputs();
 
         function sanitiseResults(results, maxLen) {
@@ -824,7 +825,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <button class="clue-nav next" aria-label="Next clue" type="button" title="Next clue"><i class="fa-solid fa-caret-right"></i></button>
             </div>
 
-            <div class="gane-ctrls" aria-label="Game controls">
+            <div class="game-ctrls" aria-label="Game controls">
                 <button class="ctrl-btn hint" type="button" aria-label="Hint">Hint</button>
                 <button class="ctrl-btn submit" type="button" aria-label="Submit">Submit</button>
                 <button class="ctrl-btn reset" type="button" aria-label="Reset">Reset</button>
@@ -997,7 +998,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function wireActionButtons(scopeEl) {
         if (!scopeEl) return;
-        scopeEl.querySelector('.hint')?.addEventListener('click', revealHint);
+        const hintBtn = scopeEl.querySelector('.hint');
+        setupHintGestures(hintBtn);
+
         scopeEl.querySelector('.submit')?.addEventListener('click', checkAnswers);
         scopeEl.querySelector('.reset')?.addEventListener('click', resetGrid);
     }
@@ -1168,6 +1171,64 @@ document.addEventListener('DOMContentLoaded', () => {
         const targetInput = targetCell?.querySelector('.cell-input');
         targetInput?.focus();
         targetInput?.select?.();
+    }
+
+    function revealHint(opts) {
+        const cells = activeCellsSorted();
+        if (!cells.length) return;
+
+        const mode = opts?.mode || (opts?.shiftKey ? 'word' : 'letter');
+        const revealAll = mode === 'word';
+
+        for (const cell of cells) {
+            const input = cell.querySelector('.cell-input');
+            const right = (cell.dataset.solution || '').toUpperCase();
+            const val = (input?.value || '').toUpperCase();
+
+            if (!val || val !== right || revealAll) {
+                if (input) {
+                    input.value = right;
+                    input.classList.add('is-hint');
+                }
+                if (!revealAll) break;
+            }
+        }
+    }
+
+    function checkAnswers() {}
+
+    function resetGrid() {}
+
+    function setupHintGestures(hintBtn) {
+        if (!hintBtn) return;
+
+        let timer = null;
+        let long = false;
+        const LONG_MS = 600;
+
+        const start = () => {
+            long = false;
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                long = true;
+                revealHint({ mode: 'word' });
+            }, LONG_MS);
+        };
+
+        const end = () => {
+            if (timer) {
+                clearTimeout(timer);
+                if (!long) revealHint({ mode: 'letter' });
+            }
+        };
+
+        hintBtn.addEventListener('mousedown', start);
+        hintBtn.addEventListener('mouseup', end);
+        hintBtn.addEventListener('mouseleave', end);
+
+        hintBtn.addEventListener('touchstart', start, { passive: true });
+        hintBtn.addEventListener('touchend', end);
+        hintBtn.addEventListener('touchcancel', end);
     }
 
     function highlightFromCell(cell, ori) {

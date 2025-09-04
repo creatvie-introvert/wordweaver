@@ -1195,7 +1195,33 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function checkAnswers() {}
+    function checkAnswers() {
+        if(!board) return;
+        let total = 0, filled = 0, correct = 0;
+
+        board.querySelectorAll('.cell:not(.black-cell)').forEach(cell => {
+            const input = cell.querySelector('.cell-input');
+            const want = (cell.dataset.solution || '').toUpperCase();
+            const got = (input?.value || '').toUpperCase();
+
+            total++
+            if (got) filled++
+
+            const ok = got === want;
+            cell.classList.toggle('is-wrong', !ok && !!got);
+            cell.classList.toggle('is-correct', ok && !!got);
+            if (ok) correct++;
+        });
+
+        if (filled === total && correct === total) {
+            alert('All correct well done');
+        }
+        else {
+            const wrong = filled - correct;
+            const empty = total - filled;
+            alert(`Checked:\n• Correct: ${correct}\n• Wrong: ${wrong} \n• Empty: ${empty}`);
+        }
+    }
 
     function resetGrid() {}
 

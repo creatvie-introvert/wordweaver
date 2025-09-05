@@ -902,17 +902,37 @@ document.addEventListener('DOMContentLoaded', () => {
             // const col = clue.col;
 
             const { row, col, orientation } = linearClues[currentIndex];
-
             const firstCell = getCellEl(row, col);
-            const input = firstCell?.querySelector('.cell-input');
-            
+
             currentOrientation = orientation;
+            // const input = firstCell?.querySelector('.cell-input');
+            const activeCells = activeCellsSorted();
+            const nextInput = activeCells.find(c => {
+                const input = c.querySelector('.cell-input');
+                return input && !input.value;
+            })?.querySelector('.cell-input') || firstCell?.querySelector('.cell-input');
 
             highlightFromCell(firstCell, orientation);
 
+            if (document.activeElement && document.activeElement !== nextInput) {
+                document.activeElement.getBoundingClientRect();
+            }
+
+            requestAnimationFrame(() => {
+                if (nextInput) {
+                    nextInput.focus({ preventScroll: false});
+                    nextInput.select?.();
+                }
+            });
+            // setTimeout(() => {
+            //     nextInput?.focus();
+            //     nextInput?.select?.();
+            //     // nextInput?.scrollIntoView({ behavior: 'smooth', black: 'center'})
+            // }, 20);
+            
             // selectClueFromCell(firstCell, clue.orientation);
 
-            input?.focus();
+            // input?.focus();
             // input?.select?.();
 
             // highlightFromCell(firstCell, currentOrientation);

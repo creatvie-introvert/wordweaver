@@ -896,6 +896,27 @@ document.addEventListener('DOMContentLoaded', () => {
             if (i === -1) return;
             currentIndex = i;
             updateCarousel();
+
+            // const clue = linearClues[currentIndex];
+            // const row = clue.row;
+            // const col = clue.col;
+
+            const { row, col, orientation } = linearClues[currentIndex];
+
+            const firstCell = getCellEl(row, col);
+            const input = firstCell?.querySelector('.cell-input');
+            
+            currentOrientation = orientation;
+
+            highlightFromCell(firstCell, orientation);
+
+            // selectClueFromCell(firstCell, clue.orientation);
+
+            input?.focus();
+            // input?.select?.();
+
+            // highlightFromCell(firstCell, currentOrientation);
+            selectClueFromCell(firstCell, currentOrientation);
         }
 
         container.addEventListener('select-clue', (e) => {
@@ -1013,7 +1034,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const cell = input.closest('.cell');
             log('focusin -> highlightFromCell', cell?.dataset);
             highlightFromCell(cell, currentOrientation);
-            selectClueFromCell(cell, currentOrientation);
+            selectClueFromCell(cell, currentOrientation, { skipEvent: true });
         });
 
         board.addEventListener('input', (e) => {
@@ -1055,7 +1076,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.key === 'ArrowRight') {
                 log('ArrowRight -> across, move +1');
                 highlightFromCell(cell, 'across');
-                selectClueFromCell(cell, 'across');
+                selectClueFromCell(cell, 'across', { skipEvent: true });
                 moveRelative(cell, 1);
                 e.preventDefault();
                 return;
@@ -1063,7 +1084,7 @@ document.addEventListener('DOMContentLoaded', () => {
             else if (e.key === 'ArrowLeft') {
                 log('ArrowLeft -> across, move -1');
                 highlightFromCell(cell, 'across');
-                selectClueFromCell(cell, 'across');
+                selectClueFromCell(cell, 'across', { skipEvent: true });
                 moveRelative(cell, -1);
                 e.preventDefault();
                 return;
@@ -1071,7 +1092,7 @@ document.addEventListener('DOMContentLoaded', () => {
             else if (e.key === 'ArrowDown') {
                 log('ArrowDown -> down, move +1');
                 highlightFromCell(cell, 'down');
-                selectClueFromCell(cell, 'down');
+                selectClueFromCell(cell, 'down', { skipEvent: true });
                 moveRelative(cell, 1);
                 e.preventDefault();
                 return;
@@ -1079,7 +1100,7 @@ document.addEventListener('DOMContentLoaded', () => {
             else if (e.key === 'ArrowUp') {
                 log('ArrowUp -> down, move -1');
                 highlightFromCell(cell, 'down');
-                selectClueFromCell(cell, 'down');
+                selectClueFromCell(cell, 'down', { skipEvent: true });
                 moveRelative(cell, -1);
                 e.preventDefault();
                 return;
@@ -1089,7 +1110,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const nextOri = currentOrientation === 'across' ? 'down' : 'across';
                 log('Space: toggle orientation', currentOrientation, '->', nextOri);
                 highlightFromCell(cell, nextOri);
-                selectClueFromCell(cell, nextOri);
+                selectClueFromCell(cell, nextOri, { skipEvent: true });
                 e.preventDefault();
                 return;
             }
@@ -1116,24 +1137,6 @@ document.addEventListener('DOMContentLoaded', () => {
             input?.select?.();
             selectClueFromCell(cell, nextOri);
         });
-
-        // let lastClickedCell = null;
-        // let lastClickedTime = 0;
-        // board.addEventListener('dblclick', (e) => {
-        //     const cell = e.target.closest('.cell:not(.black-cell)');
-        //     if (!cell) return;
-        //     const now = performance.now();
-
-        //     if (lastClickedCell === cell && (now - lastClickedTime) < 300) {
-        //         currentOrientation = currentOrientation === 'across' ? 'down' : 'across';
-        //     }
-        //     lastClickedCell = cell;
-        //     lastClickedTime = now;
-
-        //     const input = cell.querySelector('.cell-input');
-        //     input?.focus();
-        //     input?.select?.();
-        // });
     }
 
     function activeCellsSorted() {
@@ -1165,9 +1168,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const orderedActiveCells = activeCellsSorted();
         if (orderedActiveCells.length === 0) return;
 
-        const currentIndex = Math.max(0, orderedActiveCells.indexOf(currentCell));
-        const targetIndex = Math.min(Math.max(currentIndex + offset, 0), orderedActiveCells.length - 1);
+        const currentRow = currentCell?.dataset.row;
+        const currentCol = currentCell?.dataset.col;
 
+        const currentIndex = orderedActiveCells.findIndex(cell => 
+            cell.dataset.row === currentRow && cell.dataset.col === currentCol
+        );
+
+        if (currentIndex === -1) return;
+
+        // const currentIndex = Math.max(0, orderedActiveCells.indexOf(currentCell));
+
+        const targetIndex = Math.min(Math.max(currentIndex + offset, 0), orderedActiveCells.length - 1);
         const targetCell = orderedActiveCells[targetIndex];
         const targetInput = targetCell?.querySelector('.cell-input');
         targetInput?.focus();
@@ -1319,12 +1331,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function selectClueFromCell(cell, ori) {
+    function selectClueFromCell(cell, ori, options = {}) {
         ori = currentOrientation;
         if (!cell) return;
         const id = cell.dataset[ori === 'across' ? 'acrossId' : 'downId'];
         log('selectClueFromCell', { ori, id, cell: cell.dataset });
         if (!id) return;
+
+        if (options.skipEvent) return;
 
         const container = document.getElementById('clues-container');
         container?.dispatchEvent(new CustomEvent('select-clue', {

@@ -643,8 +643,6 @@ a:focus-visible,
 
     color: var(--button-bg);
 
-    /* background: transparent; */
-
     cursor: pointer;
     transition: transform .1s ease, box-shadow .15s ease, background-color .15s ease;
 }

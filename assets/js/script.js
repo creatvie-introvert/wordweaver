@@ -916,7 +916,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // input?.select?.();
 
             // highlightFromCell(firstCell, currentOrientation);
-            selectClueFromCell(firstCell, currentOrientation);
+            selectClueFromCell(firstCell, currentOrientation, { skipEvent: true });
         }
 
         container.addEventListener('select-clue', (e) => {

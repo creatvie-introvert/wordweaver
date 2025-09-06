@@ -918,12 +918,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.activeElement.getBoundingClientRect();
             }
 
-            requestAnimationFrame(() => {
-                if (nextInput) {
-                    nextInput.focus({ preventScroll: false});
-                    nextInput.select?.();
-                }
-            });
+            // requestAnimationFrame(() => {
+            //     if (nextInput) {
+            //         nextInput.focus({ preventScroll: false});
+            //         nextInput.select?.();
+            //     }
+            // });
             // setTimeout(() => {
             //     nextInput?.focus();
             //     nextInput?.select?.();
@@ -948,7 +948,40 @@ document.addEventListener('DOMContentLoaded', () => {
         container.addEventListener('click', (e) => {
             const li = e.target.closest('li[data-clue-id]');
             if (!li) return;
-            selectClueById(li.dataset.clueId);
+
+            const clueId = li.dataset.clueId;
+            const clue = linearClues.find(c => c.id === clueId);
+            if (!clue) return;
+
+            currentIndex = linearClues.indexOf(clue);
+            updateCarousel();
+
+            const { row, col, orientation } = clue;
+            currentOrientation = orientation;
+
+            const firstCell = getCellEl(row, col);
+            highlightFromCell(firstCell, orientation);
+
+            const activeCells = activeCellsSorted();
+            const nextInput = activeCells.find(c => {
+                const input = c.querySelector('.cell-input');
+                return input && !input.value;
+            })?.querySelector('.cell-input') || firstCell?.querySelector('.cell-input');
+
+            // setTimeout(() => {
+            //     if (nextInput) {
+            //         nextInput.dispatchEvent(new Event('touchstart', { bubbles: true }));
+            //         nextInput.dispatchEvent(new Event('mousedown', { bubbles: true }));
+            //         nextInput?.click();
+            //         nextInput?.focus();
+            //         nextInput?.select?.();
+            //     }
+            // }, 20);
+            
+            
+
+            selectClueFromCell(firstCell, currentOrientation, { skipEvent:true });
+            // selectClueById(li.dataset.clueId);
         });
 
         container.addEventListener('keydown', (e) => {

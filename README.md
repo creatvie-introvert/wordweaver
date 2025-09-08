@@ -288,14 +288,23 @@ The footer provides branding, attribution, and quick access to the app's social 
 </details>
 
 #### Hero Section
-The hero section introduces users to the game and provides the primary entry point to begin playing.
+The **Hero Section** serves as the game's welcome screen and introduction, giving users an immediate sense of the game's theme and purpose. It includes branding, messaging, and the main call-to-action &mdash; **Start Puzzle** &mdash; which begins the game flow.
 
 **Key Features:**
-- Displays the **game title** and **tagline** to welcome users and set context.
-- Features a prominent **Start Game** button that guides users into the gameplay flow.
-- Clicking **Start Game** hides the heor section and reveals the **Category Selection** section.
-- Fully responsive design - the hero image and text adjust seamlessly across screen sizes.
-- Designed with accessibility in mind, ensuring all interactive elements are usable with a keyboard and screen readers.
+- **Logo Display**: Features the WordWeaver logo prominently at the top of the page for instant brand recognition.
+- **Tagline**: Includes the phrase *"Unravel Clues. Solve the Grid."* to set expectations and build engagement.
+- **Start Puzzle Button:**
+  - Acts as the primary call-to-action (CTA)
+  - Transitions the user into the **Category Selection** screen when clicked.
+  - Uses semantic HTML, keyboard accessibility, and `aria-hidden/hidden attributes` for assistive tech compatibility.
+- **Accessibilyt & Focus Handling:**
+  - The section is labelled using `aria-labelledby="hero-title"` and the heading receives focus when loaded.
+  - When transitioning away, it's visually hidden but still managed for screen readers.
+- **Responsive Layout:**
+  - On **mobile**, the hero section uses a stacked **vertical layout**, with the logo positioned above the text and button. All elements are centred and spaced for small screens.
+  - On **tablet/desktop**, it switches to a **two-column layout**, placing the logo and hero text side-by-side. This layout provides better visual balance and makes use of available horizontal space.
+
+This section establishes the tone of the game, ensures easy access to gameplay, and delivers a smooth, accessible entry point to the overall user experience.
 
 <details>
 <summary>View Hero Section Screenshots (Light Mode)</summary>
@@ -314,6 +323,131 @@ The hero section introduces users to the game and provides the primary entry poi
 <img src="docs/features/hero-mobile-dark.png" width="30%" alt="Hero section on mobile in dark theme">
 <img src="docs/features/hero-tablet-dark.png" width="30%" alt="Hero section on tablet in dark theme">
 <img src="docs/features/hero-desktop-dark.png" width="30%" alt="Hero section on desktop in dark theme">
+</p>
+</details>
+
+#### Category Section
+
+After starting the game, users are guided to select from a curated list of trivia categories that personalise their crossword experience. Each category is visually represented by a unique icon label, allowing players to tailor the puzzle's content to their interests.
+
+**Key Features:**
+- **9 Trivia Categories**: General Knowledge, Science & Nature, Film, Music, Video Games, Sports, Geography, History, and Computers.
+- **Visual Recognition**: Each category features a custom **WebP icon** and accessible alt text for screen readers.
+- **Flexible Layout:**
+  - On **mobile**, categories are displayed as a horizontally scrollable list for ease of swiping.
+  - On **tablet/desktop**, they are displayed in a responsive **3x3 grid layout**.
+- **Smooth Progression**: Upon selection, the category is stored and the user is automatically transitioned to the **Difficulty Selection screen**.
+- **Accessibility**: Each button uses semantic markup and keybard/focus support for full navigation compatibility.
+
+The selected category determines the trivia content of the puzzle by mapping to a corresponding category ID from the Open Trivia DB. This ensures that all clues pulled are topically aligned with the player's interest.
+
+<details>
+<summary>Category Mapping Tablet</summary>
+
+|Category Name|Internal Slug|OpenTriviaDB ID|
+|-------------|-------------|---------------|
+|General Knowledge|`general-knowledge`|9|
+|Science & Nature|`science-and-nature`|17|
+|Film|`film`|11|
+|Music|`music`|12|
+|Video Games|`video-games`|15|
+|Sports|`sports`|21|
+|Geography|`geography`|22|
+|History|`history`|23|
+|Computers|`computers`|18|
+</details>
+
+<details>
+<summary>View Categry section Screenshots (Light Mode)</summary>
+
+<p align="center">
+<img src="docs/features/category-mobile-light.png" width="30%" alt="Category section on mobile in light mode">
+<img src="docs/features/category-tablet-light.png" width="30%" alt="Category section on tablet in light mode">
+<img src="docs/features/category-desktop-light.png" width="30%" alt="Category section on desktop in light mode">
+</p>
+</details>
+
+<details>
+<summary>View Categry section Screenshots (Dark Mode)</summary>
+
+<p align="center">
+<img src="docs/features/category-mobile-dark.png" width="30%" alt="Category section on mobile in dark mode">
+<img src="docs/features/category-tablet-dark.png" width="30%" alt="Category section on tablet in dark mode">
+<img src="docs/features/category-desktop-dark.png" width="30%" alt="Category section on desktop in dark mode">
+</p>
+</details>
+
+#### Difficulty Selection
+The difficulty level selected by the user directly affects the compexity and scope of the crossword puzzle. Each difficulty option - Easy, Medium, and Hard, controls key parameters:
+- **Grid Size**: Determines the overall size of the puzzle(11x11, 13x13, or 15x15).
+- **Clue placement Attempts**: Sets how many layout combinations the generator will try to create the most intersecting and complete grid.
+- **API Fetch Volume**: Controls how many quiz questions are retrieved from the Open Trivia DB (40 for Easy/Medium, 50 for Hard).
+- **Answer Length Filter**: Limitis the maximum length of inserted answers based on grid size, ensuring all clues fit naturally within the puzzle.
+
+This dynamic difficulty mapping ensuers that each puzzle is not only appropiately challenging but also uniquely generated based on the user's chosen combination of category and difficulty.
+
+<details>
+<summary>Difficulty Logic Table</summary>
+
+|Difficulty|Grid Size|Max Attempts|API Questions|Max Answer Length|
+|----------|---------|------------|-------------|-----------------|
+|Easy|11x11|36|40|11|
+|Medium|13x13|60|40|13|
+|Hard|15x15|96|50|15|
+</details>
+
+<details>
+<summary>View Difficulty Selection Screenshots (Light)</summary>
+
+<p align="center">
+<img src="docs/features/difficulty-mobile-light.png" width="30%" alt="Difficulty section on mobile in light mode">
+<img src="docs/features/difficulty-tablet-light.png" width="30%" alt="Difficulty section on tablet in light mode">
+<img src="docs/features/difficulty-desktop-light.png" width="30%" alt="Difficulty section on desktop in light mode">
+</p>
+</details>
+
+<details>
+<summary>View Difficulty Selection Screenshots (Dark)</summary>
+
+<p align="center">
+<img src="docs/features/difficulty-mobile-dark.png" width="30%" alt="Difficulty section on mobile in dark mode">
+<img src="docs/features/difficulty-tablet-dark.png" width="30%" alt="Difficulty section on tablet in dark mode">
+<img src="docs/features/difficulty-desktop-dark.png" width="30%" alt="Difficulty section on desktop in dark mode">
+</p>
+</details>
+
+#### Crossword Grid Logic
+The crossword grid is the core gameplay area where trivia answers are revealed through puzzle-solving. It is dynamically generated using clues fetched from the [Open Trivia DB](https://opentdb.com), and populated with intersecting words in authetic crossword style.
+
+**Key Features:**
+- **Dynamic Grid Generation:**
+  - Grid size is determined by the chosen difficulty.
+  - Clue answers are filtered, sanitised, and placed using a smart layout algorithm that tries multiple configirations to maximise word overlap.
+  - Words intersect naturally both horizontally and vertically, simulating real-world crossword structure.
+- **Interactive cells:**
+  - Each playable cell contains a focusable text input and a hidden solution value for validation.
+  - Grid cells are keyboard and mouse accessible, and labelled with `aria-labels` for screen readers.
+  - Cells that begin a clue display a small badge with a clue number, matching entries in the clue list and clue carousel.
+- **Gameplay Support:**
+  - Users can type directly into each cell.
+  - Letter inputs auto-advance to the next cell, and backspace moves back and clears letters.
+  - Real-time input sanitisation ensures only valid characters are accepted.
+- **Validation & Feedback:**
+  - "Submit" buton checks the grid for correct answers and highlights right and wrong entries.
+  - "Hint" button (tap or long press) reveals the next letter or the full word.
+  - "Reset" clears all inputs and styling for a fresh attempt.
+- Focus Management:
+  - Clue selection via list or carousel highlights the corresponding cells on the board.
+  - The active clue and its head cell are visually indicated using `.is-active` and `.is-head` classes.
+- **Responsive Layout:**
+  - On **mobile**, the crossword grid uses a compact layout and scales fluidly to fit smaller screens.
+  - On **tablet/desktop**, the grid is sized proportionally based on the number of cells and remains centred, ensuring a sapcious and legible playing area.
+
+<details>
+<summary>View Crossword Grid Scrrenshot (Light)</summary>
+
+<p align="center">
+
 </p>
 </details>
 

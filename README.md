@@ -444,10 +444,22 @@ The crossword grid is the core gameplay area where trivia answers are revealed t
   - On **tablet/desktop**, the grid is sized proportionally based on the number of cells and remains centred, ensuring a sapcious and legible playing area.
 
 <details>
-<summary>View Crossword Grid Scrrenshot (Light)</summary>
+<summary>View Crossword Grid Screenshot (Light)</summary>
 
 <p align="center">
+<img src="docs/features/grid-mobile-light.png" width="30%" alt="Crossword grid on mobile in light mode">
+<img src="docs/features/grid-tablet-light.png" width="30%" alt="Crossword grid on tablet in light mode">
+<img src="docs/features/grid-desktop-light.png" width="30%" alt="Crossword grid on desktop in light mode">
+</p>
+</details>
 
+<details>
+<summary>View Crossword Grid Screenshot (Dark)</summary>
+
+<p align="center">
+<img src="docs/features/grid-mobile-dark.png" width="30%" alt="Crossword grid on mobile in dark mode">
+<img src="docs/features/grid-tablet-dark.png" width="30%" alt="Crossword grid on tablet in dark mode">
+<img src="docs/features/grid-desktop-dark.png" width="30%" alt="Crossword grid on desktop in dark mode">
 </p>
 </details>
 

@@ -1,33 +1,41 @@
+// ========== Constants & Config ==========
+const categoryMap = {
+    'general-knowledge': 9,
+    'science-and-nature': 17,
+    'film': 11,
+    'music': 12,
+    'video-games': 15,
+    'sports': 21,
+    'geography': 22,
+    'history': 23,
+    'computers': 18
+}
+
+const sizeByDifficulty = {
+    easy: 11,
+    medium: 13,
+    hard: 15
+}
+
+const attemptsByDifficulty = {
+    easy: 36,
+    medium: 60,
+    hard: 96
+}
+
+// ========== Global Variables ==========
+let selectedCategory = null;
+let chosenDifficulty = null;
+let clueBank = new Map(); 
+let currentOrientation = 'across';
+
+const FOCUSABLE_SELECTOR = [
+    '[autofocus]', 'a[href]', 'button:not([disabled])', 
+    'input:not([disabled]):not([type="hidden"])', 'select:not([disabled])', 'textarea:not([disabled])', '[tabindex]:not([tabindex="-1"])'
+].join(', ');
+
 document.addEventListener('DOMContentLoaded', () => {
-    const categoryMap = {
-        'general-knowledge': 9,
-        'science-and-nature': 17,
-        'film': 11,
-        'music': 12,
-        'video-games': 15,
-        'sports': 21,
-        'geography': 22,
-        'history': 23,
-        'computers': 18
-    }
-
-    const sizeByDifficulty = {
-        easy: 11,
-        medium: 13,
-        hard: 15
-    }
-
-    const attemptsByDifficulty = {
-        easy: 36,
-        medium: 60,
-        hard: 96
-    }
-
-    let selectedCategory = null;
-    let chosenDifficulty = null;
-    let clueBank = new Map(); 
-    let currentOrientation = 'across';
-    
+    // ========== DOM Element References ==========
     const html = document.documentElement;
     const toggleBtn = document.querySelector('[data-theme-toggle]');
     const startBtn = document.querySelector('#start-game-btn');
@@ -39,21 +47,36 @@ document.addEventListener('DOMContentLoaded', () => {
     const gameSection = document.querySelector('#game-section');
     const board = document.getElementById('crossword-board');
     const backBtns = document.querySelectorAll('.back-btn');
-
     const modalButtons = document.querySelectorAll('[data-modal]');
     const modals = document.querySelectorAll('.modal');
     const body = document.body;
 
-    const FOCUSABLE_SELECTOR = [
-        '[autofocus]', 'a[href]', 'button:not([disabled])', 
-        'input:not([disabled]):not([type="hidden"])', 'select:not([disabled])', 'textarea:not([disabled])', '[tabindex]:not([tabindex="-1"])'
-    ].join(', ');
-
+    // ========== Initialisation ==========
     initModals({ buttons: modalButtons, modals, body });
     initThemeToggle(toggleBtn, html);
+    initHeaderHeightObserver();
 
-    const log = (...args) => console.log('[WW]', ...args);
-    
+    // ========== Utilities ==========
+    /**
+     * Decode HTML entities API strings (e.g., &quot;, &#039;) using temporary <textarea>
+     */
+    function decodeHTML(html) {
+        const txt = document.createElement('textarea');
+        txt.innerHTML = html;
+        return txt.value;
+    }
+
+    /**
+     * In-place Fisher-Yates shuffle.
+     */
+    function shuffle(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
     /**
      * Initialise the theme toggle: apply saved/system theme, switch on click, persist to localStorage, and update the button's aria-label.
      */
@@ -175,7 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
             activeModal = null;
         }
     }
-    
+
     function initHeaderHeightObserver() {
         const headerEl = document.getElementById('site-header');
         if (headerEl) {
@@ -193,12 +216,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    initHeaderHeightObserver();
+    const log = (...args) => console.log('[WW]', ...args);
     
+    // ========== Event Listeners ==========
     startBtn?.addEventListener('click', () => {
         goToSection(heroSection, categorySection, '#category-title');
     });
-    
+
     categoryContainer?.addEventListener('click', (e) => {
         const categoryBtn = e.target.closest('[data-category]');
         if (!categoryBtn) return;
@@ -217,7 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
         goToSection(difficultySection, gameSection, '#game-title');
         loadCrossword(selectedCategory, chosenDifficulty);
     });
-    
+
     backBtns.forEach(backBtn => {
         backBtn.addEventListener('click', () => {
             const prevId = backBtn.getAttribute('data-prev');
@@ -235,6 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // ========== Navigation Functions ==========
     /**
      * Show or hide a section.
      */
@@ -244,15 +269,6 @@ document.addEventListener('DOMContentLoaded', () => {
         section.classList.toggle('hidden', !visible);
         section.toggleAttribute('hidden', !visible);
         section.setAttribute('aria-hidden', visible ? 'false' : 'true')
-    }
-
-    /**
-     * Move focus to the first focusable descendant inside `root`.
-     */
-    function focusFirstFocusable(root) {
-        if (!root) return;
-        const el = root.querySelector(`${FOCUSABLE_SELECTOR}:not([hidden]):not([aria-hidden="true"]):not([inert])`);
-        (el || root).focus?.();
     }
 
     /**
@@ -278,62 +294,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    /**
-     * Decode HTML entities API strings (e.g., &quot;, &#039;) using temporary <textarea>
-     */
-    function decodeHTML(html) {
-        const txt = document.createElement('textarea');
-        txt.innerHTML = html;
-        return txt.value;
-    }
-
-    /**
-     * In-place Fisher-Yates shuffle.
-     */
-    function shuffle(arr) {
-        for (let i = arr.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [arr[i], arr[j]] = [arr[j], arr[i]];
-        }
-        return arr;
-    }
-
-    /**
-     * Try multiple randomised layouts and keep the fullest grid.
-     */
-    function buildBestLayout(rawClues, gridSize, attempts = 12) {
-        if (!Array.isArray(rawClues) || rawClues.length === 0) return [];
-
-        const tryLayout = (clues) => {
-            const placedClues = assignCluePositions(clues, gridSize);
-            const candidateGrid = generateGrid(placedClues, gridSize);
-            const filledCount = countFilledCells(candidateGrid);
-            return { grid: candidateGrid, filled: filledCount };
-        };
-
-        let bestCandidate = null;
-
-        for (let attemptIndex = 0; attemptIndex < attempts; attemptIndex++) {
-            const shuffledClues = shuffle(rawClues.map(c => ({ ...c })));
-            const candidate = tryLayout(shuffledClues);
-            if (!bestCandidate || candidate.filled > bestCandidate.filled) {
-                bestCandidate = candidate;
-            }
-        }
-
-        return bestCandidate?.grid ?? [];
-
-        function countFilledCells(grid) {
-            let count = 0;
-            for (const row of grid) {
-                for (const cell of row) {
-                    if (!cell.isBlock && cell.letter) count++;
-                }
-            }
-            return count;
-        }
-    }
-
+    // ========== Crossword Initialisation ==========
     /**
      * Fetch, sanitise, and render a crossword for the chosen category/difficulty.
      */
@@ -401,6 +362,43 @@ document.addEventListener('DOMContentLoaded', () => {
                 out.push({ clue, answer: clean, id: `clue-${out.length}` });
             }
             return out;
+        }
+    }
+
+    // ========== Crossword Construction Logic ==========
+    /**
+     * Try multiple randomised layouts and keep the fullest grid.
+     */
+    function buildBestLayout(rawClues, gridSize, attempts = 12) {
+        if (!Array.isArray(rawClues) || rawClues.length === 0) return [];
+
+        const tryLayout = (clues) => {
+            const placedClues = assignCluePositions(clues, gridSize);
+            const candidateGrid = generateGrid(placedClues, gridSize);
+            const filledCount = countFilledCells(candidateGrid);
+            return { grid: candidateGrid, filled: filledCount };
+        };
+
+        let bestCandidate = null;
+
+        for (let attemptIndex = 0; attemptIndex < attempts; attemptIndex++) {
+            const shuffledClues = shuffle(rawClues.map(c => ({ ...c })));
+            const candidate = tryLayout(shuffledClues);
+            if (!bestCandidate || candidate.filled > bestCandidate.filled) {
+                bestCandidate = candidate;
+            }
+        }
+
+        return bestCandidate?.grid ?? [];
+
+        function countFilledCells(grid) {
+            let count = 0;
+            for (const row of grid) {
+                for (const cell of row) {
+                    if (!cell.isBlock && cell.letter) count++;
+                }
+            }
+            return count;
         }
     }
 
@@ -581,7 +579,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return null;
         }
     }
-    
+
     /**
      * Build a renderable cell grid from placed clues.
      * Assumes each clue has {answer, row, col, orientation, id}
@@ -639,7 +637,78 @@ document.addEventListener('DOMContentLoaded', () => {
 
         return cellGrid;
     }
-    
+
+    /**
+     * Compute crossword numbering: scans the grid and ssigns numbers to the cells that start across and/or down answer, rendering their coordinates and ids.
+     */
+    function computeClueNumbers(grid) {
+        const clueNumbers = { across: [], down: [] };
+        let nextClueNumber = 1;
+
+        for (let row = 0; row < grid.length; row++) {
+            for (let col = 0; col < grid.length; col++) {
+                const cell = grid[row][col];
+                if (cell.isBlock) continue;
+
+                const startsAcross = (!grid[row][col-1] || grid[row][col-1].isBlock) &&
+                                     (grid[row][col+1] && !grid[row][col+1].isBlock);
+                const startsDown = (!grid[row-1]?.[col] || grid[row-1][col].isBlock) &&
+                                   (grid[row+1]?.[col] && !grid[row+1][col].isBlock);
+                
+                if (startsAcross || startsDown) {
+                    if (startsAcross) clueNumbers.across.push({ number: nextClueNumber, row, col, id: cell.acrossClueId });
+                    if (startsDown) clueNumbers.down.push({ number: nextClueNumber, row, col, id: cell.downClueId});
+                    nextClueNumber++;
+                }
+            }
+        }
+        return clueNumbers;
+    }
+
+    /**
+     * Compute lengths and friendly records for Across/Down from the rendered grid.
+     * Uses the computeClueNumbers() + the global clueBank.
+     */
+    function buildClueIndex(grid, bank) {
+        const clueNumbers = computeClueNumbers(grid);
+
+        const getAnswerLength = (startRow, startCol, ori) => {
+            let length = 0;
+            if (ori === 'across') {
+                for (let c = startCol; c < grid.length && !grid[startRow][c].isBlock; c++) {
+                    length++;
+                }
+            }
+            else {
+                for (let r = startRow; r < grid.length && !grid[r][startCol].isBlock; r++) {
+                    length++;
+                }
+            }
+            return length;
+        };
+
+        const attachMetaData = (entries, ori) => entries.map(({ number, row: startRow, col: startCol, id }) => {
+            const clueMeta = bank.get(id) || {};
+            return {
+                number,
+                orientation: ori,
+                row: startRow,
+                col: startCol,
+                id,
+                orientation: ori,
+                clue: clueMeta.clue || '(missing clue)',
+                answer: clueMeta.answer || '',
+                length: getAnswerLength(startRow, startCol, ori)
+            };
+        });
+
+        return {
+            across: attachMetaData(clueNumbers.across, 'across'),
+            down: attachMetaData(clueNumbers.down, 'down')
+        };
+    }
+
+    // ========== Rendering Functions ==========
     /**
      * Render a 2D crossword grid into the board using CSS Grid.
      */
@@ -709,95 +778,6 @@ document.addEventListener('DOMContentLoaded', () => {
             
             return el;
         }
-    }
-
-    /**
-     * Compute crossword numbering: scans the grid and ssigns numbers to the cells that start across and/or down answer, rendering their coordinates and ids.
-     */
-    function computeClueNumbers(grid) {
-        const clueNumbers = { across: [], down: [] };
-        let nextClueNumber = 1;
-
-        for (let row = 0; row < grid.length; row++) {
-            for (let col = 0; col < grid.length; col++) {
-                const cell = grid[row][col];
-                if (cell.isBlock) continue;
-
-                const startsAcross = (!grid[row][col-1] || grid[row][col-1].isBlock) &&
-                                     (grid[row][col+1] && !grid[row][col+1].isBlock);
-                const startsDown = (!grid[row-1]?.[col] || grid[row-1][col].isBlock) &&
-                                   (grid[row+1]?.[col] && !grid[row+1][col].isBlock);
-                
-                if (startsAcross || startsDown) {
-                    if (startsAcross) clueNumbers.across.push({ number: nextClueNumber, row, col, id: cell.acrossClueId });
-                    if (startsDown) clueNumbers.down.push({ number: nextClueNumber, row, col, id: cell.downClueId});
-                    nextClueNumber++;
-                }
-            }
-        }
-        return clueNumbers;
-    }
-
-    /**
-     * Update the game title to reflect the chosen category
-     */
-    function setGameTitle(categorySlug) {
-        const label = ({
-            'general-knowledge': 'General Knowledge',
-            'science-and-nature': 'Science & Nature',
-            'film': 'Film',
-            'music': 'Music',
-            'sports': 'Sports',
-            'geography': 'Geography',
-            'history': 'History',
-            'computers': 'Computers'
-        }[categorySlug]) ?? categorySlug.replace(/-/g, ' ').replace(/\b\w/g, s => s.toUpperCase());
-
-        const el = document.getElementById('game-title');
-        if (el) el.textContent = `${label} Crossword`;
-    }
-
-    /**
-     * Compute lengths and friendly records for Across/Down from the rendered grid.
-     * Uses the computeClueNumbers() + the global clueBank.
-     */
-    function buildClueIndex(grid, bank) {
-        const clueNumbers = computeClueNumbers(grid);
-
-        const getAnswerLength = (startRow, startCol, ori) => {
-            let length = 0;
-            if (ori === 'across') {
-                for (let c = startCol; c < grid.length && !grid[startRow][c].isBlock; c++) {
-                    length++;
-                }
-            }
-            else {
-                for (let r = startRow; r < grid.length && !grid[r][startCol].isBlock; r++) {
-                    length++;
-                }
-            }
-            return length;
-        };
-
-        const attachMetaData = (entries, ori) => entries.map(({ number, row: startRow, col: startCol, id }) => {
-            const clueMeta = bank.get(id) || {};
-            return {
-                number,
-                orientation: ori,
-                row: startRow,
-                col: startCol,
-                id,
-                orientation: ori,
-                clue: clueMeta.clue || '(missing clue)',
-                answer: clueMeta.answer || '',
-                length: getAnswerLength(startRow, startCol, ori)
-            };
-        });
-
-        return {
-            across: attachMetaData(clueNumbers.across, 'across'),
-            down: attachMetaData(clueNumbers.down, 'down')
-        };
     }
 
     /**
@@ -897,15 +877,10 @@ document.addEventListener('DOMContentLoaded', () => {
             currentIndex = i;
             updateCarousel();
 
-            // const clue = linearClues[currentIndex];
-            // const row = clue.row;
-            // const col = clue.col;
-
             const { row, col, orientation } = linearClues[currentIndex];
             const firstCell = getCellEl(row, col);
 
             currentOrientation = orientation;
-            // const input = firstCell?.querySelector('.cell-input');
             const activeCells = activeCellsSorted();
             const nextInput = activeCells.find(c => {
                 const input = c.querySelector('.cell-input');
@@ -918,24 +893,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.activeElement.getBoundingClientRect();
             }
 
-            // requestAnimationFrame(() => {
-            //     if (nextInput) {
-            //         nextInput.focus({ preventScroll: false});
-            //         nextInput.select?.();
-            //     }
-            // });
-            // setTimeout(() => {
-            //     nextInput?.focus();
-            //     nextInput?.select?.();
-            //     // nextInput?.scrollIntoView({ behavior: 'smooth', black: 'center'})
-            // }, 20);
-            
-            // selectClueFromCell(firstCell, clue.orientation);
-
-            // input?.focus();
-            // input?.select?.();
-
-            // highlightFromCell(firstCell, currentOrientation);
             selectClueFromCell(firstCell, currentOrientation, { skipEvent: true });
         }
 
@@ -968,20 +925,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return input && !input.value;
             })?.querySelector('.cell-input') || firstCell?.querySelector('.cell-input');
 
-            // setTimeout(() => {
-            //     if (nextInput) {
-            //         nextInput.dispatchEvent(new Event('touchstart', { bubbles: true }));
-            //         nextInput.dispatchEvent(new Event('mousedown', { bubbles: true }));
-            //         nextInput?.click();
-            //         nextInput?.focus();
-            //         nextInput?.select?.();
-            //     }
-            // }, 20);
-            
-            
-
             selectClueFromCell(firstCell, currentOrientation, { skipEvent:true });
-            // selectClueById(li.dataset.clueId);
         });
 
         container.addEventListener('keydown', (e) => {
@@ -1003,6 +947,31 @@ document.addEventListener('DOMContentLoaded', () => {
         wireActionButtons(container.querySelector('.game-ctrls'));
     }
 
+    function renderBoardActions() {
+        const root = ensureBoardActions();
+        if (!root) return;
+        root.innerHTML = `
+            <button class="ctrl-btn hint" type="button" aria-label="Hint">Hint</button>
+            <button class="ctrl-btn submit" type="button" aria-label="Submit">Submit</button>
+            <button class="ctrl-btn reset" type="button" aria-label="Reset">Reset</button>
+        `;
+        wireActionButtons(root);
+    }
+
+    function ensureBoardActions() {
+        const boardEl = document.getElementById('crossword-board');
+        if (!boardEl) return null;
+        let el = document.getElementById('board-actions');
+        if (!el) {
+            el = document.createElement('div');
+            el.id = 'board-actions';
+            el.className = 'board-actions';
+            boardEl.insertAdjacentElement('afterend', el);
+        }
+        return el;
+    }
+    
+    // ========== UI Functions ==========
     /**
      * Highlight the cells for a clue starting at (row,col) and orientation.
      */
@@ -1047,39 +1016,99 @@ document.addEventListener('DOMContentLoaded', () => {
         board.querySelectorAll('.cell.is-active, .cell.is-head').forEach(el => el.classList.remove('is-active', 'is-head'));
     }
 
-    function ensureBoardActions() {
-        const boardEl = document.getElementById('crossword-board');
-        if (!boardEl) return null;
-        let el = document.getElementById('board-actions');
-        if (!el) {
-            el = document.createElement('div');
-            el.id = 'board-actions';
-            el.className = 'board-actions';
-            boardEl.insertAdjacentElement('afterend', el);
+    /**
+     * Update the game title to reflect the chosen category
+     */
+    function setGameTitle(categorySlug) {
+        const label = ({
+            'general-knowledge': 'General Knowledge',
+            'science-and-nature': 'Science & Nature',
+            'film': 'Film',
+            'music': 'Music',
+            'sports': 'Sports',
+            'geography': 'Geography',
+            'history': 'History',
+            'computers': 'Computers'
+        }[categorySlug]) ?? categorySlug.replace(/-/g, ' ').replace(/\b\w/g, s => s.toUpperCase());
+
+        const el = document.getElementById('game-title');
+        if (el) el.textContent = `${label} Crossword`;
+    }
+
+    function highlightFromCell(cell, ori) {
+        if (!cell) return;
+        clearBoardHighlights();
+        currentOrientation = ori;
+
+        const row = Number(cell.dataset.row);
+        const col = Number(cell.dataset.col);
+
+        log('highlightFromCell start', { row, col, ori });
+        if (ori === 'across') {
+            let startCol = col;
+            while (true) {
+                const prev = getCellEl(row, startCol - 1);
+                if (!prev || prev.classList.contains('black-cell')) break;
+                startCol--;
+            }
+
+            let endCol = startCol;
+            for (let colIndex = startCol; ; colIndex++) {
+                const el = getCellEl(row, colIndex);
+                if (!el || el.classList.contains('black-cell')) {
+                    endCol = colIndex - 1;
+                    break;
+                }
+                el.classList.add('is-active');
+            }
+            // const head = getCellEl(row, startCol);
+            // head?.classList.add('is-head');
+                        getCellEl(row, startCol)?.classList.add('is-head');
+            log('across head', { row, startCol, endCol });
+            getCellEl(row, startCol)?.classList.add('is-head');
         }
-        return el;
+        else {
+            let startRow = row;
+            while (true) {
+                const prev = getCellEl(startRow - 1, col);
+                if (!prev || prev.classList.contains('black-cell')) break;
+                startRow--;
+            }
+
+            let endRow = startRow;
+            for (let rowIndex = startRow; ; rowIndex++ ) {
+                const el = getCellEl(rowIndex, col);
+                if (!el || el.classList.contains('black-cell')) {
+                    endRow = rowIndex - 1;
+                    break;
+                } 
+                el.classList.add('is-active');
+            }
+            // const head = getCellEl(startRow, col);
+            // head?.classList.add('is-head');
+            getCellEl(startRow, col)?.classList.add('is-head');
+            log('down head', { col, startRow, endRow });
+            // getCellEl(startRow, col)?.classList.add('.is-head');
+        }
     }
+    
+    function selectClueFromCell(cell, ori, options = {}) {
+        ori = currentOrientation;
+        if (!cell) return;
+        const id = cell.dataset[ori === 'across' ? 'acrossId' : 'downId'];
+        log('selectClueFromCell', { ori, id, cell: cell.dataset });
+        if (!id) return;
 
-    function renderBoardActions() {
-        const root = ensureBoardActions();
-        if (!root) return;
-        root.innerHTML = `
-            <button class="ctrl-btn hint" type="button" aria-label="Hint">Hint</button>
-            <button class="ctrl-btn submit" type="button" aria-label="Submit">Submit</button>
-            <button class="ctrl-btn reset" type="button" aria-label="Reset">Reset</button>
-        `;
-        wireActionButtons(root);
+        if (options.skipEvent) return;
+
+        const container = document.getElementById('clues-container');
+        container?.dispatchEvent(new CustomEvent('select-clue', {
+            detail: { clueId: id },
+            bubbles: true
+        }));
     }
-
-    function wireActionButtons(scopeEl) {
-        if (!scopeEl) return;
-        const hintBtn = scopeEl.querySelector('.hint');
-        setupHintGestures(hintBtn);
-
-        scopeEl.querySelector('.submit')?.addEventListener('click', checkAnswers);
-        scopeEl.querySelector('.reset')?.addEventListener('click', resetGrid);
-    }
-
+    
+    // ========== Input + Navigation Handlers ==========
     function wireBoardInputs() {
         board.addEventListener('focusin', (e) => {
             const input = e.target.closest('.cell-input');
@@ -1216,7 +1245,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     }
-
+    
     function moveRelative(currentCell, offset) {
         const orderedActiveCells = activeCellsSorted();
         if (orderedActiveCells.length === 0) return;
@@ -1237,6 +1266,48 @@ document.addEventListener('DOMContentLoaded', () => {
         const targetInput = targetCell?.querySelector('.cell-input');
         targetInput?.focus();
         targetInput?.select?.();
+    }
+
+    // ========== Game Control Actions (Hint, Check, Reset) ==========
+    function wireActionButtons(scopeEl) {
+        if (!scopeEl) return;
+        const hintBtn = scopeEl.querySelector('.hint');
+        setupHintGestures(hintBtn);
+
+        scopeEl.querySelector('.submit')?.addEventListener('click', checkAnswers);
+        scopeEl.querySelector('.reset')?.addEventListener('click', resetGrid);
+    }
+
+    function setupHintGestures(hintBtn) {
+        if (!hintBtn) return;
+
+        let timer = null;
+        let long = false;
+        const LONG_MS = 600;
+
+        const start = () => {
+            long = false;
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                long = true;
+                revealHint({ mode: 'word' });
+            }, LONG_MS);
+        };
+
+        const end = () => {
+            if (timer) {
+                clearTimeout(timer);
+                if (!long) revealHint({ mode: 'letter' });
+            }
+        };
+
+        hintBtn.addEventListener('mousedown', start);
+        hintBtn.addEventListener('mouseup', end);
+        hintBtn.addEventListener('mouseleave', end);
+
+        hintBtn.addEventListener('touchstart', start, { passive: true });
+        hintBtn.addEventListener('touchend', end);
+        hintBtn.addEventListener('touchcancel', end);
     }
 
     function revealHint(opts) {
@@ -1294,109 +1365,18 @@ document.addEventListener('DOMContentLoaded', () => {
         board.querySelectorAll('.cell-input').forEach(i => (i.value = ''));
         board.querySelectorAll('.cell').forEach(c => c.classList.remove('is-wrong', 'is-correct', 'is-hint'));
     }
+    
+    
 
-    function setupHintGestures(hintBtn) {
-        if (!hintBtn) return;
+    
+    
 
-        let timer = null;
-        let long = false;
-        const LONG_MS = 600;
+    
 
-        const start = () => {
-            long = false;
-            clearTimeout(timer);
-            timer = setTimeout(() => {
-                long = true;
-                revealHint({ mode: 'word' });
-            }, LONG_MS);
-        };
+    
 
-        const end = () => {
-            if (timer) {
-                clearTimeout(timer);
-                if (!long) revealHint({ mode: 'letter' });
-            }
-        };
 
-        hintBtn.addEventListener('mousedown', start);
-        hintBtn.addEventListener('mouseup', end);
-        hintBtn.addEventListener('mouseleave', end);
+    
 
-        hintBtn.addEventListener('touchstart', start, { passive: true });
-        hintBtn.addEventListener('touchend', end);
-        hintBtn.addEventListener('touchcancel', end);
-    }
-
-    function highlightFromCell(cell, ori) {
-        if (!cell) return;
-        clearBoardHighlights();
-        currentOrientation = ori;
-
-        const row = Number(cell.dataset.row);
-        const col = Number(cell.dataset.col);
-
-        log('highlightFromCell start', { row, col, ori });
-        if (ori === 'across') {
-            let startCol = col;
-            while (true) {
-                const prev = getCellEl(row, startCol - 1);
-                if (!prev || prev.classList.contains('black-cell')) break;
-                startCol--;
-            }
-
-            let endCol = startCol;
-            for (let colIndex = startCol; ; colIndex++) {
-                const el = getCellEl(row, colIndex);
-                if (!el || el.classList.contains('black-cell')) {
-                    endCol = colIndex - 1;
-                    break;
-                }
-                el.classList.add('is-active');
-            }
-            // const head = getCellEl(row, startCol);
-            // head?.classList.add('is-head');
-                        getCellEl(row, startCol)?.classList.add('is-head');
-            log('across head', { row, startCol, endCol });
-            getCellEl(row, startCol)?.classList.add('is-head');
-        }
-        else {
-            let startRow = row;
-            while (true) {
-                const prev = getCellEl(startRow - 1, col);
-                if (!prev || prev.classList.contains('black-cell')) break;
-                startRow--;
-            }
-
-            let endRow = startRow;
-            for (let rowIndex = startRow; ; rowIndex++ ) {
-                const el = getCellEl(rowIndex, col);
-                if (!el || el.classList.contains('black-cell')) {
-                    endRow = rowIndex - 1;
-                    break;
-                } 
-                el.classList.add('is-active');
-            }
-            // const head = getCellEl(startRow, col);
-            // head?.classList.add('is-head');
-            getCellEl(startRow, col)?.classList.add('is-head');
-            log('down head', { col, startRow, endRow });
-            // getCellEl(startRow, col)?.classList.add('.is-head');
-        }
-    }
-
-    function selectClueFromCell(cell, ori, options = {}) {
-        ori = currentOrientation;
-        if (!cell) return;
-        const id = cell.dataset[ori === 'across' ? 'acrossId' : 'downId'];
-        log('selectClueFromCell', { ori, id, cell: cell.dataset });
-        if (!id) return;
-
-        if (options.skipEvent) return;
-
-        const container = document.getElementById('clues-container');
-        container?.dispatchEvent(new CustomEvent('select-clue', {
-            detail: { clueId: id },
-            bubbles: true
-        }));
-    }
+    
 });

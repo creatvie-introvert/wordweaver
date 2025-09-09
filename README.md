@@ -257,7 +257,7 @@ The header provides persistent navigation, branding, and quick access to key fun
     - More breathing room between logo and icons.
     - Maintains touch-friendly sizing while improving clarity.
   - **Desktop:**
-    - Full-width layout with clear visual speration between logo and action icons.
+    - Full-width layout with clear visual separation between logo and action icons.
     - Ample spacing enhances readability and accessibility.
   
 > **See also:** [Modals & Focus Management](#modals--focus-management) for accessibility behaviour when opening Help and Info Modals.
@@ -351,7 +351,7 @@ The selected category determines the trivia content of the puzzle by mapping to 
 </details>
 
 #### Difficulty Selection
-The difficulty level selected by the user directly affects the compexity and scope of the crossword puzzle. Each difficulty option - Easy, Medium, and Hard, controls key parameters:
+The difficulty level selected by the user directly affects the complexity and scope of the crossword puzzle. Each difficulty option - Easy, Medium, and Hard, controls key parameters:
 - **Grid Size**: Determines the overall size of the puzzle(11x11, 13x13, or 15x15).
 - **Clue placement Attempts**: Sets how many layout combinations the generator will try to create the most intersecting and complete grid.
 - **API Fetch Volume**: Controls how many quiz questions are retrieved from the Open Trivia DB (40 for Easy/Medium, 50 for Hard).
@@ -612,7 +612,7 @@ The theme toggle system allows users to seamlessly switch between light and dark
 <!-- TODO: add a light and dark mode comparisson screenshot -->
 
 ### Future Enhancements
-While WordWeaver is fully functional and accesssible in its current version, several  enhancements are planned to extend gameplay,improve accessibility, and increase replayability.
+While WordWeaver is fully functional and accessible in its current version, several  enhancements are planned to extend gameplay,improve accessibility, and increase replayability.
 
 1. Timer and Score System
   - Add an optional timer feature to challenge players and track completion times.
@@ -620,7 +620,7 @@ While WordWeaver is fully functional and accesssible in its current version, sev
   - Display personal bests and high scores to encourage replay.
 
 2. Keyboard-Only Navigation
-  - Expand existing keyyboard support with a dedicated mode for full key-board-only control.
+  - Expand existing keyboard support with a dedicated mode for full key-board-only control.
   - Add visible shortcut hints and intuitive grid navigation keys.
   - Ensure all elements&mdash;carousel, modals, buttons&mdash;are fully reachable and operable via keyboard.
 
@@ -638,7 +638,7 @@ While WordWeaver is fully functional and accesssible in its current version, sev
   - Include shareable results cards for social media and puzzle sharing.
 
 6. Save and Resume Functionality
-  - Autimocaatically store game state in localStorage to alllow users to return to unfinished puzzle.
+  - Automatically store game state in localStorage to allow users to return to unfinished puzzle.
   - Optionally support multiple saved puzzles in progress with custom save slots.
 
 ### Stretch Goals
@@ -649,7 +649,7 @@ These features represent long-term ambitions or experimental ideas that may be i
   - Include profile avatars, puzzle stats (accuracy, fastest time, most-played categories), and historical game data.
 
 2. Daily Puzzle Mode
-  - Automatically generate and cahe a new puzzle each day using rotating categories and difficulty levels.
+  - Automatically generate and cache a new puzzle each day using rotating categories and difficulty levels.
   - Display countdouwn to the next puzzle and archive previous ones for logged-in users.
 
 3. Themed Puzzle Packs
@@ -675,7 +675,6 @@ This project was built using core frontend technologies along with a range of de
 ### Libraries and Frameworks
 - **[Google Font *Poppins*](https://fonts.google.com/specimen/Poppins)** - clean and modern typeface used throughout the site
 - **[FontAwesome](https://fontawesome.com)** - for scable and accessible SVG icons
-- **[AOS (Animate on Scroll)](https://michalsnik.github.io/aos/)** - for simple scroll-triggered animations
 
 ### Tools
 - **[Figma](https://www.figma.com/)** - used to create wireframes for mobile, tablet and desktop views
@@ -691,7 +690,7 @@ This project was built using core frontend technologies along with a range of de
 - **[Coolors](https://coolors.co/)** - used to define and refine the colour palette for both themes
 
 ### API
-- **[Opentrivia DB](https://opentdb.com/)** - public trivia API used to fetch quiz-style clues dynamically based on user-selected categories and diffficulty
+- **[OpenTrivia DB](https://opentdb.com/)** - public trivia API used to fetch quiz-style clues dynamically based on user-selected categories and diffficulty
 
 ### Validation and Accessibilty Testing
 - **[WAVE Web Accessibility Evaluation Tool](https://wave.webaim.org/)** - used to check for accessibilty issues

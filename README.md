@@ -612,9 +612,57 @@ The theme toggle system allows users to seamlessly switch between light and dark
 <!-- TODO: add a light and dark mode comparisson screenshot -->
 
 ### Future Enhancements
+While WordWeaver is fully functional and accesssible in its current version, several  enhancements are planned to extend gameplay,improve accessibility, and increase replayability.
 
+1. Timer and Score System
+  - Add an optional timer feature to challenge players and track completion times.
+  - Implement a scoring algorithm based on speed, hint usage, and accuracy.
+  - Display personal bests and high scores to encourage replay.
+
+2. Keyboard-Only Navigation
+  - Expand existing keyyboard support with a dedicated mode for full key-board-only control.
+  - Add visible shortcut hints and intuitive grid navigation keys.
+  - Ensure all elements&mdash;carousel, modals, buttons&mdash;are fully reachable and operable via keyboard.
+
+3. Multiple Grid Themes
+  - Introduce alternative visual styles for the grid (e.g., retro, high contrast, etc.).
+  - Allow users to choose a visual theme alongside the light/dark mode system.
+
+4. Offline Mode (Progressive Web App)
+  - Convert the app into a PWA (Progressive Web App) to support offline gameplay.
+  - Cache most recently played puzzle and allow offline completion with limited features.
+
+5. Leaderboard and Sharing
+  - Add optional user authentication via username or OAuth.
+  - Store scores and display leaderboards per category and difficulty.
+  - Include shareable results cards for social media and puzzle sharing.
+
+6. Save and Resume Functionality
+  - Autimocaatically store game state in localStorage to alllow users to return to unfinished puzzle.
+  - Optionally support multiple saved puzzles in progress with custom save slots.
 
 ### Stretch Goals
+These features represent long-term ambitions or experimental ideas that may be introduced in later versions of WordWeaver.
+
+1. Puzzle Gallery & User Profiles
+  - Let users save completed puzzles to a personal dashboard.
+  - Include profile avatars, puzzle stats (accuracy, fastest time, most-played categories), and historical game data.
+
+2. Daily Puzzle Mode
+  - Automatically generate and cahe a new puzzle each day using rotating categories and difficulty levels.
+  - Display countdouwn to the next puzzle and archive previous ones for logged-in users.
+
+3. Themed Puzzle Packs
+  - Release curated puzzle packs focused on pop culture, history, or niche interests.
+  - Unlock packs through achievements, special events, or content updates.
+
+4. Interactive Tutorial Mode
+  - Offer a guided onboarding flow for first-time users.
+  - Walk users through a mini-puzzle while demonstrating controls, accessibility features, and gameplay mechanics.
+
+5. Gamification System
+  - Introduce XP, levels, achievements, and collectible badges.
+  - Include progress bars, streak tracking, and unlockable content to reward regular play.
 
 ## Technologies Used
 This project was built using core frontend technologies along with a range of design, testing, and optimisation tools. The goal was to ensure clean code, responsive layouts, and an accessible user experience.

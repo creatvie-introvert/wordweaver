@@ -729,6 +729,14 @@ a:focus-visible,
     outline-offset: 2px;
 }
 
+.cell.is-wrong {
+    background-color: red;
+}
+
+.is-hint {
+    background-color: green;
+}
+
 /* Media Queries */
 @media (min-width: 480px) {
     #hero-section {

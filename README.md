@@ -183,21 +183,40 @@ The Features section showcases the interactive elements, core functionality, and
 
 ### Existing Features
 
+
+
+
+
 #### Header
-One of the core UI elements of WordWeaver, is the header. It delivers **persistent navigation**, brand visibility, and quick access to key game functions. Designed for clarity and ease of use, it adapts fluidly across devices to maintain an intuitive experience.
+The header provides persistent navigation, branding, and quick access to key functions throughout the WordWeaver app. It is fully responsive, accessible, and remains fixed to the top of the viewport across all screen sizes.
 
-The header includes the **WordWeaver logo** on the left, which doubles as a clickable button to instantly return users to the startn screen from anywhere in the app. On the right, three interactive icons - **Info**, **Help**, and **Theme Toggle** - provide quick access to guidance, gameplay information, and light/dark mode switching.
-
-The header remains fixed at the top of the viewport, ensuring it is always within reach without interrupting gameplay.
-
-##### Mobile View
-In the mobile layout the header is compact and space-efficient. Icons are sized for comfortable tapping, and spacing ensures no accidental presses.
-
-##### Tablet View
-The tablet header layout expands spacing between elements, giving the logo and icons more breathing room while maintaining a touch-friendly size. Proportional scaling ensures visual balancewithout compromising functionalitiy.
-
-##### Desktop View
-On desktop screens, the header strtches across the full width, with the logo and icons clearly separated for visual clarity. Ample horizontal space allows the design to feel open while keeoing interactive elements immediately accessible.
+**Key Features:** 
+- **WordWeaver Logo:**
+  - Positioned on the left side of the header.
+  - Acts as a **Home** button to return to the Hero screen from any part of the app.
+- **Actions Icons:**
+  - Located on the right, includes three interactive buttons:
+    - **Info** &mdash; Opens a modal with information about the app.
+    - **Help** &mdash; Opens a modal with gameplay instructions.
+    - **Theme Toggle** &mdash; Switches between light and dark modes.
+  - All buttons include `aria-label`s for accessibility and are keyboard focusable.
+- **Accessibility & Semantics:**
+  - Header uses semantic HTML (`<header>`) for clarity.
+  - Buttons support `aria-pressed` and `aria-label` states for screen readers.
+  - Focus is returned to the trigger button when modals are closed.
+- **Responsive Layout:**
+  - **Mobile:**
+    - Compact layout with tightly spaced icons for thumb reach.
+    - Icons are large enough for touch devices and spaced to avoid misclicks.
+  - **Tablet:**
+    - More breathing room between logo and icons.
+    - Maintains touch-friendly sizing while improving clarity.
+  - **Desktop:**
+    - Full-width layout with clear visual speration between logo and action icons.
+    - Ample spacing enhances readability and accessibility.
+  
+> **See also:** [Modals & Focus Management](#modals--focus-management) for accessibility behaviour when opening Help and Info Modals.
+> **See also:** [Theme Toggle System](#theme-toggle-system) for full logic behind the dark/light mode switching.
 
 <details>
 <summary>View Header Screenshots (Light Mode)</summary>
@@ -219,53 +238,31 @@ On desktop screens, the header strtches across the full width, with the logo and
 </p>
 </details>
 
-##### Information Modal
-The **Information Modal** is accessible from the header's "Info" icon, provides users with essential details about the WordWeaver app and its creatos.
-
-**Key Features:**
-- Displays app name, version, and a short description.
-- Lists creditis for trivia question sourcing [Open Trivia DB](https://opentdb.com).
-- Includes developer name and contact links: portfolio site and email feedback.
-- Opens in the centre of the screen with a dimmed overlay.
-- Fully accessible: traps focus, labelled for assitive technologies, dismissable via close button, Esc key, or clicking the backdrop.
-- Content area scrolls on smaller devices to maintain readability.
-
-<details>
-<summary>View Info Modal</summary>
-
-<p align="center">
-<img src="docs/features/info-modal.png" width="60%" alt="Info/About modal screenshot">
-</p>
-</details>
-
-##### Help Modal
-The **Help Modal** is accessible from the header's "Help" icon. It provides players with clear giudance on how to play WordWeaver.
-
-**Key Features:**
-- Displays a concise description of the game's concept.
-- Lists step-by-step instructions for starting and playing a game.
-- Opens in the centre of the screen with a dimmed overlay.
-- Fully accessible: traps focus, labelled for assitive technologies, dismissable via close button, Esc key, or clicking the backdrop.
-- Content area scrolls on smaller devices to maintain readability.
-
-<details>
-<summary>View Help Modal</summary>
-
-<p align="center">
-<img src="docs/features/help-modal.png" width="60%" alt="Help modal screenshot">
-</p>
-</details>
-
 #### Footer
-The footer provides branding, attribution, and quick access to the app's social media profiles.
+The footer server as the closing element of the page, reinforcing brand identity, providing external resource links, and enhancing overall accessibility, It is fully responsive and visually consistent across light and dark modes.
 
 **Key Features:**
-- Displays the **WordWeaver logo** linked to the homepage for quick navigation
-- Inculdes a **"Powered by"** credit linking to [Open Trivia DB](https://opentdb.com), the trivia question source.
-- Contains a **social media links section** with accessible icon buttons for Facebook, Linkedin, and GitHub.
-- External links open in new tabs and use rel="noopener noreferrer" for security.
-- Uses role="contentinfo" to clearly define the footer as site-qide information for assistive technologies.
-- Fully responsive design - content stacks verticall and is horizontally centred.
+- **Logo & Navigation:**
+  - Displays the **WordWeaver logo** prominently.
+  - Clicking the logo navigates users back to the home (Hero) screen.
+- **Attribution:**
+  - Includes a "Powered by Open Trivia DB" credit, linking to [Open Trivia DB](https://opentdb.com).
+  - External links use target="_blank" and rel="noopener noreferrer" for security and performance.
+- **Social Media Icons:**
+  - Buttons link to WordWeaver's social profiles (GitHub, LinkedIn, Facebook).
+  - Icons are styled for both themes and include `aria-label` attributes for assistive tech.
+- **Accessibilty & Sementics:**
+  - Footer uses `role="contentinfo"` to signal its purpose to screen readers.
+  - All interactive elements are keyboard accessible and visually indicate focus.
+- **Responsive Layout:**
+  - **Mobile:**
+    - Elements stack vertically and are horizontally centred for clarity on small screens.
+  - **Tablet/Desktop:**
+    - Layout expands with additional spacing between logo, links, and social icons.
+    - Design remains compact but breathable to suit larger viewports.
+
+> **See also:** [Theme Toggle System](#theme-toggle-system) for how social icons adapt to dark/light mode.
+> **See also:** [Hero Section](#hero-section)for how logo is reused as a navigation control.
 
 <details>
 <summary> View Footer Screenshots (Light Mode)</summary>
@@ -288,23 +285,33 @@ The footer provides branding, attribution, and quick access to the app's social 
 </details>
 
 #### Hero Section
-The **Hero Section** serves as the game's welcome screen and introduction, giving users an immediate sense of the game's theme and purpose. It includes branding, messaging, and the main call-to-action &mdash; **Start Puzzle** &mdash; which begins the game flow.
+The **Hero Section** serves as the game's welcome screen, introducing the brand, tagline, and primary call-to-action. It is the user's first interaction with the app and sets the tone for the overall experience.
 
 **Key Features:**
-- **Logo Display**: Features the WordWeaver logo prominently at the top of the page for instant brand recognition.
-- **Tagline**: Includes the phrase *"Unravel Clues. Solve the Grid."* to set expectations and build engagement.
+- **Logo Display:**
+  - Features the **WordWeaver logo** prominently at the top of the screen.
+  - Serves as a visual anchor for brand recognition and game identity.
+- **Tagline & Messaging:**
+  - Displays the phrase: *"Unravel Clues. Solve the Grid."*
+  - Establishes expectations and builds thematic immersion.
 - **Start Puzzle Button:**
-  - Acts as the primary call-to-action (CTA)
-  - Transitions the user into the **Category Selection** screen when clicked.
-  - Uses semantic HTML, keyboard accessibility, and `aria-hidden/hidden attributes` for assistive tech compatibility.
-- **Accessibilyt & Focus Handling:**
-  - The section is labelled using `aria-labelledby="hero-title"` and the heading receives focus when loaded.
-  - When transitioning away, it's visually hidden but still managed for screen readers.
+  - Primary call-to-action that initiates the game flow.
+  - Transitions the user to the **Category Selection** screen on click.
+  - Fully keyboard-accessible with `aria-hidden`, `aria-label`, and `tabindex` for screen reader compatibility.
+- **Accessibility & Focus Handling:**
+  - Section uses `aria-labelledby="hero-title" for semantic labelling.
+  - On load, focus is programmatically applied to the main heading for smooth keyboard navigation.
+  - When hidden, visibility and ARIA state are updated to preserve assitive tech flow.
 - **Responsive Layout:**
-  - On **mobile**, the hero section uses a stacked **vertical layout**, with the logo positioned above the text and button. All elements are centred and spaced for small screens.
-  - On **tablet/desktop**, it switches to a **two-column layout**, placing the logo and hero text side-by-side. This layout provides better visual balance and makes use of available horizontal space.
+  - **Mobile:**
+    - Uses a **stacked vertical layout** where the logo appears above the text and CTA.
+    - Elements are centred and padded for touch - friendly interactions.
+  - **Tablet/Desktop:**
+    - Switches to a **two-column layout**, placing the logo and text side-by-side.
+    - Utilises available screen space to deliver better visual balance and improved legibility.
 
-This section establishes the tone of the game, ensures easy access to gameplay, and delivers a smooth, accessible entry point to the overall user experience.
+> **See also:** [Section Transition Logic](#section-transition-logic) for how the Start button triggers view changes.
+> **See also:** [Header](#header) for how the logo is reused as a back-to-home navigation link.
 
 <details>
 <summary>View Hero Section Screenshots (Light Mode)</summary>
@@ -441,7 +448,7 @@ The crossword grid is the core gameplay area where trivia answers are revealed t
   - The active clue and its head cell are visually indicated using `.is-active` and `.is-head` classes.
 - **Responsive Layout:**
   - On **mobile**, the crossword grid uses a compact layout and scales fluidly to fit smaller screens.
-  - On **tablet/desktop**, the grid is sized proportionally based on the number of cells and remains centred, ensuring a sapcious and legible playing area.
+  - On **tablet/desktop**, the grid is sized proportionally based on the number of cells and remains centred, ensuring a spacious and legible playing area.
 
 <details>
 <summary>View Crossword Grid Screenshot (Light)</summary>
@@ -462,6 +469,150 @@ The crossword grid is the core gameplay area where trivia answers are revealed t
 <img src="docs/features/grid-desktop-dark.png" width="30%" alt="Crossword grid on desktop in dark mode">
 </p>
 </details>
+
+#### Game Controls & User Interaction
+This section outlines how players interact with the crossword puzzle, including clue navigation, input validation, and the positioning of game controls across devices.
+
+- **Control Buttons:**
+  - **Hint**: Reveals a correct letter in the currently selected clue, or the entire word on long press.
+  - **Submit**: Validates all filled cells against the correct answers. Incorrect letters are visually marked to provide feedback.
+  - **Reset**: Clears all user input, allowing the puzzle to be restarted.
+- **Responsive Layout:**
+  - On **mobile**, the game control buttons are located in a `.game-ctrls` section directly beneath the clue carousel for thumb accessibility.
+  - On *tablet/desktop*, these buttons are placed in the `.board-actions` container, with a layout that visually aligns underneath the crossword grid.
+- **Clue Highlighting and Navigation:**
+  - Clues can be selected by clicking the numbered list or using keyboard navigation.
+  - A horizontally scrollable carousel shows the active clue on **mobile**, flanked by **Previous** and **Next** buttons. On **tablet/desktop**, the active clue is displayed statically above the grid without horizontal scrolling, maintaining visibility without user input.
+  - Highlighting a clue visually emphasises the matching word in the grid.
+  - Clicking a clue focuses the first unfilled input in that word; if all are filled, focus remains on the first cell.
+- **Keyboard Shortcuts and Interactions:**
+  - Arrow keys shift focus across cells based on the current orientation (Across/Down).
+  - `Space`toggles orientation.
+  - `Backspace` clears current cell or jumps backward.
+  - Clicking or focusing an input field triggers active clue highlighting and syncing with the clue carousel.
+- **Accessibility Features:**
+  - All buttons and navigation elements include descriptive `aria-label` attributes.
+  - Clue text updates via `aria-live="polite"` in the carousel.
+  - Grid cells are labelled for screen readers with clue information and coordinates.
+  - Focus is managed manually for modals and section transitions to ensure a smooth keyboard-first experience.
+  - Clue list items and input fields are navigable via `Tab`, with visual `:focus` indicators and appropiate `aria-hidden` management during section transitions.
+
+> **See also:** [Crossword Grid Logic](#crossword-grid-logic) for dynamic grid generationa and word placement.
+> **See also:** [Input Validation & Feedback Logic](#input-validation--feedback-logic) for details on how user answers are checked and styled.
+
+#### Clue Panel & Carousel
+The Clue Panel and Clue Carousel work together to provide a clear and responsive way to access crossword clues depending on the user's device.
+
+- **Clue Grouping:**
+  - Clues are divided into **Across** and **Down** sections, each prefaced with a heading and numbered to match the grid.
+  - Each clue is uniquely tied to a starting grid cell via `data-clue-id` attributes.
+- **Mobile Carousel:**
+  - On **mobile**, the active clue s shown in a horizontally scrollable carousel fixed below the grid.
+  - It includes **Previous** and **Next** buttons, allowing swipe-style navigation between clues.
+  - The carousel automatically scrolls to bring the selected clue into view.
+  - The clue is announced via an `aria-live="polite"` region for screen readers.
+- **Tablet/Desktop Clue Panels:**
+  - On **tablet/desktop**, clues are shown in two static panels beside the grid.
+  - The panels are scrollable if content overflows and remains persistently visible during gameplay.
+  - Selecting a clue scrolls the list to reveal it, and the corresponding word in the grid is visually highlighted.
+- **Synchronisation with Grid:**
+  - Clicking a clue scrolls the grid to the first cell of the corrsponding word and focuses the input.
+  - Selecting a cell from the grid updates the active clue in the panel or carousel.
+  - Highlighted clues and grid cells are visually coordinated via shared class names.
+- **Accessibility Considerations:**
+  - All clues are interactive list items with `aria-label`s describing their content.
+  - Only one clue is active at a time, and the interface ensures screen reader focus stays in sync with visual focus.
+  - All navigation controls are keyboard accessible with visible focus indicators.
+
+> **See also:** [Game Controls & User Interaction](#game-controls--user-interaction) to learn how clues intersect with grid selection and hint tools.
+> **See also:** [Section Transition Logic](#section-transition-logic) for how focus and visibility shift between clue interfaces.
+
+#### Modals & Focus Management
+WordWeaver uses modal dialogs to present instructions and gameplay tips without disrupting the main game flow. These overlays are fully keyboard-navigable and accessible to screen readers.
+
+- **Trigger Mechanisms:**
+  - Modals are opened by buttons with `data-model` attributes and are matched via corresponding element IDs.
+  - Each modal automatically receives focus when opened and returns focus to the triggering button when clsed.
+- **Focus Trapping:**
+  - While open, focus is trapped within the modal using keyboard navigation (`Tab` and `Shift+Tab`).
+  - First and last focusable elements are detected dynamically to create an accessible loop.
+- **Dismissal Options:**
+  - Users can close modals by:
+    - Clicking the close button(`.close-modal`)
+    - Pressing `Escape`
+    - Clicking outside the modal content
+- **ARIA & Semantic Roles:**
+  - Each modal is given `role="dialog"`, `aria-modal="true"`, and `aria-hidden` toggles.
+  - Labels and descriptions ensure screen reader users understand the purpose and content.
+- **Responsiveness and Usability:**
+  - Modals are designed to work on all devices, adjusting width and padding based on screen size.
+  - Modal open state prevents background scrolling (`.modal-open` class on `<body>`).
+
+These accessibility and usability practices ensure that modal interactions do not interfere with gameplay or disorient users navigating via keyboard or assistive technologies.
+
+> add how to play modal screenshot here
+> **See also:** [Theme Toggle System](#theme-toggle-system) for another header-level control feature with accessibility support.
+> **See also:** [Section Transition Logic](#section-transition-logic) for focus handling beteen main sections.
+
+#### Theme Toggle System
+The theme toggle system allows users to seamlessly switch between light and dark modes, preserving their preference across sessions.
+
+- **Initial Theme Detection:**
+  - On first visit, the app checks localStorage for a saved theme.
+  - If no saved theme exists, it defaults to the user's OS-level `prefers-color-scheme` setting.
+- **User Toggle:**
+  - A toggle button in the header lets users switch themes manually.
+  - The button updates its `aria-label` and `aria-pressed` state for assistive tech.
+- **Persistence:**
+  - The selected theme is stored in localStorage and reapplied on every visit.
+  - The `<html>` element's `data-theme` attribute is updated dynamically to reflect the current theme.
+- **Accessibility:**
+  - Toggle button include decriptive ARIA labels.
+  - Theme changes do not interfere with keyboard navigation or screen reader flow.
+- **Visual Impact:**
+  - The UI uses CSS variables to instantly switch between colours based on the `data-theme` attribute.
+  - All custom components, (grid, buttons, modals, etc.) inherit their colours from the active theme.
+
+> add a light and dark mode comparison screenshot
+
+#### Section Transition Logic
+WordWeaver uses a smooth,, accessible section-switching system to guide users through the game flow&mdash;from start screen to category and difficulty selection, and finally to the puzzle.
+
+- **Transition Between Sections:**
+  - Custom logic manages transitions between major sections (`#hero-section`, `#category-section`, `#difficulty-section`, `#game-section`).
+  - Buttons use a `data-prev` attribute to identify which section to return to when clicking a Back button.
+- **ARIA & Visibility Management:**
+  - Only one section is visible at a time using the `.hidden` class and `hidden` attribute.
+  - `aria-hidden` is dynamically set to ensure screen readers ignore inactive sections.
+- **Scroll & Focus Behaviour:**
+  - Each transition scrolls to the target section's heading, offsetting for the sticky header height.
+  - After scroll, focus is automatically applied to the new section's heading (e.g., `#game-title`), ensuring logical keyboard flow.
+- **Accessibility Notes:**
+  - All section headers use `tabindex="-1"` to allow focus without introducing unwanted tab stops.
+  - Focus management is compatible with both keyboard and screen reader navigation.
+
+#### Input Validation & Feedback Logic
+The game provides immediate and accessible feedback when checking answers.
+
+- **Correct vs Incorrect Entries:**
+  - Upon clicking **Submit**, each input is compared to the correct solution stored in the grid.
+  - Correct entries receive the `.is-correct` class.
+  - Incorrect entries are marked with `.is-wrong`.
+- **Summary Alert:**
+  - After submission, a summary alert is shown indicating:
+    - Number of correct letters
+    - Number of incorrect letters
+    - Number of empty cells
+  - If all answers are correct, a congratulatory message is shown.
+- **Hint-Based Feedback**
+  - Hinted cells are given the `.is-hint` class to visually distinguish them from manually entered values.
+  - Long-pressing the **Hint** button reveals the full word, and a click reveals one letter.
+- **Reset Behaviour:**
+  - The **Reset** button clears all input values.
+  - Any `.is-wrong`, `.is-correct`, or `.is-hint` classes are removed.
+- **Mobile & Desktop Consistency:**
+  - The visual styling of correct/incorrect/hint states is consistent across device breakpoints.
+  - Focus and input state are retained when resizing or rotating the device.
 
 ### Future Enhancements
 

@@ -15,7 +15,7 @@ This project exists to:
 
 By combining trivia with crosswords, WordWeaver engages users in a mentally challenging experience that is equally suited for casual entertainment and light learning.
 
-<!-- TODO: Insert final mockup screenshot here -->
+![Responsive mockup of the WordWeaver app shown on mobile, tablet, laptop, and desktop screens](docs/features/wordweaver-mockup.png)
 
 ## Table of Contents
 - [User Goals](#user-goals)
@@ -588,7 +588,11 @@ These accessibility and usability practices ensure that modal interactions do no
 > **See also:** [Theme Toggle System](#theme-toggle-system) for another header-level control feature with accessibility support.
 > **See also:** [Section Transition Logic](#section-transition-logic) for focus handling beteen main sections.
 
-<!-- TODO: add how to play modal screenshot here -->
+<details>
+<summary>How to Play Modal (Desktop View)</summary>
+
+<img src="docs/features/modal-desktop-example.png" alt="A modal window titled “How to play?” is displayed over the WordWeaver game homepage.">
+</details>
 
 #### Theme Toggle System
 The theme toggle system allows users to seamlessly switch between light and dark modes, preserving their preference across sessions.
@@ -609,7 +613,7 @@ The theme toggle system allows users to seamlessly switch between light and dark
   - The UI uses CSS variables to instantly switch between colours based on the `data-theme` attribute.
   - All custom components, (grid, buttons, modals, etc.) inherit their colours from the active theme.
 
-<!-- TODO: add a light and dark mode comparisson screenshot -->
+<!-- TODO: add a light and dark mode comparison screenshot -->
 
 ### Future Enhancements
 While WordWeaver is fully functional and accessible in its current version, several  enhancements are planned to extend gameplay,improve accessibility, and increase replayability.

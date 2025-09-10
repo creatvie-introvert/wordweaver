@@ -722,6 +722,42 @@ This project was built using core frontend technologies along with a range of de
 |B-0004|Modal aria-hidden Focus Error|Closing a modal while its close button retained focus caused a console warning about aria-hidden blocking assistive tech|**Fixed**|Restored focus to the modal opener before hiding and clearing attributes|[3dfe5bd](https://github.com/creatvie-introvert/wordweaver/commit/3dfe5bd0b36fe4ac875d084cd848eb2c3375a843)|
 
 ### Responsiveness Tests
+The **WordWeaver** app was designed using a mobile-first approach and rigourously tested across a variety of screen sizes, devices, and input methods to ensure a consistent, accessible, and intuitive user experience on all platforms.
+
+**Tools Used:**
+- **[BrowserStack](https://www.browserstack.com)** &mdash; for live testing on physical and OS/browser combinations.
+- **[Chrome DevTools](https://developer.chrome.com/docs/devtools/)** &mdash; used throughout development for breakpoint inspection and real-time adjustments.
+- **[Responsive Design Checker](https://responsivedesignchecker.com)** &mdash; to simulate multiple screen dimensions and validate layout behaviour.
+- **[Am I Responsive?](https://ui.dev/amiresponsive)** &mdash; to generate a visual mockup demonstrating cross-device compatibility.
+
+**Devices Tested on BrowserStack:**
+|Device                      |Resolution          |Orientation          |Status          |
+|----------------------------|--------------------|---------------------|----------------|
+|iPhone SE (2020)            |357 x 667           |Portrait             |Pass            |
+|iPhone 14 Pro               |390 x 844           |Portrait             |Pass            |
+|Google Pixel 7              |412 x 915           |Portrait             |Pass            |
+|Samsung Galaxy S21          |360 x 800           |Portrait             |Pass            |
+|iPhone 14 Pro Max           |430 x 932           |Portrait             |Pass            |
+|iPhone 14 Pro               |844 x 390           |Landscape            |Pass            |
+|Samsung Galaxy S21          |800 x 360           |Landscape            |Pass            |
+|iPad Mini                   |768 x 1024          |Portrait             |Pass            |
+|ipad Air                    |834 x 1194          |Portrait             |Pass            |
+|iPad Pro 11"                |834 x 1194          |Portrait             |Pass            |
+|Samsung Galaxy Tab S7       |800 x 1280          |Portrait             |Pass            |
+|MacBook Air 13" (non-retina)|1440 × 900          |Landscape            |Pass            |
+|Windows Laptop              |1366 x 768          |Landscape            |Pass            |
+|Large Monitor               |2560 x 1440         |Landscape            |Pass            |
+
+**Screens Simulated via Responsive Design Checker:**
+- Desktop: 24", 22", 13"
+- Tablet: iPad Mini (768x1024), Samsung Galaxy Tab 10" (800x1280)
+- Mobile: iPhone 6/6s/7 (372x667), iPhone 6s Plus/7 Plus (414x736), Samsung Galaxy S5/S6/S7 (360x640), Google Pixel (411x731)
+
+All tested devices and screen sizes successfully displayed WordWeaver with:
+- Proper layout adjustments at each breakpoint
+- Fully accessible and usable controls
+- Scalable typography and SVG icons
+Grid and clue interfaces adapting appropiately for orientation and size
 
 ### Code Validation
 

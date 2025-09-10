@@ -58,7 +58,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ========== Utilities ==========
     /**
-     * Decode HTML entities API strings (e.g., &quot;, &#039;) using temporary <textarea>
+     * Decodes HTML entities in a string to their corresdonding characters.
+     * 
+     * Useful for handling API responses or user input that inclues HTML-encoded characters.
+     * 
+     * @param {string} html - The HTML-encoded string to decode.
+     * @returns {string} - The decoded plain-text string.
      */
     function decodeHTML(html) {
         const txt = document.createElement('textarea');
@@ -67,7 +72,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * In-place Fisher-Yates shuffle.
+     * Shuffles the elements of an array in place using the Fisher-Yates algorithm.
+     * 
+     * This function rearranges the elements of the given array in a random order.
+     * It modifies the original array and returns it.
+     * 
+     * @param {any[]} arr - The array to be shuffled.
+     * @returns {any[]} - The same array with its elements randomly reordered. 
      */
     function shuffle(arr) {
         for (let i = arr.length - 1; i > 0; i--) {
@@ -78,7 +89,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * Initialise the theme toggle: apply saved/system theme, switch on click, persist to localStorage, and update the button's aria-label.
+     * Initialise the theme toggle functionality for light/dark mode.
+     * 
+     * - Applies a saved theme from localStorage if available.
+     * - Falls back to system preference (prefers-color-scheme) if no theme is saved.
+     * - Listens for clicks on the toggle button to switch between light and dark themes.
+     * - Updates the HTML root's `data-theme` attribute and the toggle button's accessibility labels.
+     * 
+     * @param {HTMLElement|null} btn - The toggle button element. If null, no toggle interaction is set up.
+     * @param {HTMLElement} [root = document.documentElement] - The root element to apply the `data-theme` attribute to.
      */
     function initThemeToggle(btn, root = document.documentElement) {
         let theme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
@@ -93,6 +112,12 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
+        /**
+         * Applies the selected theme by updating the `data-theme` attribute on the root element.
+         * Also updates the toggle button's accessibility attributes.
+         * 
+         * @param {string} theme - The current theme to apply ('light' or 'dark').
+         */
         function applyTheme(theme) {
             root.setAttribute('data-theme', theme);
             if (btn) {
@@ -103,7 +128,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * Initialise modal system: binds open/close triggers, traps focus, restores focus, and handles Escape + outside-click to close.
+     * Initialises modal functionality by wiring up open and close behaviour, managing focus trapping and escape key handling for accessibility.
+     * 
+     * @param {Object} options - Configuration object.
+     * @param {NodeListOf<Element>} options.buttons - Elements that trigger modals (must have a `data-modal` attribute). 
+     * @param {NodeListOf<Element>} options.modals - All modal elements on the page.
+     * @param {HTMLElement} options.body - The <body> element, used to toggle a class when modals are open.
      */
     function initModals({ buttons, modals, body }) {
         let activeModal = null;
@@ -129,6 +159,13 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
+        /**
+         * Opens a modal dialog, applies ARIA accessibility attributes, traps keyboard focus inside the modal, and sets up Escape key to close it.
+         * 
+         * @param {HTMLElement} modal - The modal element tp open.
+         * @param {HTMLElement} openerEl  - The element that triggered the modal to open.
+         * @returns 
+         */
         function openModal(modal, openerEl) {
             if (!modal) return;
             if (activeModal && activeModal !== modal) closeModal(activeModal);
@@ -174,6 +211,12 @@ document.addEventListener('DOMContentLoaded', () => {
             document.addEventListener('keydown', trapHandler);
         }
 
+        /**
+         * Closes the modal dialog, removes ARIA accessibility attributes, unbinds key event listeners, and restores focus to the element that opened the modal.
+         * 
+         * @param {HTMLElement} modal - The modal element to close.
+         * @returns 
+         */
         function closeModal(modal) {
             if (!modal) return;
 
@@ -199,6 +242,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    /**
+     * Initialises a dynamic header height observer that updates CSS custom properties based on the current height of the site header.
+     * 
+     * This ensures that other layout elements (e.g., scroll padding) adapt automatically when the header's size changes due to content, resizing, or device orientation.
+     */
     function initHeaderHeightObserver() {
         const headerEl = document.getElementById('site-header');
         if (headerEl) {
@@ -261,7 +309,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ========== Navigation Functions ==========
     /**
-     * Show or hide a section.
+     * Show or hides a section element, updating its visibility classes and ARIA attributes.
+     * 
+     * @param {HTMLElement} section - The section to show or hide.
+     * @param {boolean} visible - Whether the section should be visible (`true`) or hidden (`false`).
      */
     function setSectionVisible (section, visible) {
         if (!section) return;
@@ -272,7 +323,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * Navigate from one section to another with proper focus management.
+     * Navigate from one section to another, updates visibility, scrolls to a new section, and moves focus to a specific element within the new section.
+     * 
+     * @param {HTMLElement} from - The currently visible section to hide.
+     * @param {HTMLElement} to - The section to show and scroll into view.
+     * @param {string} [focusSelector] - CSS selector for an element within `to` to focus after scroll.
      */
     function goToSection(from, to, focusSelector) {
         if (!from || !to) return;
@@ -296,11 +351,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ========== Crossword Initialisation ==========
     /**
-     * Fetch, sanitise, and render a crossword for the chosen category/difficulty.
+     * Fetch trivia questions from the Open Trivia DB API based on the selected category and difficulty, sanitises and filters the results, builds the best crossword layout from the clues, and renders the crossword board.
+     * 
+     * @async
+     * @param {string} selectedCategory - The slug of the chosen category.
+     * @param {string} chosenDifficulty - The selected difficulty level.
      */
     async function loadCrossword(selectedCategory, chosenDifficulty) {
-        // console.log('loadCrossword called with:', selectedCategory, chosenDifficulty);
-
         const categoryId = categoryMap[selectedCategory];
         if (!categoryId) {
             console.warn('Unknown category:', selectedCategory);
@@ -347,6 +404,18 @@ document.addEventListener('DOMContentLoaded', () => {
         renderBoardActions();
         wireBoardInputs();
 
+        /**
+         * Cleans and filter te raw trivia results from the API to produce valid crossword clues.
+         * 
+         * - Decodes HTML entities in questions and answers.
+         * - removes any non-alphabetic characters from answers.
+         * - Filters outanswers that are too long, contani digits, or are duplicates.
+         * - Converts answers to uppercase for consistency in crossword placement.
+         * 
+         * @param {Array<Object>} results - The raw trivia question objects from the API.
+         * @param {number} maxLen - The maximum allowed length for any answer (Based on grid size).
+         * @returns  {Array<Object>} - An array of valid clue objects.
+         */
         function sanitiseResults(results, maxLen) {
             const seen = new Set();
             const out = [];
@@ -367,7 +436,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ========== Crossword Construction Logic ==========
     /**
-     * Try multiple randomised layouts and keep the fullest grid.
+     * Attempts to generate the best possible crossword layout from a given set of clues.
+     * 
+     * It runs multiple layout attempts by randomlu shuffling the clues each time, then returns the grid layout that filled the most cells.
+     * 
+     * @param {Array<Object>} rawClues - Array of clue objects containing question and answer data.
+     * @param {number} gridSize - Size of the square crossword grid.
+     * @param {number} [attempts=12] - Number of layout attempts to try using different clue orders.
+     * @returns {Array<Array<Object>>} The best-performiong grid layout found, or an empty grid if none is suitable. 
      */
     function buildBestLayout(rawClues, gridSize, attempts = 12) {
         if (!Array.isArray(rawClues) || rawClues.length === 0) return [];
@@ -391,6 +467,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         return bestCandidate?.grid ?? [];
 
+        /**
+         * Counts how many non-block cells in the crossword grid contain a letter.
+         * 
+         * This is used to evaluate how well a crossword layout performs by checking how many letter cells are filled (excluding black squares).
+         * 
+         * @param {Array<Array<Object>>} grid - The 2D crossword grid to evaluate.
+         * @returns {number} The total number of filled letter cells in the grid.
+         */
         function countFilledCells(grid) {
             let count = 0;
             for (const row of grid) {
@@ -403,7 +487,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * Place as many clues as possible onto an internal character grid.
+     * Attempts to place all valid clues onto a crossword grid using a mix of optimal and fallback logic.
+     * Words are positioned to maximise intersections and minimise empty space.
+     * @param {Array<Object>} clues - The list of clue objects containing answer string.
+     * @param {number} [gridSize=15] - The width and height of the square crossword grid.
+     * @returns {Array<Object>}A filtered list of clue objects that were successfully placed on the grid, each updated with position and orientation.
      */
     function assignCluePositions(clues, gridSize = 15) {
         const ACROSS = 'across';
@@ -445,14 +533,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
         return validClues.filter(c => c.placed);
 
+        /**
+         * Creates a 2D grid array filled with `null` values.
+         * 
+         * @param {number} size - The number of rows and columns in the grid.
+         * @returns {Array<Array<null>>} A square grid of specified size filled with `null`
+         */
         function makeGrid(size) {
             return Array.from({ length: size }, () => Array(size).fill(null));
         }
 
+        /**
+         * Checks if a given row and column coordinate is within the bounds of the grid.
+         * @param {number} row - The row index to check.
+         * @param {number} col - The column index to check.
+         * @returns {boolean} True if tthe coordinates are within bounds, false otherwise.
+         */
         function inBounds(row, col) {
             return row >= 0 && row < gridSize && col >= 0 && col < gridSize;
         }
 
+        /**
+         * Places a clue's answer on the grid at the specified starting position and orientation.
+         * Updates the clue object with placement metadata.
+         * 
+         * @param {object} clue - The clue object to place. 
+         * @param {number} startRow - Starting row Index
+         * @param {number} startCol - Starting column Index
+         * @param {string} ori - Orientation of the clue.
+         */
         function place(clue, startRow, startCol, ori) {
             const word = clue.answer;
             for (let i = 0; i < word.length; i++) {
@@ -466,6 +575,15 @@ document.addEventListener('DOMContentLoaded', () => {
             clue.placed = true;
         }
 
+        /**
+         * Deterines if a word can be placed on the grid at the specified position and orientation without overlapping invalid characters or breaking crossword rules.
+         * 
+         * @param {Object} clue - The clue object being tested.
+         * @param {number} startRow - Starting row Index. 
+         * @param {number} startCol - Starting column Index.
+         * @param {string} ori - Orientation
+         * @returns {boolean} True if the clue can be placed, false otherwise.
+         */
         function canPlace(clue, startRow, startCol, ori) {
             const word = clue.answer;
 
@@ -502,6 +620,12 @@ document.addEventListener('DOMContentLoaded', () => {
             return true;
         }
 
+        /**
+         * Attempts to place the first clue in the centre of the grid as the starting point (seed).
+         * Falls back to the first available valid spot if centred placement fails.
+         * 
+         * @param {object} firstClue - The first clue to place on the board.
+         */
         function placeSeed(firstClue) {
             if (!firstClue) return;
             const startRow = Math.floor(gridSize / 2);
@@ -515,6 +639,12 @@ document.addEventListener('DOMContentLoaded', () => {
             else console.warn(`Could not place seed: ${firstClue.answer}`);
         }
 
+        /**
+         * Generate a list of potential placement positions for a given clue by matching its letters to existing letters already on the grid.
+         * 
+         * @param {object} clue - The clue to evaluate.
+         * @returns {Array<Object>} An array of candiate placements with start coordinates and orientation.
+         */
         function getCandidates(clue) {
             const word = clue.answer;
             const placements = [];
@@ -538,6 +668,11 @@ document.addEventListener('DOMContentLoaded', () => {
             return placements;
         }
 
+        /**
+         * Returns a comparator function to rank candidate placements by number of overlaps and proximity to the grid's centre.
+         * @param {Object} clue - The clue being placed.
+         * @returns {function(Object, Object): number} A sorting comparator for candiate placements.
+         */
         function compareCandidates(clue) {
             const word = clue.answer;
             const centreCoord = (gridSize - 1) / 2;
@@ -553,6 +688,13 @@ document.addEventListener('DOMContentLoaded', () => {
             };
         }
 
+        /**
+         * Counts how many letters in a candidate placement intersect with existing letters on the grid.
+         * 
+         * @param {Object} candidate - A placement option with row, col, and orientation.
+         * @param {string} word - The clue answer being placed.
+         * @returns {number} The number of matching characters already on the board.
+         */
         function countCrosses(candidate, word) {
             let crosses = 0;
             for (let i = 0; i < word.length; i++) {
@@ -563,12 +705,26 @@ document.addEventListener('DOMContentLoaded', () => {
             return crosses;
         }
 
+        /**
+         * Calculate the Manhattan distance from the candidate placement's centre point to the centre of the grid.
+         * 
+         * @param {Object} candidate - A placement option with row, col, and orientation.
+         * @param {number} length - The length of. the word.
+         * @param {number} centreCoord - The central coordinate of the grid.
+         * @returns {number} The sum of horizontal and vertical distance from centre.
+         */
         function centreDistance(candidate, length, centreCoord) {
             const midpointRow = candidate.ori === DOWN ? candidate.startRow + (length - 1) / 2 : candidate.startRow;
             const midpointCol = candidate.ori === ACROSS ? candidate.startCol + (length - 1) / 2 : candidate.startCol;
             return Math.abs(midpointRow - centreCoord) + Math.abs(midpointCol - centreCoord);
         }
 
+        /**
+         * Finds the first available valid spot on the grid where a clue can be placed.
+         * 
+         * @param {Object} clue - The clue to place.
+         * @returns {Object|null} A placement object or null if none found.
+         */
         function findFirstSpot(clue) {
             for (let row = 0; row < gridSize; row++) {
                 for (let col = 0; col < gridSize; col++) {
@@ -581,8 +737,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * Build a renderable cell grid from placed clues.
-     * Assumes each clue has {answer, row, col, orientation, id}
+     * Converts an array of placed clues into a structured crossword grid.
+     * 
+     * Each grid cell contains metadata such as its position, letter, clue associations, and whether it starts a clue.
+     * 
+     * @param {Array<Object>} placedClues - An array of clue objects with row, col, id, answer, and orientation.
+     * @param {number} gridSize - The size of the square crossword grid.
+     * @returns {Array<Array<Object>>} A 2D grid array where each cell includes letter data and clue metadata.
      */
     function generateGrid(placedClues, gridSize) {
         const ACROSS = 'across';
@@ -639,7 +800,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * Compute crossword numbering: scans the grid and ssigns numbers to the cells that start across and/or down answer, rendering their coordinates and ids.
+     * Scans the crossword grid and assigns numbers to the starting cells of each across and down word. These numbers are used for displaying the puzzle clues and for referencing cell in the UI.
+     * 
+     * @param {Array<Array<Object>>} grid - A 2D array representing the crossword grid.
+     * @returns {Object} An object with `across` and `down` arrays, each containing objects with clue number, row, col, and clue ID.
      */
     function computeClueNumbers(grid) {
         const clueNumbers = { across: [], down: [] };
@@ -666,8 +830,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * Compute lengths and friendly records for Across/Down from the rendered grid.
-     * Uses the computeClueNumbers() + the global clueBank.
+     * Builds a clue index from the crossword grid and clue bank.
+     * It combines grid-based clue positions with metadata like clue text, answer, and length.
+     * @param {Array<Array<Object>>} grid - A 2D array representing the crossword puzzle grid.
+     * @param {Map<string, Object>} bank - A Map of clue metadata keyed by clue ID.
+     * @returns {Object} An object with `across` and `down` arrays, each containing clue data including number, position, orientation, clue text, answer, and answer length.
      */
     function buildClueIndex(grid, bank) {
         const clueNumbers = computeClueNumbers(grid);
@@ -710,7 +877,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ========== Rendering Functions ==========
     /**
-     * Render a 2D crossword grid into the board using CSS Grid.
+     * Render the crossword board on the page using the provided cell grid.
+     * Builds each cell with appropiate data, styles, and input elements, and injects them into the DOM using document fragment for performance.
+     * @param {Array<Array<Object>>} cellGrid - 2D array representing the crossword grid structure. 
      */
     function renderCrossword(cellGrid) {
         if (!board || !Array.isArray(cellGrid) || cellGrid.length === 0) return;
@@ -742,6 +911,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         board.appendChild(frag);
 
+        /**
+         * Create a DOM element representing a single crossword cell.
+         * This includes visual styling, clue numbers, and user input elements if the cell is not a block.
+         * 
+         * @param {Object} gridCell - The data for the cell including position, content, and metadata.
+         * @returns {HTMLElement} - A div element representing the grid cell.
+         */
         function buildCell(gridCell) {
             const el = document.createElement('div');
             el.className = gridCell.isBlock ? 'cell black-cell' : 'cell';
@@ -781,7 +957,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * Render mobile carousel + tablet/desktop two panel lists, and wire up interactions (prev/next, click to focus).
+     * Renders the crossword clues, carousel navigation, and game controls into the DOM.
+     * Builds both across and down clues using the crossword grid and clue bank, and wires up interactions for clue selection, keyboard access, and navigation.
+     * @param {Array<Array<Object>>} grid - The 2D grid of crossword cell objects.
+     * @param {Map<string, Object>} bank - A Map of clue metadata keyed by clue ID.
      */
     function renderClues(grid, bank) {
         const container = document.getElementById('clues-container');
@@ -849,6 +1028,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let currentIndex = 0;
 
+        /**
+         * Updates the clue carousel display with the currently selected clue.
+         * Displays the clue number, direction, length, and text, and highlights the active clue in both the clue list and on the crossword grid.
+         */
         function updateCarousel() {
             if (!linearClues.length) return;
             const current = linearClues[currentIndex];
@@ -871,6 +1054,12 @@ document.addEventListener('DOMContentLoaded', () => {
             updateCarousel();
         });
 
+        /**
+         * Selects a clue in the clue list and board grid based on its clue ID.
+         * Updates the clue carousel, highlights the clue's starting cell, focuses the next empty input cell (if any), and prepares input state.
+         * 
+         * @param {string} clueId - The ID of the clue to select.
+         */
         function selectClueById(clueId) {
             const i = linearClues.findIndex(c => c.id === clueId);
             if (i === -1) return;
@@ -937,6 +1126,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+        /**
+         * Highlights the currently active clue in the list panel.
+         * Removes the `is-active` class from all other clues.
+         * 
+         * @param {string} id - The clue ID to mark as active.
+         */
         function setActiveListItem(id) {
             container.querySelectorAll('.clues-panel li').forEach(li => {
                 li.classList.toggle('is-active', li.dataset.clueId === id);
@@ -947,6 +1142,11 @@ document.addEventListener('DOMContentLoaded', () => {
         wireActionButtons(container.querySelector('.game-ctrls'));
     }
 
+    /**
+     * Renders the crossword game control buttons (Hint, Submit, Reset) inside the crossword board section and wires them to their handlers.
+     * 
+     * @function 
+     */
     function renderBoardActions() {
         const root = ensureBoardActions();
         if (!root) return;
@@ -958,6 +1158,13 @@ document.addEventListener('DOMContentLoaded', () => {
         wireActionButtons(root);
     }
 
+    /**
+     * Ensures the crossword board has a sibling container for action buttons.
+     * Creates and inserts the container if it doesn't exist.
+     * 
+     * @function
+     * @returns {HTMLElement|null} The action buttons container element, or null if board is missing.
+     */
     function ensureBoardActions() {
         const boardEl = document.getElementById('crossword-board');
         if (!boardEl) return null;
@@ -973,7 +1180,10 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // ========== UI Functions ==========
     /**
-     * Highlight the cells for a clue starting at (row,col) and orientation.
+     * Highlight all cells on the board that belong to a specific clue.
+     * Scrolls the clue's starting cell into view and visually marks the clue path.
+     * 
+     * @param {Object} clue - The clue object containing its orientation, row, and col.
      */
     function highlightClueOnBoard(clue) {
         if (!clue || !board) return;
@@ -1005,19 +1215,32 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * Get the .cell element at a board coordinate.
+     * Retrieves a specific cell element from the crossword board using its row and column coordinates.
+     * 
+     * @param {number|string} row - The row index of the cell.
+     * @param {number|string} col - The column index of the cell.
+     * @returns {HTMLElement|null} The corresponding cell element, or null if not found.
      */
     function getCellEl(row , col) {
         return board?.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
     }
 
+    /**
+     * Removes visual classes from all crossowrd grid cells.
+     * 
+     * Specifically it removes 'is-active' and 'is-head' classes from any cell that currently has them, clearing previous clue highlights.
+     */
     function clearBoardHighlights() {
         if (!board) return;
         board.querySelectorAll('.cell.is-active, .cell.is-head').forEach(el => el.classList.remove('is-active', 'is-head'));
     }
 
     /**
-     * Update the game title to reflect the chosen category
+     * Updates the crossword game's heading based on the selected category.
+     * 
+     * Converts the category slug into a human-readable title and sets it as the text content of the element with ID 'game-title'.
+     * 
+     * @param {string} categorySlug - The category identifier.
      */
     function setGameTitle(categorySlug) {
         const label = ({
@@ -1035,6 +1258,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (el) el.textContent = `${label} Crossword`;
     }
 
+    /**
+     * Highlights a full clue (across or down) starting from a given cell.
+     * 
+     * Traverses from the selected cell to find the full span of the clue in the specified orientation, highlights all the relevant cells, and marks the starting cell as the "head" of the clue.
+     * 
+     * @param {HTMLElement} cell - The starting DOM element (cell) where the user clicked.
+     * @param {'across' | 'down'} ori - The orientation of the clue ('across' or 'down').
+     */
     function highlightFromCell(cell, ori) {
         if (!cell) return;
         clearBoardHighlights();
@@ -1092,6 +1323,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
+    /**
+     * Triggers selection of the clue associated with a given cell and orientation.
+     * 
+     * Looks up the clue ID based on the cell's data attributes and dispatches a custon 'select-clue' event from the clues container, unless skipped via options.
+     * 
+     * @param {HTMLElement} cell - The DOM cell element the user interacted with.
+     * @param {'across' | 'down'} ori - The intended orientation of the clue.
+     * @param {Object} [options={}] - Optional argument.
+     * @returns {boolean} [options.skipEvent=false] - If true, skips dispatching the event.
+     */
     function selectClueFromCell(cell, ori, options = {}) {
         ori = currentOrientation;
         if (!cell) return;
@@ -1109,6 +1350,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // ========== Input + Navigation Handlers ==========
+    /**
+     * Wires up all event listeners for the crossword board's input interactions.
+     * Handles user actions such as focusing on cells, typing letters, navigation with arro keys, deleting letters, toggling clue orientation, and interacting via mouse clicks.
+     * 
+     * Events handled:
+     * - `focusin`: Highlights and selects a clue when a cell recieves focus.
+     * - `input`: Restricts user input to a single uppercase letter and moves to the next cell.
+     * - `keydown`: Handles Backspace, Arrow keys, and space for movement and orientation toggle.
+     * - `click`: Focuses input and selects clue when a cell is clicked.
+     * - `dblclick`: Toggles orientation and selects clue on double-click. 
+     */
     function wireBoardInputs() {
         board.addEventListener('focusin', (e) => {
             const input = e.target.closest('.cell-input');
@@ -1221,6 +1473,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    /**
+     * Retuns the currently highlighted (active) cells on the board, sorted in logical order based on the current clue orientation.
+     * 
+     * @returns {HTMLElement} Sorted list of active cell elements.
+     */
     function activeCellsSorted() {
         const activeCells = [...board.querySelectorAll('.cell.is-active:not(.black-cell)')];
         if (!activeCells.length) return [];
@@ -1246,6 +1503,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
+    /**
+     * Moves focus to another input cell within the currently active clue, based on a relative offset from the currently focused cell.
+     * 
+     * @param {HTMLElement} currentCell - The currently focused `.cell` element.
+     * @param {number} offset - The number of steps to move (positive or negative).
+     */
     function moveRelative(currentCell, offset) {
         const orderedActiveCells = activeCellsSorted();
         if (orderedActiveCells.length === 0) return;
@@ -1269,6 +1532,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ========== Game Control Actions (Hint, Check, Reset) ==========
+    /**
+     * Wires up event listeners to the crossword action buttons (Hint, Submit, and Reset) within the given container element.
+     * 
+     * @param {HTMLElement} scopeEl - The container element where the action buttons are loacted. 
+     */
     function wireActionButtons(scopeEl) {
         if (!scopeEl) return;
         const hintBtn = scopeEl.querySelector('.hint');
@@ -1278,6 +1546,16 @@ document.addEventListener('DOMContentLoaded', () => {
         scopeEl.querySelector('.reset')?.addEventListener('click', resetGrid);
     }
 
+    /**
+     * Sets up gesture-based behaviour for the "Hint" button.
+     * 
+     * - A short click/tap reveals a single letter hint.
+     * - A long press (held for ≥ 600ms) reveals the full word.
+     * 
+     * Handles bout mouse and touch events for accessibility across devices.
+     * 
+     * @param {HTMLElement} hintBtn - the hint button element to attach gesture listeners to.
+     */
     function setupHintGestures(hintBtn) {
         if (!hintBtn) return;
 
@@ -1310,6 +1588,17 @@ document.addEventListener('DOMContentLoaded', () => {
         hintBtn.addEventListener('touchcancel', end);
     }
 
+    /**
+     * Reveals hint(s) for the currently selected clue.
+     * 
+     * Depending on the mode, it reveals eithe the next missing letter or the entire word.
+     * 
+     * The function updates the input ofields with the correct answer(s) and visually marks them using the `is-hint` class.
+     * 
+     * @param {Object} opts - Options to control reveal behaviour.
+     * @param {string} [opts.mode] - 'letter' to reveal single letter, 'word' to reveal full word.
+     * @param {boolean} [opts.shiftKey] - Optional flag to infer mode if `mode` is not explicitly set.
+     */
     function revealHint(opts) {
         const cells = activeCellsSorted();
         if (!cells.length) return;
@@ -1332,6 +1621,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    /**
+     * Validates the user's current crossword answers.
+     * 
+     * Compares user input in each cell to the correct solution stored in `data-solution`.
+     * Applies cisual feedback classes (`is-correct`, `is-wrong`) to eacg cell based on acuracy.
+     * Displays an alert summarising the result:
+     * - If all answers are correct, shows a success message.
+     * - Otherwise, displays a breakdown of correctm wrong, and empty cells.
+     */
     function checkAnswers() {
         if(!board) return;
         let total = 0, filled = 0, correct = 0;
@@ -1360,23 +1658,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    /**
+     * Clears alll user input and visual feedback fron the crossword grid.
+     * 
+     * - Empties the value of each input cell.
+     * - Removes any status classes ('is-wrong', 'is-correct', 'is-hint').
+     * @returns 
+     */
     function resetGrid() {
         if (!board) return;
         board.querySelectorAll('.cell-input').forEach(i => (i.value = ''));
         board.querySelectorAll('.cell').forEach(c => c.classList.remove('is-wrong', 'is-correct', 'is-hint'));
-    }
-    
-    
-
-    
-    
-
-    
-
-    
-
-
-    
-
-    
+    }    
 });

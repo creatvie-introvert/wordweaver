@@ -53,6 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const restartBtn = document.getElementById('restart-btn');
     const homeBtn = document.getElementById('home-btn');
     const completeModal = document.getElementById('completeModal');
+    const incompleteDismissBtn = document.getElementById('incomplete-dismiss-btn');
 
     // ========== Initialisation ==========
     initModals({ buttons: modalButtons, modals, body });
@@ -319,6 +320,10 @@ document.addEventListener('DOMContentLoaded', () => {
     homeBtn?.addEventListener('click', () => {
         returnToSection(document.getElementById('hero-section'), 'h1');
     });
+
+    incompleteDismissBtn?.addEventListener('click', () => {
+        closeModal(document.getElementById('incompleteModal'));
+    });    
 
     // ========== Navigation Functions ==========
     /**

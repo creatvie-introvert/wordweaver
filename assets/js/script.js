@@ -1676,13 +1676,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (filled === total && correct === total) {
             openModal(document.getElementById('completeModal'));
-            // alert('All correct well done');
             return;
         }
         else {
-            const wrong = filled - correct;
+            const incorrect = filled - correct;
             const empty = total - filled;
-            alert(`Checked:\n• Correct: ${correct}\n• Wrong: ${wrong} \n• Empty: ${empty}`);
+
+            const message = `You have ${incorrect} incorrect letter${incorrect !== 1 ? 's' : ''} and ${empty} empty cell${empty !== 1 ? 's' : ''}. Please complete the puzzle before submitting.`;
+
+            const incompleteMsg = document.getElementById('incompleteMsg');
+            incompleteMsg.textContent = message;
+
+            openModal(document.getElementById('incompleteModal'));
         }
     }
 

@@ -1292,9 +1292,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 el.classList.add('is-active');
             }
-            // const head = getCellEl(row, startCol);
-            // head?.classList.add('is-head');
-                        getCellEl(row, startCol)?.classList.add('is-head');
+            
+            getCellEl(row, startCol)?.classList.add('is-head');
             log('across head', { row, startCol, endCol });
             getCellEl(row, startCol)?.classList.add('is-head');
         }
@@ -1315,11 +1314,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 } 
                 el.classList.add('is-active');
             }
-            // const head = getCellEl(startRow, col);
-            // head?.classList.add('is-head');
+            
             getCellEl(startRow, col)?.classList.add('is-head');
             log('down head', { col, startRow, endRow });
-            // getCellEl(startRow, col)?.classList.add('.is-head');
         }
     }
     
@@ -1521,8 +1518,6 @@ document.addEventListener('DOMContentLoaded', () => {
         );
 
         if (currentIndex === -1) return;
-
-        // const currentIndex = Math.max(0, orderedActiveCells.indexOf(currentCell));
 
         const targetIndex = Math.min(Math.max(currentIndex + offset, 0), orderedActiveCells.length - 1);
         const targetCell = orderedActiveCells[targetIndex];

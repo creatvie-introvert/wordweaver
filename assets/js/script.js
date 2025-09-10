@@ -50,6 +50,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalButtons = document.querySelectorAll('[data-modal]');
     const modals = document.querySelectorAll('.modal');
     const body = document.body;
+    const restartBtn = document.getElementById('restart-btn');
+    const homeBtn = document.getElementById('home-btn');
+    const completeModal = document.getElementById('completeModal');
 
     // ========== Initialisation ==========
     initModals({ buttons: modalButtons, modals, body });
@@ -309,6 +312,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    restartBtn?.addEventListener('click', () => {
+        returnToSection(document.getElementById('category-section'), '#category-title');
+    });
+
+    homeBtn?.addEventListener('click', () => {
+        returnToSection(document.getElementById('hero-section'), 'h1');
+    });
+
     // ========== Navigation Functions ==========
     /**
      * Show or hides a section element, updating its visibility classes and ARIA attributes.
@@ -348,6 +359,24 @@ document.addEventListener('DOMContentLoaded', () => {
             const y = target.getBoundingClientRect().top + window.scrollY - headerPx - 10;
             window.scrollTo({ top: y, behavior: 'smooth' });
             target.focus?.({ preventScroll: true });
+        });
+    }
+
+    /**
+     * Navogates from game section to the target seection (hero or category), resetting the game state.
+     * 
+     * @param {HTMLElement} targetSection - The section to show.
+     * @param {string} focusSelector - Optional CSS selector to apply focus.
+     */
+    function returnToSection (targetSection, focusSelector = '') {
+        closeModal(completeModal);
+
+        setSectionVisible(document.getElementById('game-section'), false);
+        setSectionVisible(targetSection, true);
+
+        resetGrid();
+        requestAnimationFrame(() => {
+            if (focusSelector) targetSection.querySelector(focusSelector)?.focus();
         });
     }
 
@@ -1668,36 +1697,5 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!board) return;
         board.querySelectorAll('.cell-input').forEach(i => (i.value = ''));
         board.querySelectorAll('.cell').forEach(c => c.classList.remove('is-wrong', 'is-correct', 'is-hint'));
-    }   
-    
-    const restartBtn = document.getElementById('restart-btn');
-    const homeBtn = document.getElementById('home-btn');
-
-    restartBtn?.addEventListener('click', () => {
-        closeModal(document.getElementById('completeModal'));
-        
-        const gameSection = document.getElementById('game-section');
-        gameSection.classList.add('hidden');
-        gameSection.setAttribute('aria-hidden', true);
-        gameSection.setAttribute('hidden', '');
-        
-        const categorySection = document.getElementById('category-section');
-        categorySection.classList.remove('hidden');
-        categorySection.removeAttribute('hidden');
-        categorySection.setAttribute('aria-hidden', false);
-    });
-
-    homeBtn?.addEventListener('click', () => {
-        closeModal(document.getElementById('completeModal'));
-
-        const gameSection = document.getElementById('game-section');
-        gameSection.classList.add('hidden');
-        gameSection.setAttribute('aria-hidden', true);
-        gameSection.setAttribute('hidden', '');
-
-        const hero = document.getElementById('hero-section');
-        hero.classList.remove('hidden');
-        hero.setAttribute('aria-hidden', false);
-        hero.querySelector('h1')?.focus();
-    });
+    } 
 });

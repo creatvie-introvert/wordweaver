@@ -347,6 +347,36 @@
         </div>
     </div>
 
+    <!-- Completion Modal -->
+    <div class="modal" id="completeModal" role="dialog" aria-modal="true" aria-labelledby="completTitle" aria-hidden="true" hidden>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="completeTitle">
+                    Puzzle Complete
+                </h2>
+                <button class="close-modal" aria-label="Close completion modal" type="button">
+                    &times;
+                </button>
+            </div>
+            <div class="modal-body-text">
+                <p>
+                    Well done! You'ce solved the entire crossword.
+                </p>
+                <p class="bold">
+                    What would you like to do next?
+                </p>
+                <div class="completion-actions">
+                    <button class="primary-btn" id="restart-btn">
+                        Play Again
+                    </button>
+                    <button class="primary-btn" id="home-btn">
+                        Return to Start
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <footer class="site-footer" role="contentinfo">
         <div class="footer-logo-container">
             <a href="index.html" aria-label="Go to homepage">

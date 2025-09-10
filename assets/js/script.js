@@ -127,6 +127,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    let activeModal = null;
+    let escHandler = null;
+    let trapHandler = null;
+
     /**
      * Initialises modal functionality by wiring up open and close behaviour, managing focus trapping and escape key handling for accessibility.
      * 
@@ -136,9 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
      * @param {HTMLElement} options.body - The <body> element, used to toggle a class when modals are open.
      */
     function initModals({ buttons, modals, body }) {
-        let activeModal = null;
-        let escHandler = null;
-        let trapHandler = null;
+        
 
         buttons.forEach(button => {
             button.addEventListener('click', () => {
@@ -158,88 +160,88 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (content && !content.contains(e.target)) closeModal(modal);
             });
         });
+    }
 
-        /**
-         * Opens a modal dialog, applies ARIA accessibility attributes, traps keyboard focus inside the modal, and sets up Escape key to close it.
-         * 
-         * @param {HTMLElement} modal - The modal element tp open.
-         * @param {HTMLElement} openerEl  - The element that triggered the modal to open.
-         * @returns 
-         */
-        function openModal(modal, openerEl) {
-            if (!modal) return;
-            if (activeModal && activeModal !== modal) closeModal(activeModal);
+    /**
+     * Opens a modal dialog, applies ARIA accessibility attributes, traps keyboard focus inside the modal, and sets up Escape key to close it.
+     * 
+     * @param {HTMLElement} modal - The modal element tp open.
+     * @param {HTMLElement} openerEl  - The element that triggered the modal to open.
+     * @returns 
+     */
+    function openModal(modal, openerEl) {
+        if (!modal) return;
+        if (activeModal && activeModal !== modal) closeModal(activeModal);
 
-            activeModal = modal;
-            modal.dataset.returnFocusId = openerEl?.id || '';
-            modal.hidden = false;
-            modal.setAttribute('aria-hidden', 'false');
-            modal.setAttribute('aria-modal', 'true');
-            if (!modal.getAttribute('role')) modal.setAttribute('role', 'dialog');
-            body.classList.add('modal-open');
+        activeModal = modal;
+        modal.dataset.returnFocusId = openerEl?.id || '';
+        modal.hidden = false;
+        modal.setAttribute('aria-hidden', 'false');
+        modal.setAttribute('aria-modal', 'true');
+        if (!modal.getAttribute('role')) modal.setAttribute('role', 'dialog');
+        body.classList.add('modal-open');
 
-            requestAnimationFrame(() => {
-                (modal.querySelector('.close-modal') || 
-                 modal.querySelector(FOCUSABLE_SELECTOR) ||
-                 modal).focus?.();
-            });
+        requestAnimationFrame(() => {
+            (modal.querySelector('.close-modal') || 
+                modal.querySelector(FOCUSABLE_SELECTOR) ||
+                modal).focus?.();
+        });
 
-            escHandler = (e) => {
-                if (e.key === 'Escape') closeModal(modal);
-            };
+        escHandler = (e) => {
+            if (e.key === 'Escape') closeModal(modal);
+        };
 
-            trapHandler = (e) => {
-                if (e.key !== 'Tab') return;
-                const focusables = [...modal.querySelectorAll(FOCUSABLE_SELECTOR)].filter(el => !el.hasAttribute('disabled') && el.offsetParent !== null);
-                if (!focusables.length) return;
+        trapHandler = (e) => {
+            if (e.key !== 'Tab') return;
+            const focusables = [...modal.querySelectorAll(FOCUSABLE_SELECTOR)].filter(el => !el.hasAttribute('disabled') && el.offsetParent !== null);
+            if (!focusables.length) return;
 
-                const first = focusables[0];
-                const last = focusables[focusables.length - 1];
-                const current = document.activeElement;
+            const first = focusables[0];
+            const last = focusables[focusables.length - 1];
+            const current = document.activeElement;
 
-                if (e.shiftKey && current === first) {
-                    e.preventDefault();
-                    last.focus();
-                }
-                else if (!e.shiftKey && current === last) {
-                    e.preventDefault()
-                    first.focus();
-                }
-            };
+            if (e.shiftKey && current === first) {
+                e.preventDefault();
+                last.focus();
+            }
+            else if (!e.shiftKey && current === last) {
+                e.preventDefault()
+                first.focus();
+            }
+        };
 
-            document.addEventListener('keydown', escHandler);
-            document.addEventListener('keydown', trapHandler);
+        document.addEventListener('keydown', escHandler);
+        document.addEventListener('keydown', trapHandler);
+    }
+
+    /**
+     * Closes the modal dialog, removes ARIA accessibility attributes, unbinds key event listeners, and restores focus to the element that opened the modal.
+     * 
+     * @param {HTMLElement} modal - The modal element to close.
+     * @returns 
+     */
+    function closeModal(modal) {
+        if (!modal) return;
+
+        modal.hidden = true;
+        modal.setAttribute('aria-hidden', true);
+        modal.removeAttribute('aria-modal');
+        body.classList.remove('modal-open');
+
+        if (escHandler) {
+            document.removeEventListener('keydown', escHandler);
+            escHandler = null;
+        }
+        if (trapHandler) {
+            document.removeEventListener('keydown', trapHandler);
+            trapHandler = null;
         }
 
-        /**
-         * Closes the modal dialog, removes ARIA accessibility attributes, unbinds key event listeners, and restores focus to the element that opened the modal.
-         * 
-         * @param {HTMLElement} modal - The modal element to close.
-         * @returns 
-         */
-        function closeModal(modal) {
-            if (!modal) return;
+        const returnId = modal.dataset.returnFocusId;
+        const fallback = document.querySelector('#site-header a, #site-header button');
+        (returnId ? document.getElementById(returnId) : fallback)?.focus?.();
 
-            modal.hidden = true;
-            modal.setAttribute('aria-hidden', true);
-            modal.removeAttribute('aria-modal');
-            body.classList.remove('modal-open');
-
-            if (escHandler) {
-                document.removeEventListener('keydown', escHandler);
-                escHandler = null;
-            }
-            if (trapHandler) {
-                document.removeEventListener('keydown', trapHandler);
-                trapHandler = null;
-            }
-
-            const returnId = modal.dataset.returnFocusId;
-            const fallback = document.querySelector('#site-header a, #site-header button');
-            (returnId ? document.getElementById(returnId) : fallback)?.focus?.();
-
-            activeModal = null;
-        }
+        activeModal = null;
     }
 
     /**
@@ -1644,7 +1646,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         if (filled === total && correct === total) {
-            alert('All correct well done');
+            openModal(document.getElementById('completeModal'));
+            // alert('All correct well done');
+            return;
         }
         else {
             const wrong = filled - correct;
@@ -1664,5 +1668,36 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!board) return;
         board.querySelectorAll('.cell-input').forEach(i => (i.value = ''));
         board.querySelectorAll('.cell').forEach(c => c.classList.remove('is-wrong', 'is-correct', 'is-hint'));
-    }    
+    }   
+    
+    const restartBtn = document.getElementById('restart-btn');
+    const homeBtn = document.getElementById('home-btn');
+
+    restartBtn?.addEventListener('click', () => {
+        closeModal(document.getElementById('completeModal'));
+        
+        const gameSection = document.getElementById('game-section');
+        gameSection.classList.add('hidden');
+        gameSection.setAttribute('aria-hidden', true);
+        gameSection.setAttribute('hidden', '');
+        
+        const categorySection = document.getElementById('category-section');
+        categorySection.classList.remove('hidden');
+        categorySection.removeAttribute('hidden');
+        categorySection.setAttribute('aria-hidden', false);
+    });
+
+    homeBtn?.addEventListener('click', () => {
+        closeModal(document.getElementById('completeModal'));
+
+        const gameSection = document.getElementById('game-section');
+        gameSection.classList.add('hidden');
+        gameSection.setAttribute('aria-hidden', true);
+        gameSection.setAttribute('hidden', '');
+
+        const hero = document.getElementById('hero-section');
+        hero.classList.remove('hidden');
+        hero.setAttribute('aria-hidden', false);
+        hero.querySelector('h1')?.focus();
+    });
 });

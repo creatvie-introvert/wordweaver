@@ -356,6 +356,13 @@ body.modal-open {
     margin-bottom: 1rem;
 }
 
+.completion-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+    margin-top: 1.6rem;
+}
+
 /* -- Footer -- */
 .site-footer {
     display: flex;
@@ -723,6 +730,11 @@ body.modal-open {
     .clue-carousel {
         max-width: clamp(28rem, 8vmin, 72rem);
         margin: auto;
+    }
+
+    .completion-actions {
+        flex-direction: row;
+        justify-content: center;
     }
 }
 

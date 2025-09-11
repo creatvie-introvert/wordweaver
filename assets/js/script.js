@@ -777,6 +777,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
+     * Checks whether a given grid position is out of bounds.
+     * 
+     * @param {Object} pos - The grid position to check.
+     * @param {number} gridSize - The size of the square grid.
+     * @returns {boolean} True if the position is out of bounds, false otherwise.
+     */
+    function checkOutOfBounds(pos, gridSize) {
+        return pos.row < 0 || pos.col < 0 || pos.row >= gridSize || pos.col >= gridSize;
+    }
+
+    /**
      * Converts an array of placed clues into a structured crossword grid.
      * 
      * Each grid cell contains metadata such as its position, letter, clue associations, and whether it starts a clue.
@@ -809,9 +820,6 @@ document.addEventListener('DOMContentLoaded', () => {
             })); 
         };
 
-        function checkOutOfBounds(pos, gridSize) {
-            return pos.row < 0 || pos.col < 0 || pos.row >= gridSize || pos.col >= gridSize;
-        }
         for (const placedClue of placedClues) {
             if (!Number.isInteger(placedClue.row) || !Number.isInteger(placedClue.col)) {
                 continue;

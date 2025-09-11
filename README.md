@@ -615,6 +615,37 @@ The theme toggle system allows users to seamlessly switch between light and dark
 
 <!-- TODO: add a light and dark mode comparison screenshot -->
 
+#### Cutom 404 Error Page
+
+WordWeaver includes a fully responsive, animated 404 error page to enhance the user experience when navigating to invalid routes.
+
+**Key Features:**
+- Illustrated Desiogn: Friendly cartoon of a puzzle user besides a crossword grid.
+- Animation: Subtle float effect adds visual interest.
+- Responsive Layout: Optimised for mobile, tablet, and desktop.
+- Theme Support: Adapts to both light and dark modes.
+- Navigation: Clear call-to-action to return to the homepae.
+
+<details>
+<summary>View Custom 404 Page Screenshots (Light)</summary>
+
+<p align="center">
+<img src="docs/features/404-mobile-light.png" width="30%" alt=""404 page on mobile in light mode>
+<img src="docs/features/404-tablet-light.png" width="30%" alt=""404 page on tablet in light mode>
+<img src="docs/features/404-desktop-light.png" width="30%" alt=""404 page on desktop in light mode>
+</p>
+</details>
+
+<details>
+<summary>View Custom 404 Page Screenshots (Dark)</summary>
+
+<p align="center">
+<img src="docs/features/404-mobile-dark.png" width="30%" alt=""404 page on mobile in dark mode>
+<img src="docs/features/404-tablet-dark.png" width="30%" alt=""404 page on tablet in dark mode>
+<img src="docs/features/404-desktop-dark.png" width="30%" alt=""404 page on desktop in dark mode>
+</p>
+</details>
+
 ### Future Enhancements
 While WordWeaver is fully functional and accessible in its current version, several  enhancements are planned to extend gameplay,improve accessibility, and increase replayability.
 

@@ -809,6 +809,9 @@ document.addEventListener('DOMContentLoaded', () => {
             })); 
         };
 
+        function checkOutOfBounds(pos, gridSize) {
+            return pos.row < 0 || pos.col < 0 || pos.row >= gridSize || pos.col >= gridSize;
+        }
         for (const placedClue of placedClues) {
             if (!Number.isInteger(placedClue.row) || !Number.isInteger(placedClue.col)) {
                 continue;
@@ -816,9 +819,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const positions = positionsForClue(placedClue);
 
-            const isOutOfBounds = positions.some(pos =>
-                pos.row < 0 || pos.col < 0 || pos.row >= gridSize || pos.col >= gridSize
-            );
+            const isOutOfBounds = positions.some(pos => checkOutOfBounds(pos, gridSize));
+            
             if (isOutOfBounds) {
                 console.warn(`Skipping "${placedClue.answer}" due to conflict`);
                 continue;

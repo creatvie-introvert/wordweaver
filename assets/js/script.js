@@ -1,6 +1,8 @@
-/* jshint esversion: 11 */
-/* jshint -W030 */       // Suppress: Unused expressions
-/* jshint -W061 */       // (optional) suppress eval warnings if any
+/* jshint esversion: 11 */      // Allow ES11+ features
+/* jshint -W030 */              // Allow standalone expressions 
+/* jshint -W083 */              // Allow functions inside loops
+/* jshint -W061 */              // Allow use of eval (remove if not used)
+/* global ResizeObserver */     // Declare global browser API
 
 // ========== Constants & Config ==========
 const categoryMap = {

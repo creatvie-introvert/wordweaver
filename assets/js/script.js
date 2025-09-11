@@ -820,7 +820,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const positions = positionsForClue(placedClue);
 
             const isOutOfBounds = positions.some(pos => checkOutOfBounds(pos, gridSize));
-            
+
             if (isOutOfBounds) {
                 console.warn(`Skipping "${placedClue.answer}" due to conflict`);
                 continue;
@@ -1148,12 +1148,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const firstCell = getCellEl(row, col);
             highlightFromCell(firstCell, orientation);
-
-            const activeCells = activeCellsSorted();
-            const nextInput = activeCells.find(c => {
-                const input = c.querySelector('.cell-input');
-                return input && !input.value;
-            })?.querySelector('.cell-input') || firstCell?.querySelector('.cell-input');
 
             selectClueFromCell(firstCell, currentOrientation, { skipEvent:true });
         });

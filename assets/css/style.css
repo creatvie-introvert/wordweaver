@@ -649,11 +649,8 @@ body.modal-open {
     place-items: center;
     border: 1px solid var(--border-color);
     border-radius: 0.8rem;
-    background: linear-gradient(
-        180deg, 
-        color-mix(in srgb, var(--text-color) 12%, var(--panel-color)), var(--panel-color));
-    box-shadow: 
-        0 2px 0 color-mix(in srgb, var(--border-color) 70%, transparent), 0 0.8rem 1.8rem color-mix(in srgb, var(--panel-color) 55%, transform);
+    background-color: var(--panel-color);
+    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.2);
     color: var(--button-bg);
     cursor: pointer;
     transition: 

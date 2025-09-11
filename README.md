@@ -75,7 +75,7 @@ The following goals were identified to ensure WordWeaver offers meaningful value
 - As a user, I want to play without needing to sign up or log in.
 - As a user, I want to see clues displayed beside or beneath the crossword puzzle so I know how to solve it.
 - As a user, I want to be able to input letters into the crossword grid so I can solve the puzzle.
-- As a user, I the puzzle grid to adapt t the length of the answers so that every quiz feels custom-built.
+- As a user, I want the puzzle grid to adapt t the length of the answers so that every quiz feels custom-built.
 - As a user, I want to be notified when I've correctly completed the puzzle so I know I've solved it.
 
 User stories and development tasks are fully detailed on the [GitHub Project Board](https://github.com/users/creatvie-introvert/projects/13/views/1), showcasing steps taken to bring the project to completion.
@@ -814,22 +814,13 @@ All issues were fixed through careful code review and semantic corrections:
 
 After refactoring, the site passed with **zero errors or warnings**, confirming full W3C compliance.
 
-<details>
-<summary>View HTML validation screenshot (Main Page)</summary>
-
 ![Screenshot showing that index.html passed HTML validation with zero errors or warnings](docs/validation/index-html-validation-pass.png)
-</details>
-<br>
 
 **404 Page Validation**
 
 The custom 404 page was also validated independently to ensure it met the same standards. The page passed validation with **zero errors or warnings**.
 
-<details>
-<summary>View HTML validation screenshot (404 Page)</summary>
-
 ![Screenshot showing that 404.html passed HTML validation with zero errors or warnings](docs/validation/404-html-validation-pass.png)
-</details>
 
 #### CSS
 
@@ -844,17 +835,68 @@ The [style.css](assets/css/style.css) file was tested using the official [W3C CS
 - 4 vendor extension warnings (e.g., `-webkit-font-smoothing`) &mdash; **safe to ignore**
 - All remaining rules pass validation
 
-<details>
-<sumary>View CSS validation screenshot</summary>
-
 ![W3C CSS Validation Pass](docs/validation/style-css-validation-pass.png)
-</details>
 
 #### JavaScript
+The JavaScript codebase was tested manually and validated using automated linting tools to ensure clarity, maintainability, and performance across browsers and devices.
+
+**Tools Used:**
+- **[JSHint](https://jshint.com/)** &mdash; used to check syntax issues, potential bugs, and style consistency in the main JavaScript file script.js.
+
+**Linting Configuration:**
+```
+/* jshint esversion: 11 */      // Allow ES11+ features
+/* jshint -W030 */              // Allow standalone expressions 
+/* jshint -W083 */              // Allow functions inside loops
+/* jshint -W061 */              // Allow use of eval (remove if not used)
+/* global ResizeObserver */     // Declare global browser API
+```
+
+**Results:**
+- **0 Errors**
+- **0 Warnings** (after resolving unused variables, duplicated keys, and function declarations inside loops)
+
+![JSHint validation passed with all warnings suppressed](docs/validation/jshint-validation-pass.png)
 
 ### User Story Testing
+The following user stories were defined at the beginning of the project. Each one was tested manually in a real browser environment across multiple devices to ensure full functionalituy and alignment with the project's original goals.
+
+|ID|User Story|Test Criteria|Status|
+|--|----------|-------------|------|
+|US-001|As a user, I want to choose the category of questions so that the crossword reflects my interests.|User is presented with 9 category options represented by icons. Selecting one stores the choice and customises quiz content pulled from the API.|Pass|
+|US-002|As a user, I want to select the puzzle difficulty so I can play at my level.|User chooses between Easy, Medium, or Hard. Each selection changes the grid size and adjusts the number and length of clues accordingly.|Pass|
+|US-003|As a user, I want to play without needing to sign up or log in.|No authentication is required. User can start a new game immediately upon visisting the site.|Pass|
+|US-004|As a user, I want to see clues displayed beside or beneath the crossword puzzle so I know how to solve it.|Clues are shown in a panel (tablet/desktop) or carousel (mobile). Each clue is linked to the crossword and updates when the user selects a cell.|Pass|
+|US-005|As a user, I want to be able to input letters into the crossword grid so I can solve the puzzle.|Each white cell in the crossword is focusable and accepts a single uppercase character. Input auto-advances and supports keyboard navigation.|Pass|
+|US-006|As a user, I want the puzzle grid to adapt to the length of the answers so that every quiz feels custom-built.|Grid size and word placement change dynamically based on selected difficulty and the fetched clues. Words are filtered by length and itersect authentically.|Pass|
+|US-007|As a user, I want to be notified when I've correctly completed the puzzle so I know I've solved it.|Clicking "Submit" validates all input and displays a summary message. A unique success modal appears when the entire puzzle is solved correctly.|Pass|
+
+*Each of these user stories was derived from the original [user goals](#user-goals) and directly informed design and development decisions throughout the project.*
 
 ### Feature Testing
+The following feature tests were conducted to confirm that all core functionality works as intended across differenct devices ,browsers, and interaction modes. Each test was carried out manually and observed during the development process.
+
+|Feature|Test|Expected Outcomes|Actual Result|Status|
+|-------|----|-----------------|-------------|------|
+|**Hero Section**|Load the homepage and verify logo, tagline, and CTA button display correctly|Logo and tagline are visible; CTA starts the game|All elements rendered as expected; Start button transitions to Category screen|Pass|
+||Use keyboard to tab through hero elements|Focus follows correct logical order|Focus follows logo → tagline → CTA|Pass|
+|**Header Navigation**|Click logo to return to Hero section from any part of the app|App scrolls to top and shows Hero section only|Navigation works correctly across sections|Pass|
+||Click Info and Help buttons|Modal overlays open with correct content|Modals appear, trap focus, and close as expected|Pass|
+||Click Theme Toggle|Theme switches between light and dark mode|Theme updates correctly and persists via localStorage|Pass|
+|**Category Selection**|Click on a category icon|Moves to Difficulty Selection screen and stores chosen category|Navigation and data storage confirmed via dev tools|Pass|
+||Inspect category icons for `alt` text|Each icon has a description `alt` value|All icons are accessible to screen readers|Pass|
+|**Difficulty Selection**|Click on difficulty level|Game section is triggered with correct grid size and clue volume|Grid layout matches expected config from logic table|Pass|
+|**Crossword Grid**|Verify generated grid displays inputs for correct clue words|Grid populates based on selected difficulty and category|Grid is rendered, and layout is consistent with clue data|Pass|
+||Type answers into cells|Characters appear and auto-advance to next cell|Works for both Across and Down entries|Pass|
+||Press Backspace in a cell|Deletes letter and moves back one cell|Works correctly on both directions|Pass|
+|**Clue Panel & Carousel**|Select a clue via list or carousel|Matching grid word is highlighted and focused|Clue and grid stay in sync|Pass|
+||On mobile, swipe through carousel|Previous/Next buttons move through clues|Clues scroll smoothly|Pass|
+|**Game Controls**|Click Hint button|Reveals correct letter or word|Highlighted hint appears in grid|Pass|
+||Click Submit|Opens Check Answers modal; Correct letter highlighted in green, wrong in red|Feedback is visual and accurate|Pass|
+||Click Reset|Clears inputs and styling|Puzzle resets cleanly|Pass|
+|**Modals**|Open Help or Info modal|Focus is trapped; Content is accessible|Tab/Shift+Tab loop correctly; Esc closes modal|Pass|
+|**Theme Toggle**|Switch between light/dark themes|Entire app theme updates instantly|Layout, contrast, and icons adjust appropiately|Pass|
+|**404 Error Page**|Visit `404.html` directly or via broken link|Custom illustration and link to homepage display|Works responsively in all themes|Pass|
 
 ### Accessibility Testing
 

@@ -762,7 +762,7 @@ Grid and clue interfaces adapting appropiately for orientation and size
 ### Code Validation
 
 #### HTML
-The HTML for **WordWeaver** was validated using the W3C Nu HTML Checker.
+The HTML for **WordWeaver** was validated using the [W3C Nu HTML Checker](https://validator.w3.org/).
 
 **Initial Findings**
 When first tested, the HTML had a number of **validation errors and warnings**, including:
@@ -784,12 +784,29 @@ All issues were fixed through careful code review and semantic corrections:
 After refactoring, the site passed with **zero errors or warnings**, confirming full W3C compliance.
 
 <details>
-<summary>View validation screenshot</summary>
+<summary>View HTML validation screenshot</summary>
 
 ![Screenshot showing that index.html passed HTML validation with zero errors or warnings](docs/validation/index-html-validation-pass.png)
 </details>
 
 #### CSS
+
+The [style.css](assets/css/style.css) file was tested using the official [W3C CSS Validation Service](https://jigsaw.w3.org/css-validator/) to ensure the stylesheet complies with CSS Level 3 + SVG standards.
+
+**Errors Fixed:**
+- `color-mix()` and in function → Replaced with a simple `var()` CSS variables.
+- `box-shadow: var(--panel-color)` → Replaced with a valid `rgba()` fallback to match theme and pass validation.
+
+**Final Result:**
+- **0 Errors**
+- 4 vendor extension warnings (e.g., `-webkit-font-smoothing`) &mdash; **safe to ignore**
+- All remaining rules pass validation
+
+<details>
+<sumary>View CSS validation screenshot</summary>
+
+![W3C CSS Validation Pass](docs/validation/style-css-validation-pass.png)
+</details>
 
 #### JavaScript
 

@@ -692,12 +692,12 @@ body.modal-open {
     padding: 4rem 1rem;
 }
 
-.not-found-container .primary-btn {
+.not-found-link {
     font-size: var(--font-button);
     color: var(--button-text);
 }
 
-.not-found-container .primary-btn:hover {
+.not-found-link:hover {
     color: var(--text-color);
 }
 /* -- Media Queries -- */
@@ -880,6 +880,11 @@ body.modal-open {
         max-width: 100%;
         margin-left: auto;
         margin-right: auto;
+    }
+
+    .not-found-link {
+        max-width: 50%;
+        margin: auto;
     }
 }
 

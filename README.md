@@ -762,6 +762,32 @@ Grid and clue interfaces adapting appropiately for orientation and size
 ### Code Validation
 
 #### HTML
+The HTML for **WordWeaver** was validated using the W3C Nu HTML Checker.
+
+**Initial Findings**
+When first tested, the HTML had a number of **validation errors and warnings**, including:
+- Invalid `rel` for favicon icons (`rel="android-chrome` instead of icon)
+- Improper `<p>` tag nesting around block-level elements
+Duplicate `aria-labelledby` values without matching elements
+- Redundant `aria-hidden` attributes alongside `hidden`
+- Unnecessary use of `role="contentinfo"` on `<footer>`
+
+**Cleanup Actions**
+
+All issues were fixed through careful code review and semantic corrections:
+- Updated all favicon `<link>` tags to valid `rel="icon"` values
+- Removed redundant `ARIA` attributes
+- Corrected paragraph nesting violations
+- Ensured unique and valid ID references in `aria-labelledby` attributes
+- Removed unnecessary landmark roles like `contentinfo`
+
+After refactoring, the site passed with **zero errors or warnings**, confirming full W3C compliance.
+
+<details>
+<summary>View validation screenshot</summary>
+
+![Screenshot showing that index.html passed HTML validation with zero errors or warnings](docs/validation/index-html-validation-pass.png)
+</details>
 
 #### CSS
 

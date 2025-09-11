@@ -700,6 +700,20 @@ body.modal-open {
 .not-found-link:hover {
     color: var(--text-color);
 }
+
+.not-found-image {
+    width: 100%;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }    
+    50% {
+        transform: translateY(-0.8rem);
+    }
+}
 /* -- Media Queries -- */
 @media (min-width: 480px) {
     #hero-section {
@@ -749,6 +763,10 @@ body.modal-open {
     .completion-actions {
         flex-direction: row;
         justify-content: center;
+    }
+
+    .not-found-image {
+        width: 48rem;
     }
 }
 
@@ -884,6 +902,11 @@ body.modal-open {
 
     .not-found-link {
         max-width: 50%;
+        margin: auto;
+    }
+
+    .not-found-image {
+        width: 40rem;
         margin: auto;
     }
 }

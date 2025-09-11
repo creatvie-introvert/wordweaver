@@ -902,7 +902,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 row: startRow,
                 col: startCol,
                 id,
-                orientation: ori,
                 clue: clueMeta.clue || '(missing clue)',
                 answer: clueMeta.answer || '',
                 length: getAnswerLength(startRow, startCol, ori)

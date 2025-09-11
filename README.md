@@ -899,6 +899,38 @@ The following feature tests were conducted to confirm that all core functionalit
 |**404 Error Page**|Visit `404.html` directly or via broken link|Custom illustration and link to homepage display|Works responsively in all themes|Pass|
 
 ### Accessibility Testing
+Accessibility was prioritised throughout the development of **WordWeaver**, ensuring users of all abilities can interact with the application using assistive technologies, keyboard navigation, and screen readers.
+
+**Tools Used**
+
+|Tool|Purpose|
+|[WAVE Web Accessibility Evaluation Tool](https://wave.webaim.org)|Detected contrast issues, missing `ARIA` labels, and heading structure problems|
+|[WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/)|Verified WCAG 2.1 AA/AAA compliance for text/background colour ratios|
+|VoiceOver (Mac)|Manually tested screen reader navigation and focus management|
+|Chrome DevTools Accessibility Tab|Inspected roles, landmarks, tab order, and keyboard reachability|
+|Manual Keyboard Testing|Ensured full access to all interactive elements without a mouse|
+
+**Key Accessibility Features Implemented**
+- **Semantic HTML**: All structural elements (header, main, nav, section, footer) use semantic tags for screen reader clarity.
+- **Landmark Roles**: `<header>`, `<main>`, and `<footer>` are defined to assist with quick navigation.
+- **ARIA Labels and Attributes**:
+  - Used `aria-label`, `aria-hidden`, `aria-live`, and `aria-modal` appropiately on dynamic elements (e.g., modals, grid cells, carousel).
+  - Unique `aria-labelledby` applied to headings, for screen reader context.
+- **Keyboard Navigation**:
+  - All interactive elements are reachable via Tab/Shift+Tab.
+  - Custom focus management ensures logical progression across views.
+  - Focus trapping implemented inside modals.
+- **Visible Focus Indicators**: Clear outlines on buttons, links, modals, and grid inputs support users navigating via keyboard.
+- **Screen REader Announcements**:
+  - Dynamic content such as clue changes and game completion alerts are announced using `aria-live="polite"` regions.
+- **Theme Contrasat Compliance**:
+  - Both light and dark themes meet or excedd WCAG 2.1 AA contrast ratios.
+  - Tested all theme colours using WebAIM's contrast checker.
+
+**Manual Testing Results**
+|Feature|Accessibility Test|Result|
+|-------|------------------|------|
+|Keyboard Navigation|All buttons, modals, and controls are reachable and operable
 
 ### Lighthouse Testing
 

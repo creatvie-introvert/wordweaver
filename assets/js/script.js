@@ -1,3 +1,7 @@
+/* jshint esversion: 11 */
+/* jshint -W030 */       // Suppress: Unused expressions
+/* jshint -W061 */       // (optional) suppress eval warnings if any
+
 // ========== Constants & Config ==========
 const categoryMap = {
     'general-knowledge': 9,
@@ -9,19 +13,19 @@ const categoryMap = {
     'geography': 22,
     'history': 23,
     'computers': 18
-}
+};
 
 const sizeByDifficulty = {
     easy: 11,
     medium: 13,
     hard: 15
-}
+};
 
 const attemptsByDifficulty = {
     easy: 36,
     medium: 60,
     hard: 96
-}
+};
 
 // ========== Global Variables ==========
 let selectedCategory = null;
@@ -209,7 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 last.focus();
             }
             else if (!e.shiftKey && current === last) {
-                e.preventDefault()
+                e.preventDefault();
                 first.focus();
             }
         };
@@ -337,7 +341,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         section.classList.toggle('hidden', !visible);
         section.toggleAttribute('hidden', !visible);
-        section.setAttribute('aria-hidden', visible ? 'false' : 'true')
+        section.setAttribute('aria-hidden', visible ? 'false' : 'true');
     }
 
     /**
@@ -1158,7 +1162,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!li) return;
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
-                selectClueById(li.dataset.clueId)
+                selectClueById(li.dataset.clueId);
             }
         });
 
@@ -1670,8 +1674,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const want = (cell.dataset.solution || '').toUpperCase();
             const got = (input?.value || '').toUpperCase();
 
-            total++
-            if (got) filled++
+            total++;
+            if (got) filled++;
 
             const ok = got === want;
             cell.classList.toggle('is-wrong', !ok && !!got);

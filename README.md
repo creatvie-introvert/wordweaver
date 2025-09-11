@@ -815,9 +815,20 @@ All issues were fixed through careful code review and semantic corrections:
 After refactoring, the site passed with **zero errors or warnings**, confirming full W3C compliance.
 
 <details>
-<summary>View HTML validation screenshot</summary>
+<summary>View HTML validation screenshot (Main Page)</summary>
 
 ![Screenshot showing that index.html passed HTML validation with zero errors or warnings](docs/validation/index-html-validation-pass.png)
+</details>
+<br>
+
+**404 Page Validation**
+
+The custom 404 page was also validated independently to ensure it met the same standards. The page passed validation with **zero errors or warnings**.
+
+<details>
+<summary>View HTML validation screenshot (404 Page)</summary>
+
+![Screenshot showing that 404.html passed HTML validation with zero errors or warnings](docs/validation/404-html-validation-pass.png)
 </details>
 
 #### CSS

@@ -469,7 +469,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 seen.add(clean);
                 out.push({ clue, answer: clean, id: `clue-${out.length}` });
             }
-            return out;
+            return out; 
         }
     }
 

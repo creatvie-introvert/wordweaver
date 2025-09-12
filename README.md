@@ -739,7 +739,7 @@ This project was built using core frontend technologies along with a range of de
 - **[W3C Markup Validator](https://validator.w3.org/)** - for validating HTML structure
 - **[W3C CSS Validator](https://jigsaw.w3.org/css-validator/)** - for validating stylesheet syntax
 - **[Autoprefixer](https://autoprefixer.github.io/)** - ensured browser compatibility for custom CSS
-- **[JSHinterface](https://creatvie-introvert.github.io/JSHinterface/)** - used to validate and lint JavaScript code during development
+- **[JSHint](https://jshint.com)** - used to validate and lint JavaScript code during development
 
 ### Responsive Design Testing
 - **[Am I Responsive?](https://ui.dev/amiresponsive/)** - for generating device mockups of the responsive design

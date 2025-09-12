@@ -972,6 +972,27 @@ Colour contrast ratios were calculated manually using WebAIM's contrast checker.
 > *Note*: All screenshots were taken from final-stage deployment testing to ensure real-world accessibility alignment.
 
 ### Lighthouse Testing
+Automated performance and accessibility audits were carried out using **Google Lighthouse** in Chrome DevTools. Tests were run on both **mobile** and desktop environments.
+
+**Mobile Results**
+- **Performance:** 92
+- **Accessibility:** 100
+- **Best Practices:** 96
+- **SEO:** 100
+
+**Mobile Summary**
+![View screenshot of mobile report](docs/validation/lighthouse-summary-mobile.png)
+[Download Full Mobile Report (PDF)](docs/validation/lighthouse-report-mobile.pdf)
+
+**Desktop Results**
+- **Performance:** 98
+- **Accessibility:** 100
+- **Best Practices:** 96
+- **SEO:** 100
+
+**Desktop Summary**
+![View screenshot of desktop report](docs/validation/lighthouse-summary-desktop.png)
+[Download Full Desktop Report (PDF)](docs/validation/lighthouse-report-desktop.pdf)
 
 ### Browser Testing
 

@@ -930,7 +930,14 @@ Accessibility was prioritised throughout the development of **WordWeaver**, ensu
 **Manual Testing Results**
 |Feature|Accessibility Test|Result|
 |-------|------------------|------|
-|Keyboard Navigation|All buttons, modals, and controls are reachable and operable
+|Keyboard Navigation|All buttons, modals, and controls are reachable and operable|Pass|
+|Modal Focus Trap| Focus is trapped while modals are open; ESC closes properly|Pass|
+|Screen Reader Labels|Clue list items, grid cells, and controls all have descriptive `aria-label`s|Pass|
+|Colour Contrast|All text/background combinations pass WCAG 2.1 AA|Pass|
+|Reduced Motion|App does not rely on animations to convey meaning|Pass|
+|Visual Indicators|Visible focus outlines for all interactive elements|Pass|
+
+![WAVE Accessibility Evaluation Report](docs/validation/wave-accessibility-pass.png)
 
 ### Lighthouse Testing
 

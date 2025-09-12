@@ -921,10 +921,10 @@ Accessibility was prioritised throughout the development of **WordWeaver**, ensu
   - Custom focus management ensures logical progression across views.
   - Focus trapping implemented inside modals.
 - **Visible Focus Indicators**: Clear outlines on buttons, links, modals, and grid inputs support users navigating via keyboard.
-- **Screen REader Announcements**:
+- **Screen Reader Announcements**:
   - Dynamic content such as clue changes and game completion alerts are announced using `aria-live="polite"` regions.
-- **Theme Contrasat Compliance**:
-  - Both light and dark themes meet or excedd WCAG 2.1 AA contrast ratios.
+- **Theme Contrast Compliance**:
+  - Both light and dark themes meet or exceed WCAG 2.1 AA contrast ratios.
   - Tested all theme colours using WebAIM's contrast checker.
 
 **Manual Testing Results**
@@ -937,7 +937,39 @@ Accessibility was prioritised throughout the development of **WordWeaver**, ensu
 |Reduced Motion|App does not rely on animations to convey meaning|Pass|
 |Visual Indicators|Visible focus outlines for all interactive elements|Pass|
 
-![WAVE Accessibility Evaluation Report](docs/validation/wave-accessibility-pass.png)
+**Additional Audit Results**
+In addition to manual and automated checks, the application was evaluated using [AccessibilityChecker.org](https://accessibilitychecker.org). The report returned:
+- **Accessibility Score**: 95%
+- **Lawsuit Risk**: Minor
+- **Critical Issues**: 0
+- **Passed WCAG 2.2 Audits**: 37
+- **Manual Audits Required**: 3
+- **Pages Scanned**: 1
+
+**AccessibilityChecker.org Full Report**
+[Download Full Accessibility Checker Report (PDF)](docs/validation/accessibility-checker-report.pdf)
+
+**Colour Contrast Validation Report**
+
+To verify readability and contrast accessibility, all UI foreground/background colour combinations were manually tested in both light and dark themes. All tested combinations passed WCAG 2.1 **AA** contrast requirements, with many also exceeding **AAA** thresholds.
+
+Colour contrast ratios were calculated manually using WebAIM's contrast checker.
+
+![Colour Contrast Ratio Table](docs/validation/colour-contrast-results.png)
+*Figure: All light/dark mode UI colour pairs tested for compliance using WebAIM's Contrast Checker.*
+
+**Key WAVE Findings**
+- No contrast errors
+- All form inputs properly labelled
+- `ARIA` landmarks detected and structured correctly
+- No missing `alt` attributes
+- No Keyboard accessibility issues
+
+**WAVE Accesibility Evaluation Report**
+![View Report SCreenshot](docs/validation/wave-accessibility-pass.png)
+*Figure: WAVE detected no critical issues at final deployment stage.*
+
+> *Note*: All screenshots were taken from final-stage deployment testing to ensure real-world accessibility alignment.
 
 ### Lighthouse Testing
 

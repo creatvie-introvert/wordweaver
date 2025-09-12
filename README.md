@@ -994,7 +994,38 @@ Automated performance and accessibility audits were carried out using **Google L
 ![View screenshot of desktop report](docs/validation/lighthouse-summary-desktop.png)
 [Download Full Desktop Report (PDF)](docs/validation/lighthouse-report-desktop.pdf)
 
+**Optimisations Made**
+During development, several optimisations were applied to improve performance scores:
+- Resized the hero logo image from 1024x1024 (152KB) to 300x300 (~25KD).
+- Added `loading-lazy` to offscreen images (e.g., category icons).
+
+These changes improved the **mobile Performance score from 76 to 92** while maintaining perfect Accessibility and SEO results.
+
 ### Browser Testing
+The **WordWeaver** app was tested across a wide range of browsers and devices to ensure consitent layout, functionality, and accessibility. Testing was performed manually and with **BrowserStack**, **Chrome DevTools**, and **Responsive Design Checker**.
+
+#### Devices & Browsers Tested
+- **Mobile / Tablet**
+  - iPhone SE (Safari)
+  - iPhone 14 / 14 Pro / 14 Pro Max (Safari)
+  - Google Pixel 7 (Chrome)
+  - Samsung Galaxy S21 (Chrome)
+  - iPad Mini, iPad Air, iPad Pro 11" (Safari)
+  - Samsung Galaxy Tab S7 (Chrome)
+
+- **Desktop / Laptops**
+  - Chrome (Mac)
+  - Firefox (Mac)
+  - Safari (Mac)
+  - Microsoft Edge (Chrome/Edge BrowserStack)
+  - Windows Laptop (Chrome/Edge BrowserStack)
+
+#### Observations
+- All tested devices successfully displayed **WordWeaver** with correct responsiveness at each breakpoint.
+- No visual or functionaly inconsistencies were detected across browsers.
+- Accessibility features (keyboard navigation, `ARIA` labels, contrast) worked consistently across platforms.
+
+**Conclusion:** WordWeaver performs consitently and accesibly across all major browsers and devices tested.
 
 ## Deployment
 The project was deployed using **GitHub Pages** and is publicly accessible via the following link:

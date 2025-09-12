@@ -3,44 +3,47 @@
 /* jshint -W083 */              // Allow functions inside loops
 /* jshint -W061 */              // Allow use of eval (remove if not used)
 /* global ResizeObserver */     // Declare global browser API
-
-// ========== Constants & Config ==========
-const categoryMap = {
-    'general-knowledge': 9,
-    'science-and-nature': 17,
-    'film': 11,
-    'music': 12,
-    'video-games': 15,
-    'sports': 21,
-    'geography': 22,
-    'history': 23,
-    'computers': 18
-};
-
-const sizeByDifficulty = {
-    easy: 11,
-    medium: 13,
-    hard: 15
-};
-
-const attemptsByDifficulty = {
-    easy: 36,
-    medium: 60,
-    hard: 96
-};
-
-// ========== Global Variables ==========
-let selectedCategory = null;
-let chosenDifficulty = null;
-let clueBank = new Map(); 
-let currentOrientation = 'across';
-
-const FOCUSABLE_SELECTOR = [
-    '[autofocus]', 'a[href]', 'button:not([disabled])', 
-    'input:not([disabled]):not([type="hidden"])', 'select:not([disabled])', 'textarea:not([disabled])', '[tabindex]:not([tabindex="-1"])'
-].join(', ');
-
 document.addEventListener('DOMContentLoaded', () => {
+    // ========== Constants & Config ==========
+    const categoryMap = {
+        'general-knowledge': 9,
+        'science-and-nature': 17,
+        'film': 11,
+        'music': 12,
+        'video-games': 15,
+        'sports': 21,
+        'geography': 22,
+        'history': 23,
+        'computers': 18
+    };
+
+    const sizeByDifficulty = {
+        easy: 11,
+        medium: 13,
+        hard: 15
+    };
+
+    const attemptsByDifficulty = {
+        easy: 36,
+        medium: 60,
+        hard: 96
+    };
+
+    // ========== Global Variables ==========
+    let selectedCategory = null;
+    let chosenDifficulty = null;
+    let clueBank = new Map(); 
+    let currentOrientation = 'across';
+
+    let activeModal = null;
+    let escHandler = null;
+    let trapHandler = null;
+
+    const FOCUSABLE_SELECTOR = [
+        '[autofocus]', 'a[href]', 'button:not([disabled])', 
+        'input:not([disabled]):not([type="hidden"])', 'select:not([disabled])', 'textarea:not([disabled])', '[tabindex]:not([tabindex="-1"])'
+    ].join(', ');
+
     // ========== DOM Element References ==========
     const html = document.documentElement;
     const toggleBtn = document.querySelector('[data-theme-toggle]');
@@ -136,10 +139,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     }
-
-    let activeModal = null;
-    let escHandler = null;
-    let trapHandler = null;
 
     /**
      * Initialises modal functionality by wiring up open and close behaviour, managing focus trapping and escape key handling for accessibility.
@@ -275,8 +274,6 @@ document.addEventListener('DOMContentLoaded', () => {
             window.addEventListener('resize', updateHeaderHeight);
         }
     }
-
-    const log = (...args) => console.log('[WW]', ...args);
     
     // ========== Event Listeners ==========
     startBtn?.addEventListener('click', () => {
@@ -1138,7 +1135,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         container.addEventListener('select-clue', (e) => {
             const id = e.detail?.clueId;
-            log('event: select-clue', id);
             if (id) selectClueById(id);
         });
 
@@ -1234,7 +1230,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!clue || !board) return;
 
         clearBoardHighlights();
-        log('highlightClueOnBoard', clue);
         currentOrientation = clue.orientation;
 
         const rowStep = clue.orientation === 'down' ? 1 : 0;
@@ -1319,7 +1314,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const row = Number(cell.dataset.row);
         const col = Number(cell.dataset.col);
 
-        log('highlightFromCell start', { row, col, ori });
         if (ori === 'across') {
             let startCol = col;
             while (true) {
@@ -1339,7 +1333,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             getCellEl(row, startCol)?.classList.add('is-head');
-            log('across head', { row, startCol, endCol });
             getCellEl(row, startCol)?.classList.add('is-head');
         }
         else {
@@ -1361,7 +1354,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             getCellEl(startRow, col)?.classList.add('is-head');
-            log('down head', { col, startRow, endRow });
         }
     }
     
@@ -1379,7 +1371,6 @@ document.addEventListener('DOMContentLoaded', () => {
         ori = currentOrientation;
         if (!cell) return;
         const id = cell.dataset[ori === 'across' ? 'acrossId' : 'downId'];
-        log('selectClueFromCell', { ori, id, cell: cell.dataset });
         if (!id) return;
 
         if (options.skipEvent) return;
@@ -1408,7 +1399,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const input = e.target.closest('.cell-input');
             if (!input) return;
             const cell = input.closest('.cell');
-            log('focusin -> highlightFromCell', cell?.dataset);
             highlightFromCell(cell, currentOrientation);
             selectClueFromCell(cell, currentOrientation, { skipEvent: true });
         });
@@ -1422,7 +1412,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (v) {
                 const cell = input.closest('.cell');
-                log('input letter', v, '-> moveRelative +1');
                 moveRelative(cell, 1);
             }
         });
@@ -1436,12 +1425,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const cell = input.closest('.cell');
 
                 if (input.value) {
-                    log('Backspace: clearing current cell'); 
                     input.value = '';
                     e.preventDefault();
                     return;
                 }
-                log('Backspace: moveRelatice -1 and clear previous');
                 moveRelative(cell, -1);
                 const prev = document.activeElement?.closest('.cell')?.querySelector('.cell-input');
                 if (prev) prev.value = '';
@@ -1450,7 +1437,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (e.key === 'ArrowRight') {
-                log('ArrowRight -> across, move +1');
                 highlightFromCell(cell, 'across');
                 selectClueFromCell(cell, 'across', { skipEvent: true });
                 moveRelative(cell, 1);
@@ -1458,7 +1444,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             else if (e.key === 'ArrowLeft') {
-                log('ArrowLeft -> across, move -1');
                 highlightFromCell(cell, 'across');
                 selectClueFromCell(cell, 'across', { skipEvent: true });
                 moveRelative(cell, -1);
@@ -1466,7 +1451,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             else if (e.key === 'ArrowDown') {
-                log('ArrowDown -> down, move +1');
                 highlightFromCell(cell, 'down');
                 selectClueFromCell(cell, 'down', { skipEvent: true });
                 moveRelative(cell, 1);
@@ -1474,7 +1458,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             else if (e.key === 'ArrowUp') {
-                log('ArrowUp -> down, move -1');
                 highlightFromCell(cell, 'down');
                 selectClueFromCell(cell, 'down', { skipEvent: true });
                 moveRelative(cell, -1);
@@ -1484,7 +1467,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (e.code === 'Space' || e.key === ' ' || e.key === 'Spacebar') {
                 const nextOri = currentOrientation === 'across' ? 'down' : 'across';
-                log('Space: toggle orientation', currentOrientation, '->', nextOri);
                 highlightFromCell(cell, nextOri);
                 selectClueFromCell(cell, nextOri, { skipEvent: true });
                 e.preventDefault();
@@ -1495,7 +1477,6 @@ document.addEventListener('DOMContentLoaded', () => {
         board.addEventListener('click', (e) => {
             const cell = e.target.closest('.cell:not(.black-cell)');
             if (!cell) return;
-            log('click cell', cell.dataset);
             const input =  cell.querySelector('.cell-input');
             input?.focus();
             input?.select?.();
@@ -1506,7 +1487,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const cell = e.target.closest('.cell:not(.black-cell)');
             if (!cell) return;
             const nextOri = currentOrientation === 'across' ? 'down' : 'across';
-            log('dblclick cell', cell.dataset, 'toggle to', nextOri);
             highlightFromCell(cell, nextOri);
             const input = cell.querySelector('.cell-input');
             input?.focus();

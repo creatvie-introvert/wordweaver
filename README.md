@@ -613,7 +613,13 @@ The theme toggle system allows users to seamlessly switch between light and dark
   - The UI uses CSS variables to instantly switch between colours based on the `data-theme` attribute.
   - All custom components, (grid, buttons, modals, etc.) inherit their colours from the active theme.
 
-<!-- TODO: add a light and dark mode comparison screenshot -->
+<details>
+<summary>View Theme Toggle Comparison</summary>
+
+<p align="center">
+<img src="docs/features/theme-toggle-comparison.png" width="80%" alt="Side-by-side comparison of WordWeaver in light mode (left) and dark mode (right)">
+</p>
+</details>
 
 #### Cutom 404 Error Page
 

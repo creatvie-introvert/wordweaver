@@ -825,7 +825,6 @@ body.modal-open {
         grid-template-rows: auto 1fr;
         column-gap: 2.4rem;
         align-items: start;
-        /* max-width: 140rem; */
         margin-inline: auto;
     } 
 
@@ -846,7 +845,6 @@ body.modal-open {
         align-self: start;
         position: sticky;
         top: 1.2rem;
-        /* max-width: 80rem; */
         width: 100%;
     }
 

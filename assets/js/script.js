@@ -1121,10 +1121,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             highlightFromCell(firstCell, orientation);
 
-            // if (document.activeElement && document.activeElement !== nextInput) {
-            //     // document.activeElement.getBoundingClientRect();
-            // }
-
             if (nextInput) {
                 nextInput.focus();
                 nextInput.select?.();

@@ -134,6 +134,8 @@ The type system follows a responsive scale that adjusts font sizes across mobile
 |Button/Label|18px|20px|22px|
 |Caption/Tag|14px|14px|14px|
 
+On very large displays (viewport width ≥ 1600px), WordWeaver increases the base font and increases sizing of smaller text elements such as cell-numbers. This ensures headings, grid text, and clues are more legible. The type sytme remains fluid, using rem units and clamp() where needed.
+
 ![Typography system across all breakpoints](docs/design-choices/typography-design-system.png)
 
 ### Colour Scheme
@@ -757,6 +759,7 @@ This project was built using core frontend technologies along with a range of de
 |B-002|Category Container Overflow|On desktop view, the 3x3 category grid flowed off screen and wasn't centred|**Fixed**|Added `max-width`, `margin: 0 auto;`, and corrected grid layout properties in CSS|[0075021](https://github.com/creatvie-introvert/wordweaver/commit/0075021f61c1c9747d01c83ced41cca7ca059ba0)|
 |B-003|Focus Ring Missing on Logo|Focus-visible styles didn't apply to the header logo link|**Fixed**|Updated selector from `.logo-container` to `.logo-container a:focus-visible` for correct targeting|[3326f3c](https://github.com/creatvie-introvert/wordweaver/commit/3326f3cecaa679c459ec745fd5faab49b61fb551)|
 |B-0004|Modal aria-hidden Focus Error|Closing a modal while its close button retained focus caused a console warning about aria-hidden blocking assistive tech|**Fixed**|Restored focus to the modal opener before hiding and clearing attributes|[3dfe5bd](https://github.com/creatvie-introvert/wordweaver/commit/3dfe5bd0b36fe4ac875d084cd848eb2c3375a843)|
+|B-0005|Large-screen Typography/Layout Scaling|On viewports ≥ 1600px, text, clue panel, and cell number fonts were too small; clues panel was too narrow relative to the crossword grid|Fixed|Increased root font-size to 110%, adjusted grid template columns to 3fr 2.5fr, and bumped up cell number size via media query|https://github.com/creatvie-introvert/wordweaver/commit/f70c8e15c46e5d5bd8ef1d8427673912ce7a3a7d|
 
 ### Responsiveness Tests
 The **WordWeaver** app was designed using a mobile-first approach and rigourously tested across a variety of screen sizes, devices, and input methods to ensure a consistent, accessible, and intuitive user experience on all platforms.

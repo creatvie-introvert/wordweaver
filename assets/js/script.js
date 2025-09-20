@@ -1121,8 +1121,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             highlightFromCell(firstCell, orientation);
 
-            if (document.activeElement && document.activeElement !== nextInput) {
-                document.activeElement.getBoundingClientRect();
+            // if (document.activeElement && document.activeElement !== nextInput) {
+            //     // document.activeElement.getBoundingClientRect();
+            // }
+
+            if (nextInput) {
+                nextInput.focus();
+                nextInput.select?.();
             }
 
             selectClueFromCell(firstCell, currentOrientation, { skipEvent: true });
@@ -1136,6 +1141,8 @@ document.addEventListener('DOMContentLoaded', () => {
         container.addEventListener('click', (e) => {
             const li = e.target.closest('li[data-clue-id]');
             if (!li) return;
+            e.preventDefault();
+            selectClueById(li.dataset.clueId);
 
             const clueId = li.dataset.clueId;
             const clue = linearClues.find(c => c.id === clueId);

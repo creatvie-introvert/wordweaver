@@ -821,10 +821,12 @@ body.modal-open {
         grid-template-areas: 
             "header header"
             "board clues";
-        grid-template-columns: 1.5fr 1fr;
+        grid-template-columns: 3fr 1.5fr;
         grid-template-rows: auto 1fr;
         column-gap: 2.4rem;
         align-items: start;
+        /* max-width: 140rem; */
+        margin-inline: auto;
     } 
 
     .section-header {
@@ -836,7 +838,7 @@ body.modal-open {
         grid-area: board;
         justify-self: center;
         align-self: center;
-        inline-size: min(75vmin, 60rem);
+        inline-size: clamp(40rem, 80vmin, 100rem);
     }
 
     #clues-container {
@@ -844,6 +846,8 @@ body.modal-open {
         align-self: start;
         position: sticky;
         top: 1.2rem;
+        /* max-width: 80rem; */
+        width: 100%;
     }
 
     .clues-panels {
@@ -942,6 +946,21 @@ body.modal-open {
     .hero-text,
     #hero-section img {
         width: 45%;
+    }
+}
+
+@media (min-width: 1600px) {
+    html {
+        font-size: 110%;
+    }
+
+    #game-section {
+        grid-template-columns: 3fr 2.5fr;
+        column-gap: 4rem;
+    }
+
+    .cell .cell-num {
+        font-size: 2rem;
     }
 }
 

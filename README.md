@@ -147,15 +147,11 @@ The light theme uses a soft **seasalt background** paired with **charcoal text**
 
 ![Light Theme Colour palette](docs/design-choices/light-colour-scheme.png)
 
-![Light Theme Contrast Grid](docs/design-choices/light-theme-contrast-grid.png)
-
 **Dark Theme**
 
 The dark theme adopts a deep charcoal base ('#1E1E1E') for a reduced-glare experience. Primary text is displayed in a **soft pale green** ('#E5F5DC') for high contrast. Button accents shift to muted green and sage tones, offering visual continuity with the light theme and interactive states.
 
 ![Dark Theme Colour Palette](docs/design-choices/dark-colour-scheme.png)
-
-![Dark Theme Contrast Grid](docs/design-choices/dark-theme-contrast-grid.png)
 
 ### Images
 The project's visuals were kept clean and purposeful to support usability and accessibility. The only raster image used was the custom WordWeaver logo, which was designed to reflect the game's whimsical and intellectual nature. The logo features a feather quill, sparkles, and stylised crossword tiles to subtly reinforce the game's word puzzle theme.
